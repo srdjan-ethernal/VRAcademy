@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY VRSimulator.sln ./
@@ -8,7 +8,7 @@ RUN dotnet restore src/VRSimulator.Api/VRSimulator.Api.csproj
 COPY src/VRSimulator.Api/ src/VRSimulator.Api/
 RUN dotnet publish src/VRSimulator.Api/VRSimulator.Api.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
 ENV ASPNETCORE_URLS=http://+:7860

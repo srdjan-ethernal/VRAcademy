@@ -33,9 +33,9 @@ Backend je u folderu `src/VRSimulator.Api`.
 
 Tehnologije:
 
-- .NET 6
+- .NET 10
 - ASP.NET Core Minimal API
-- Entity Framework Core 6
+- Entity Framework Core 10
 - SQL Server provider
 - PostgreSQL provider za opcionu Neon demo varijantu
 - Microsoft runtime stack
@@ -116,6 +116,8 @@ Repo sadrzi GitHub Actions workflow:
 ```
 
 Workflow se pokrece automatski na svaki push u `main` i moze se pokrenuti rucno iz GitHub Actions taba. Build objavljuje ASP.NET Core backend i kopira staticki frontend u `wwwroot`, zatim deployuje paket na Azure App Service.
+
+Azure App Service treba podesiti na .NET 10 runtime stack. Lokalni build zahteva instaliran .NET 10 SDK.
 
 Potrebno u GitHub repository settings:
 

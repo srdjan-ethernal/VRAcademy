@@ -4,10 +4,10 @@ ASP.NET Core backend za evidenciju VR obuka radnika.
 
 ## Tehnologije
 
-- .NET 6
+- .NET 10
 - ASP.NET Core Minimal API
 - Microsoft hosting/runtime stack
-- Entity Framework Core 6
+- Entity Framework Core 10
 - SQL Server provider
 - PostgreSQL provider za opcionu Neon demo varijantu
 
