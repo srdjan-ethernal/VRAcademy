@@ -106,3 +106,35 @@ Fajlovi su u `deploy/azure-vm`:
 - `deploy.sh` radi build i restart containera
 
 Detaljni koraci su u `deploy/azure-vm/README.md`.
+
+## Azure App Service continuous deployment
+
+Repo sadrzi GitHub Actions workflow:
+
+```text
+.github/workflows/azure-app-service.yml
+```
+
+Workflow se pokrece automatski na svaki push u `main` i moze se pokrenuti rucno iz GitHub Actions taba. Build objavljuje ASP.NET Core backend i kopira staticki frontend u `wwwroot`, zatim deployuje paket na Azure App Service.
+
+Potrebno u GitHub repository settings:
+
+```text
+Variable:
+AZURE_WEBAPP_NAME=<ime Azure App Service aplikacije>
+
+Secret:
+AZURE_WEBAPP_PUBLISH_PROFILE=<sadrzaj publish profile fajla iz Azure App Service-a>
+```
+
+Potrebno u Azure App Service Configuration / Application settings:
+
+```text
+DATABASE_URL=postgresql://<user>:<password>@<host>/<database>?sslmode=require
+Database__Provider=PostgreSql
+Database__EnsureCreated=true
+Database__FallbackToInMemory=false
+Cors__AllowAnyOrigin=true
+```
+
+Ako se koristi publish profile deployment, u Azure App Service mora biti omogucen basic authentication za publishing profile. Za Linux App Service, ako Azure ne dozvoli download publish profile-a, dodati app setting `WEBSITE_WEBDEPLOY_USE_SCM=true`, sacuvati i zatim ponovo preuzeti publish profile.
