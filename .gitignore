@@ -4,4 +4,6 @@ bin/
 obj/
 *.log
 deploy/azure-vm/.env
+.dotnet-home/
+.nuget/
 
