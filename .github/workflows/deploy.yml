@@ -1,0 +1,46 @@
+name: Deploy to App Service
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - run: dotnet restore
+      - run: dotnet build --configuration Release --no-restore
+      - run: dotnet test --no-build --configuration Release
+
+      - name: Run EF Core migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          # TODO (coworker): set this to the actual path of the .csproj that contains
+          # your EF Core migrations, e.g. ./src/VrProject.Api/VrProject.Api.csproj
+          dotnet ef database update --project C:\Users\Srdjan\Documents\VRSimulator\src\VRSimulator.Api/VRSimulator.Api.csproj --connection "${{ secrets.SQL_CONNECTION_STRING }}"
+
+      - run: dotnet publish -c Release -o publish_output
+        # TODO (coworker): if this repo has more than one project (e.g. a solution
+        # with an API project + a class library), add the project path here too:
+        # dotnet publish ./TODO-PATH-TO-YOUR-PROJECT.csproj -c Release -o publish_output
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: vrproject
+          package: publish_output
