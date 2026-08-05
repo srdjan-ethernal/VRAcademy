@@ -54,7 +54,7 @@ public sealed class InMemoryAuthService : IAuthService
                 normalizedEmail,
                 request.FirstName.Trim(),
                 request.LastName.Trim(),
-                UserRole.CompanyAdmin,
+                UserRole.CompanyAdministrator,
                 DateTimeOffset.UtcNow);
 
             var storedUser = new StoredUser(account, password.Hash, password.Salt);
@@ -140,9 +140,9 @@ public sealed class InMemoryAuthService : IAuthService
             return Result<UserProfileResponse>.Failure(validationError);
         }
 
-        if (request.Role == UserRole.CompanyAdmin)
+        if (request.Role == UserRole.SystemAdministrator || request.Role == UserRole.CompanyAdministrator)
         {
-            return Result<UserProfileResponse>.Failure("Novi korisnik ne moze dobiti CompanyAdmin ulogu kroz ovu rutu.");
+            return Result<UserProfileResponse>.Failure("Novi korisnik kroz ovu rutu moze dobiti samo User ulogu.");
         }
 
         var normalizedEmail = NormalizeEmail(request.Email);

@@ -8,6 +8,10 @@ using VRSimulator.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 var databaseProvider = builder.Configuration["Database:Provider"] ?? "SqlServer";
 var autoCreateDatabase = builder.Configuration.GetValue<bool>("Database:EnsureCreated");
 var connectionStringCandidates = new[]
@@ -121,6 +125,7 @@ if (!useInMemoryServices && autoCreateDatabase)
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<TrainingDbContext>();
         dbContext.Database.EnsureCreated();
+        EnsureEnrollmentDueAtColumn(dbContext, databaseProvider);
     }
     catch (Exception exception)
     {
@@ -166,6 +171,7 @@ app.MapGet("/api", () => Results.Ok(new
         "GET /api/users",
         "POST /api/users",
         "GET /api/companies",
+        "GET /api/dashboard/summary",
         "GET /api/scenarios",
         "GET /api/courses",
         "GET /api/workers",
@@ -265,7 +271,9 @@ app.MapGet("/api/users", (HttpRequest request, IAuthService authService) =>
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => Results.Ok(authService.GetUsersForCompany(user.CompanyId)),
+        user => IsCompanyAdministrator(user)
+            ? Results.Ok(authService.GetUsersForCompany(user.CompanyId))
+            : Results.Forbid(),
         _ => Results.Unauthorized());
 });
 
@@ -275,7 +283,7 @@ app.MapPost("/api/users", (CreateCompanyUserRequest request, HttpRequest httpReq
     return currentUser.Match(
         user =>
         {
-            if (user.Role != UserRole.CompanyAdmin)
+            if (!IsCompanyAdministrator(user))
             {
                 return Results.Forbid();
             }
@@ -292,9 +300,21 @@ app.MapGet("/api/companies", (HttpRequest request, IAuthService authService) =>
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => authService.GetCompany(user.CompanyId).Match(
-            company => Results.Ok(new[] { company }),
-            error => Results.BadRequest(new ProblemResponse(error))),
+        user => IsCompanyAdministrator(user)
+            ? authService.GetCompany(user.CompanyId).Match(
+                company => Results.Ok(new[] { company }),
+                error => Results.BadRequest(new ProblemResponse(error)))
+            : Results.Forbid(),
+        _ => Results.Unauthorized());
+});
+
+app.MapGet("/api/dashboard/summary", (HttpRequest request, IAuthService authService, ITrainingRepository repository) =>
+{
+    var currentUser = ResolveCurrentUser(request, authService);
+    return currentUser.Match(
+        user => IsCompanyAdministrator(user)
+            ? Results.Ok(repository.GetDashboardSummary(user.CompanyId))
+            : Results.Forbid(),
         _ => Results.Unauthorized());
 });
 
@@ -312,7 +332,9 @@ app.MapGet("/api/workers", (HttpRequest request, IAuthService authService, ITrai
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => Results.Ok(repository.GetWorkers(user.CompanyId)),
+        user => IsCompanyAdministrator(user)
+            ? Results.Ok(repository.GetWorkers(user.CompanyId))
+            : Results.Forbid(),
         _ => Results.Unauthorized());
 });
 
@@ -337,6 +359,11 @@ app.MapPost("/api/workers", (CreateWorkerRequest request, HttpRequest httpReques
     return currentUser.Match(
         user =>
         {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
             var result = repository.CreateWorker(user.CompanyId, request);
             return result.Match(
                 worker => Results.Created($"/api/workers/{worker.Id}", worker),
@@ -351,6 +378,11 @@ app.MapPost("/api/enrollments", (CreateEnrollmentRequest request, HttpRequest ht
     return currentUser.Match(
         user =>
         {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
             var result = repository.CreateEnrollment(user.CompanyId, request);
             return result.Match(
                 enrollment => Results.Created($"/api/enrollments/{enrollment.Id}", enrollment),
@@ -363,7 +395,9 @@ app.MapGet("/api/enrollments", (HttpRequest request, IAuthService authService, I
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => Results.Ok(repository.GetEnrollments(user.CompanyId)),
+        user => IsCompanyAdministrator(user)
+            ? Results.Ok(repository.GetEnrollments(user.CompanyId))
+            : Results.Forbid(),
         _ => Results.Unauthorized());
 });
 
@@ -383,6 +417,11 @@ app.MapPost("/api/enrollments/{enrollmentId:guid}/complete", (
     return currentUser.Match(
         user =>
         {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
             var result = repository.CompleteEnrollment(user.CompanyId, enrollmentId, request);
             return result.Match(
                 completion => Results.Ok(completion),
@@ -395,7 +434,9 @@ app.MapGet("/api/certificates", (HttpRequest request, IAuthService authService, 
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => Results.Ok(repository.GetCertificates(user.CompanyId)),
+        user => IsCompanyAdministrator(user)
+            ? Results.Ok(repository.GetCertificates(user.CompanyId))
+            : Results.Forbid(),
         _ => Results.Unauthorized());
 });
 
@@ -409,7 +450,9 @@ app.MapGet("/api/workers/{workerId:guid}/certificates", (Guid workerId, HttpRequ
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => Results.Ok(repository.GetCertificatesForWorker(user.CompanyId, workerId)),
+        user => IsCompanyAdministrator(user)
+            ? Results.Ok(repository.GetCertificatesForWorker(user.CompanyId, workerId))
+            : Results.Forbid(),
         _ => Results.Unauthorized());
 });
 
@@ -419,6 +462,11 @@ app.MapGet("/api/certificates/{certificateId:guid}", (Guid certificateId, HttpRe
     return currentUser.Match(
         user =>
         {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
             var certificate = repository.GetCertificate(user.CompanyId, certificateId);
             return certificate is null ? Results.NotFound() : Results.Ok(certificate);
         },
@@ -441,6 +489,11 @@ app.MapPost("/api/notifications/reminders", (
     return currentUser.Match(
         user =>
         {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
             var worker = repository.GetWorker(user.CompanyId, request.WorkerId);
             if (worker is null)
             {
@@ -461,6 +514,11 @@ app.MapGet("/api/worker-portal/me", (HttpRequest request, IAuthService authServi
     return currentUser.Match(
         user =>
         {
+            if (!IsWorkerUser(user))
+            {
+                return Results.Forbid();
+            }
+
             var worker = repository.GetWorkerByEmail(user.CompanyId, user.Email);
             if (worker is null)
             {
@@ -488,6 +546,11 @@ app.MapPost("/api/worker-portal/enrollments/{enrollmentId:guid}/start", (
     return currentUser.Match(
         user =>
         {
+            if (!IsWorkerUser(user))
+            {
+                return Results.Forbid();
+            }
+
             var worker = repository.GetWorkerByEmail(user.CompanyId, user.Email);
             if (worker is null)
             {
@@ -523,6 +586,11 @@ app.MapPost("/api/worker-portal/enrollments/{enrollmentId:guid}/complete", (
     return currentUser.Match(
         user =>
         {
+            if (!IsWorkerUser(user))
+            {
+                return Results.Forbid();
+            }
+
             var worker = repository.GetWorkerByEmail(user.CompanyId, user.Email);
             if (worker is null)
             {
@@ -565,6 +633,27 @@ static Result<UserProfileResponse> ResolveCurrentUser(HttpRequest request, IAuth
     return string.IsNullOrWhiteSpace(token)
         ? Result<UserProfileResponse>.Failure("Token nije poslat.")
         : authService.GetCurrentUser(token);
+}
+
+static bool IsCompanyAdministrator(UserProfileResponse user)
+{
+    return user.Role is UserRole.SystemAdministrator or UserRole.CompanyAdministrator;
+}
+
+static bool IsWorkerUser(UserProfileResponse user)
+{
+    return user.Role == UserRole.User;
+}
+
+static void EnsureEnrollmentDueAtColumn(TrainingDbContext dbContext, string provider)
+{
+    if (IsPostgreSqlProvider(provider))
+    {
+        dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Enrollments\" ADD COLUMN IF NOT EXISTS \"DueAt\" timestamp with time zone NULL;");
+        return;
+    }
+
+    dbContext.Database.ExecuteSqlRaw("IF COL_LENGTH('Enrollments', 'DueAt') IS NULL ALTER TABLE [Enrollments] ADD [DueAt] datetimeoffset NULL;");
 }
 
 static string? NormalizeConnectionString(string? value, string provider)

@@ -6,6 +6,7 @@ public sealed record Enrollment(
     Guid CourseId,
     EnrollmentStatus Status,
     DateTimeOffset EnrolledAt,
+    DateTimeOffset? DueAt,
     DateTimeOffset? CompletedAt,
     int? Score,
     int? DurationMinutes);

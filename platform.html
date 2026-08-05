@@ -135,6 +135,10 @@
                   <span data-i18n="platform.assignCourse">Kurs</span>
                   <select name="courseId" required data-enrollment-course></select>
                 </label>
+                <label>
+                  <span data-i18n="platform.assignDueAt">Rok za polaganje</span>
+                  <input type="date" name="dueAt" />
+                </label>
               </div>
               <button class="button primary" type="submit" data-i18n="platform.assignTraining">Dodeli obuku</button>
               <p class="auth-message" data-enrollment-message></p>
@@ -180,6 +184,10 @@
                 <span data-i18n="platform.workerDepartment">Odeljenje</span>
                 <input type="text" name="department" />
               </label>
+              <label>
+                <span data-i18n="platform.workerPortalPassword">Lozinka za portal</span>
+                <input type="password" name="portalPassword" minlength="5" autocomplete="new-password" />
+              </label>
               <button class="button primary" type="submit" data-i18n="platform.addWorker">Dodaj radnika</button>
               <p class="auth-message" data-worker-message></p>
             </form>
@@ -197,6 +205,7 @@
             <div role="row" class="records-head enrollment-head">
               <span role="columnheader" data-i18n="platform.recordWorker">Radnik</span>
               <span role="columnheader" data-i18n="platform.recordCourse">Kurs</span>
+              <span role="columnheader" data-i18n="platform.enrollmentDueAt">Rok</span>
               <span role="columnheader" data-i18n="platform.enrollmentStatus">Status</span>
               <span role="columnheader" data-i18n="platform.enrollmentScore">Rezultat</span>
             </div>

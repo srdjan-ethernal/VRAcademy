@@ -163,6 +163,7 @@ public sealed class TrainingDbContext : DbContext
             entity.ToTable("Enrollments");
             entity.HasKey(enrollment => enrollment.Id);
             entity.Property(enrollment => enrollment.Status).HasConversion<string>().HasMaxLength(40).IsRequired();
+            entity.Property(enrollment => enrollment.DueAt);
             entity.HasOne(enrollment => enrollment.Worker)
                 .WithMany(worker => worker.Enrollments)
                 .HasForeignKey(enrollment => enrollment.WorkerId)

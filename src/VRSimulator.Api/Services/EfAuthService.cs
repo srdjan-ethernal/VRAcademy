@@ -60,7 +60,7 @@ public sealed class EfAuthService : IAuthService
             Email = normalizedEmail,
             FirstName = request.FirstName.Trim(),
             LastName = request.LastName.Trim(),
-            Role = UserRole.CompanyAdmin,
+            Role = UserRole.CompanyAdministrator,
             CreatedAt = DateTimeOffset.UtcNow,
             PasswordHash = password.Hash,
             PasswordSalt = password.Salt
@@ -129,9 +129,9 @@ public sealed class EfAuthService : IAuthService
             return Result<UserProfileResponse>.Failure(validationError);
         }
 
-        if (request.Role == UserRole.CompanyAdmin)
+        if (request.Role == UserRole.SystemAdministrator || request.Role == UserRole.CompanyAdministrator)
         {
-            return Result<UserProfileResponse>.Failure("Novi korisnik ne moze dobiti CompanyAdmin ulogu kroz ovu rutu.");
+            return Result<UserProfileResponse>.Failure("Novi korisnik kroz ovu rutu moze dobiti samo User ulogu.");
         }
 
         var company = _dbContext.Companies.SingleOrDefault(existingCompany => existingCompany.Id == companyId);

@@ -1308,6 +1308,7 @@ h1 {
 
 .worker-tools input,
 .assignment-form select,
+.assignment-form input,
 .completion-form select,
 .completion-form input {
   width: 100%;
@@ -1326,6 +1327,7 @@ h1 {
 
 .worker-tools input:focus,
 .assignment-form select:focus,
+.assignment-form input:focus,
 .completion-form select:focus,
 .completion-form input:focus {
   border-color: rgba(15, 118, 110, 0.6);
@@ -1378,6 +1380,35 @@ h1 {
   background: var(--teal);
 }
 
+.worker-status-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.worker-status-line strong {
+  color: #31414f;
+  font-size: 12px;
+}
+
+.worker-course-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.worker-course-statuses span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: #31414f;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  padding: 5px 8px;
+}
+
 .certificate-log {
   box-shadow: none;
 }
@@ -1425,7 +1456,7 @@ h1 {
 
 .enrollment-head,
 .enrollment-row {
-  grid-template-columns: 1fr 1.2fr 0.7fr 0.5fr;
+  grid-template-columns: 1fr 1.15fr 0.65fr 0.65fr 0.45fr;
 }
 
 .included-list h3 {

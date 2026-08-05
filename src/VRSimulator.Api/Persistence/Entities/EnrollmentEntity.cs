@@ -14,6 +14,8 @@ public sealed class EnrollmentEntity
 
     public DateTimeOffset EnrolledAt { get; set; }
 
+    public DateTimeOffset? DueAt { get; set; }
+
     public DateTimeOffset? CompletedAt { get; set; }
 
     public int? Score { get; set; }

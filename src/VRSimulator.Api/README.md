@@ -99,11 +99,12 @@ Port moze biti drugaciji ako ga Visual Studio ili `launchSettings.json` dodele a
 3. `GET /api/auth/me`
 4. `GET /api/users`
 5. `POST /api/users`
-6. `GET /api/courses`
-7. `POST /api/workers`
-8. `POST /api/enrollments`
-9. `POST /api/enrollments/{enrollmentId}/complete`
-10. `GET /api/certificates`
+6. `GET /api/dashboard/summary`
+7. `GET /api/courses`
+8. `POST /api/workers`
+9. `POST /api/enrollments`
+10. `POST /api/enrollments/{enrollmentId}/complete`
+11. `GET /api/certificates`
 
 Ako je rezultat kursa najmanje 80, backend automatski izdaje sertifikat koji vazi 12 meseci.
 
@@ -123,7 +124,7 @@ Ako je rezultat kursa najmanje 80, backend automatski izdaje sertifikat koji vaz
 }
 ```
 
-Registracija kreira korisnika i kompaniju ako kompanija jos ne postoji. Prvi korisnik dobija ulogu `CompanyAdmin`.
+Registracija kreira korisnika i kompaniju ako kompanija jos ne postoji. Prvi korisnik dobija ulogu `CompanyAdministrator`.
 
 ### Login
 
@@ -168,15 +169,15 @@ Body:
 
 ```json
 {
-  "email": "instructor@safetysim.test",
+  "email": "worker@safetysim.test",
   "password": "TestPass123",
-  "firstName": "Ivan",
-  "lastName": "Instruktor",
-  "role": "Instructor"
+  "firstName": "Pera",
+  "lastName": "Peric",
+  "role": "User"
 }
 ```
 
-Samo `CompanyAdmin` moze dodati korisnika. Kroz ovu rutu mogu se dodati `Instructor` i `Employee` korisnici. `CompanyAdmin` se kreira registracijom kompanije.
+Samo `CompanyAdministrator` ili `SystemAdministrator` moze dodati korisnika za kompaniju. Kroz ovu rutu se dodaje obican `User`; administratorske uloge se kreiraju posebnim administrativnim tokom.
 
 ### Kreiranje radnika u tenant-u
 
@@ -200,3 +201,25 @@ Body:
 ```
 
 Kompanija radnika se uzima iz tokena ulogovanog korisnika.
+
+### Dodela kursa radniku
+
+`POST /api/enrollments`
+
+Header:
+
+```text
+Authorization: Bearer <accessToken>
+```
+
+Body:
+
+```json
+{
+  "workerId": "00000000-0000-0000-0000-000000000000",
+  "courseId": "00000000-0000-0000-0000-000000000000",
+  "dueAt": "2026-09-05T21:59:59.000Z"
+}
+```
+
+`dueAt` je opcioni rok do kada zaposleni treba da polozi kurs. Dodelu kurseva i pregled svih statusa vidi samo `CompanyAdministrator` ili `SystemAdministrator`. Obican `User` vidi samo svoje kurseve kroz `GET /api/worker-portal/me`.

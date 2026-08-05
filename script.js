@@ -220,7 +220,7 @@
     },
     auth: {
       eyebrow: "Platforma za obuku",
-      title: "Prijava za kompanije i instruktore",
+      title: "Prijava za kompanije i zaposlene",
       copy: "Korisnici se prijavljuju u okviru svoje kompanije, prate obuke radnika i cuvaju evidenciju sertifikata.",
       panelLabel: "Prijava i registracija",
       tabsLabel: "Izbor forme",
@@ -241,7 +241,7 @@
       adminLabel: "Administrator kompanije",
       adminTitle: "Jedna kompanija, vise korisnika",
       adminCopy:
-        "Administrator dodaje instruktore i radnike, dodeljuje kurseve i prati status obuke za celu organizaciju.",
+        "Administrator dodaje zaposlene, dodeljuje kurseve i prati status obuke za celu organizaciju.",
       workerLabel: "Radnici i evidencija",
       workerTitle: "Obuke i sertifikati na jednom mestu",
       workerCopy:
@@ -289,6 +289,8 @@
       certificatesLink: "Sertifikati",
       workersLabel: "Radnici",
       workersTitle: "Status obuke",
+      workerAssignedSummary: "{passed}/{total} polozeno",
+      workerNoAssignedTraining: "Nema dodeljenih kurseva",
       recordsLabel: "Evidencija",
       recordsTitle: "Poslednji sertifikati",
       recordWorker: "Radnik",
@@ -301,9 +303,12 @@
       workerEmail: "Email",
       workerEmployeeNumber: "Broj zaposlenog",
       workerDepartment: "Odeljenje",
+      workerPortalPassword: "Lozinka za portal",
       addWorker: "Dodaj radnika",
       addWorkerLoginRequired: "Prijavite se da biste dodali radnika.",
       addWorkerSuccess: "Radnik je dodat.",
+      addWorkerWithUserSuccess: "Radnik i korisnicki nalog su dodati.",
+      addWorkerUserWarning: "Radnik je dodat, ali korisnicki nalog nije kreiran: {error}",
       addWorkerWorking: "Dodavanje radnika...",
       workerSearch: "Pretraga radnika",
       importWorkers: "Import CSV",
@@ -312,12 +317,14 @@
       importWorkersHint: "CSV kolone: firstName,lastName,email,employeeNumber,department",
       assignWorker: "Radnik",
       assignCourse: "Kurs",
+      assignDueAt: "Rok za polaganje",
       assignTraining: "Dodeli obuku",
       assignTrainingLoginRequired: "Prijavite se da biste dodelili obuku.",
       assignTrainingWorking: "Dodeljivanje obuke...",
       assignTrainingSuccess: "Obuka je dodeljena.",
       enrollmentsLabel: "Obuke",
       enrollmentsTitle: "Dodeljene obuke",
+      enrollmentDueAt: "Rok",
       enrollmentStatus: "Status",
       enrollmentScore: "Rezultat",
       enrollmentEmpty: "Nema dodeljenih obuka.",
@@ -360,6 +367,7 @@
       linkedWorker: "Prijavljeni ste kao {name}.",
       missingWorker: "Nije pronadjen worker zapis sa email adresom prijavljenog korisnika.",
       apiFallback: "API nije dostupan, prikazan je demo radnicki portal.",
+      dueDateLabel: "Rok",
       startTraining: "Pokreni obuku",
       startWorking: "Pokretanje obuke...",
       startSuccess: "Obuka je pokrenuta.",
@@ -595,7 +603,7 @@
     },
     auth: {
       eyebrow: "Training platform",
-      title: "Sign in for companies and instructors",
+      title: "Sign in for companies and employees",
       copy: "Users sign in within their company, track worker training, and keep certificate records.",
       panelLabel: "Sign in and registration",
       tabsLabel: "Form selection",
@@ -615,7 +623,7 @@
       adminLabel: "Company administrator",
       adminTitle: "One company, multiple users",
       adminCopy:
-        "The administrator adds instructors and workers, assigns courses, and tracks training status for the whole organization.",
+        "The administrator adds employees, assigns courses, and tracks training status for the whole organization.",
       workerLabel: "Workers and records",
       workerTitle: "Training and certificates in one place",
       workerCopy:
@@ -663,6 +671,8 @@
       certificatesLink: "Certificates",
       workersLabel: "Workers",
       workersTitle: "Training status",
+      workerAssignedSummary: "{passed}/{total} passed",
+      workerNoAssignedTraining: "No assigned courses",
       recordsLabel: "Records",
       recordsTitle: "Latest certificates",
       recordWorker: "Worker",
@@ -675,9 +685,12 @@
       workerEmail: "Email",
       workerEmployeeNumber: "Employee number",
       workerDepartment: "Department",
+      workerPortalPassword: "Portal password",
       addWorker: "Add worker",
       addWorkerLoginRequired: "Sign in to add a worker.",
       addWorkerSuccess: "The worker has been added.",
+      addWorkerWithUserSuccess: "The worker and user account have been added.",
+      addWorkerUserWarning: "The worker was added, but the user account was not created: {error}",
       addWorkerWorking: "Adding worker...",
       workerSearch: "Worker search",
       importWorkers: "CSV import",
@@ -686,12 +699,14 @@
       importWorkersHint: "CSV columns: firstName,lastName,email,employeeNumber,department",
       assignWorker: "Worker",
       assignCourse: "Course",
+      assignDueAt: "Due date",
       assignTraining: "Assign training",
       assignTrainingLoginRequired: "Sign in to assign training.",
       assignTrainingWorking: "Assigning training...",
       assignTrainingSuccess: "Training has been assigned.",
       enrollmentsLabel: "Training",
       enrollmentsTitle: "Assigned training",
+      enrollmentDueAt: "Due date",
       enrollmentStatus: "Status",
       enrollmentScore: "Score",
       enrollmentEmpty: "No assigned training.",
@@ -734,6 +749,7 @@
       linkedWorker: "Signed in as {name}.",
       missingWorker: "No worker record was found for the signed-in email address.",
       apiFallback: "The API is unavailable, so a demo worker portal is shown.",
+      dueDateLabel: "Due",
       startTraining: "Start training",
       startWorking: "Starting training...",
       startSuccess: "Training has been started.",
@@ -939,6 +955,7 @@ const supportedLanguages = ["sr", "en"];
 const scenarioGrid = document.querySelector("[data-scenario-grid]");
 const header = document.querySelector("[data-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
+const headerActionLink = document.querySelector(".header-action");
 const languageButtons = document.querySelectorAll("[data-language-option]");
 const metaDescription = document.querySelector('meta[name="description"]');
 const scenarioCount = document.querySelector("[data-scenario-count]");
@@ -1073,6 +1090,88 @@ function saveAuth(auth) {
 
 function clearAuth() {
   localStorage.removeItem(authStorageKey);
+}
+
+function normalizeUserRole(role) {
+  const normalizedRole = String(role || "").toLowerCase();
+
+  if (normalizedRole === "systemadministrator" || normalizedRole === "systemadmin") {
+    return "systemAdministrator";
+  }
+
+  if (normalizedRole === "companyadministrator" || normalizedRole === "companyadmin") {
+    return "companyAdministrator";
+  }
+
+  if (normalizedRole === "user" || normalizedRole === "employee" || normalizedRole === "instructor") {
+    return "user";
+  }
+
+  return "";
+}
+
+function getStoredUserRole() {
+  return normalizeUserRole(getField(getField(getStoredAuth(), "user"), "role"));
+}
+
+function isAdministratorRole(role) {
+  return role === "systemAdministrator" || role === "companyAdministrator";
+}
+
+function isWorkerRole(role) {
+  return role === "user";
+}
+
+function getDefaultPageForRole(role) {
+  return isWorkerRole(role) ? "worker.html" : "platform.html";
+}
+
+function updateNavigationVisibility() {
+  const role = getStoredUserRole();
+  const isLoggedIn = Boolean(getAccessToken());
+
+  document.querySelectorAll('a[href="platform.html"]').forEach((link) => {
+    link.hidden = !isLoggedIn || !isAdministratorRole(role);
+  });
+
+  document.querySelectorAll('a[href="worker.html"]').forEach((link) => {
+    link.hidden = !isLoggedIn || !isWorkerRole(role);
+  });
+
+  if (!headerActionLink) {
+    return;
+  }
+
+  if (isLoggedIn) {
+    headerActionLink.href = getDefaultPageForRole(role);
+    headerActionLink.removeAttribute("data-i18n");
+    headerActionLink.removeAttribute("aria-current");
+    headerActionLink.textContent = isWorkerRole(role)
+      ? translations[currentLanguage].nav.workerPortal
+      : translations[currentLanguage].nav.platform;
+    return;
+  }
+
+  headerActionLink.href = "login.html";
+  headerActionLink.dataset.i18n = "nav.login";
+  headerActionLink.textContent = translations[currentLanguage].nav.login;
+}
+
+function enforcePageAccess() {
+  const isLoggedIn = Boolean(getAccessToken());
+  const role = getStoredUserRole();
+
+  if (pageName === "platform" && (!isLoggedIn || !isAdministratorRole(role))) {
+    window.location.href = isWorkerRole(role) ? "worker.html" : "login.html";
+    return false;
+  }
+
+  if (pageName === "worker" && (!isLoggedIn || !isWorkerRole(role))) {
+    window.location.href = isAdministratorRole(role) ? "platform.html" : "login.html";
+    return false;
+  }
+
+  return true;
 }
 
 function getAccessToken() {
@@ -1446,7 +1545,7 @@ function exportWorkersReport() {
 function exportEnrollmentsReport() {
   const data = getReportData();
   const rows = [
-    ["Worker", "Course", "Status", "Score", "Duration minutes", "Enrolled at", "Completed at"],
+    ["Worker", "Course", "Status", "Score", "Duration minutes", "Enrolled at", "Due at", "Completed at"],
     ...(data.enrollments || []).map((enrollment) => {
       const worker = data.workerMap.get(String(getField(enrollment, "workerId")));
       const course = data.courseMap.get(String(getField(enrollment, "courseId")));
@@ -1458,6 +1557,7 @@ function exportEnrollmentsReport() {
         getField(enrollment, "score") ?? "",
         getField(enrollment, "durationMinutes") ?? "",
         formatShortDate(getField(enrollment, "enrolledAt"), currentLanguage),
+        formatShortDate(getField(enrollment, "dueAt"), currentLanguage),
         formatShortDate(getField(enrollment, "completedAt"), currentLanguage),
       ];
     }),
@@ -1622,11 +1722,15 @@ function renderPlatform(language, apiData = null) {
     const haystack = `${getWorkerName(worker)} ${getWorkerDetail(worker, language)}`.toLowerCase();
     return haystack.includes(workerSearchTerm.toLowerCase());
   });
+  const summary = apiData?.summary;
 
-  setPlatformMetric("courses", courses.length);
-  setPlatformMetric("workers", workers.length);
-  setPlatformMetric("certificates", certificates.length);
-  setPlatformMetric("score", getAverageScore(enrollments));
+  setPlatformMetric("courses", getField(summary, "courseCount") ?? courses.length);
+  setPlatformMetric("workers", getField(summary, "workerCount") ?? workers.length);
+  setPlatformMetric("certificates", getField(summary, "activeCertificateCount") ?? certificates.length);
+  setPlatformMetric(
+    "score",
+    summary ? `${Math.round(Number(getField(summary, "averageScore") || 0))}%` : getAverageScore(enrollments),
+  );
   renderEnrollmentSelectors(workers, courses, language);
   renderCompletionSelector(enrollments, workerMap, courseMap, language);
   renderNotifications(
@@ -1664,15 +1768,48 @@ function renderPlatform(language, apiData = null) {
   workerList.innerHTML = filteredWorkers
     .map((worker) => {
       const isDemoWorker = "progress" in worker;
-      const progress = isDemoWorker ? worker.progress : 0;
-      const status = progress === 100 ? dictionary.statusCompleted : isDemoWorker ? dictionary.statusActive : dictionary.statusReady;
+      const workerId = String(getField(worker, "id"));
+      const workerEnrollments = isDemoWorker
+        ? []
+        : enrollments.filter((enrollment) => String(getField(enrollment, "workerId")) === workerId);
+      const passedCount = workerEnrollments.filter((enrollment) => String(getField(enrollment, "status")).toLowerCase() === "passed")
+        .length;
+      const progress = isDemoWorker
+        ? worker.progress
+        : workerEnrollments.length
+          ? Math.round((passedCount / workerEnrollments.length) * 100)
+          : 0;
+      const status = progress === 100 && workerEnrollments.length
+        ? dictionary.statusCompleted
+        : isDemoWorker || workerEnrollments.some((enrollment) => String(getField(enrollment, "status")).toLowerCase() === "inprogress")
+          ? dictionary.statusActive
+          : dictionary.statusReady;
+      const assignedSummary = workerEnrollments.length
+        ? dictionary.workerAssignedSummary
+            .replace("{passed}", String(passedCount))
+            .replace("{total}", String(workerEnrollments.length))
+        : dictionary.workerNoAssignedTraining;
+      const courseStatusMarkup = workerEnrollments.length
+        ? `<div class="worker-course-statuses">
+            ${workerEnrollments
+              .map((enrollment) => {
+                const course = courseMap.get(String(getField(enrollment, "courseId")));
+                return `<span>${getCourseTitle(course, language) || "-"}: ${getEnrollmentStatusLabel(getField(enrollment, "status"), language)}</span>`;
+              })
+              .join("")}
+          </div>`
+        : `<div class="worker-course-statuses"><span>${dictionary.workerNoAssignedTraining}</span></div>`;
 
       return `
         <article class="worker-item">
           <h3>${getWorkerName(worker)}</h3>
           <p>${getWorkerDetail(worker, language)}</p>
           <div class="worker-progress" aria-hidden="true"><span style="width: ${progress}%"></span></div>
-          <span class="status-pill">${status}</span>
+          <div class="worker-status-line">
+            <span class="status-pill">${status}</span>
+            <strong>${assignedSummary}</strong>
+          </div>
+          ${courseStatusMarkup}
         </article>
       `;
     })
@@ -1710,18 +1847,20 @@ function renderPlatform(language, apiData = null) {
             const worker = workerMap.get(String(getField(enrollment, "workerId")));
             const course = courseMap.get(String(getField(enrollment, "courseId")));
             const score = getField(enrollment, "score");
+            const dueAt = formatShortDate(getField(enrollment, "dueAt"), language);
 
             return `
               <div role="row" class="record-row enrollment-row">
                 <span role="cell">${getWorkerName(worker)}</span>
                 <span role="cell">${getCourseTitle(course, language) || "-"}</span>
+                <span role="cell">${dueAt}</span>
                 <span role="cell">${getEnrollmentStatusLabel(getField(enrollment, "status"), language)}</span>
                 <span role="cell">${score ?? "-"}</span>
               </div>
             `;
           })
           .join("")
-      : `<div role="row" class="record-row enrollment-row"><span role="cell">${dictionary.enrollmentEmpty}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
+      : `<div role="row" class="record-row enrollment-row"><span role="cell">${dictionary.enrollmentEmpty}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
   }
 }
 
@@ -1760,6 +1899,7 @@ function getDemoWorkerPortalData() {
         status: "Passed",
         score: 92,
         durationMinutes: 34,
+        dueAt: "2026-07-15T00:00:00Z",
         completedAt: "2026-06-27T00:00:00Z",
       },
       {
@@ -1768,6 +1908,7 @@ function getDemoWorkerPortalData() {
         status: "InProgress",
         score: null,
         durationMinutes: 0,
+        dueAt: "2026-08-20T00:00:00Z",
         completedAt: null,
       },
       {
@@ -1776,6 +1917,7 @@ function getDemoWorkerPortalData() {
         status: "Enrolled",
         score: null,
         durationMinutes: 0,
+        dueAt: "2026-09-05T00:00:00Z",
         completedAt: null,
       },
     ],
@@ -1827,6 +1969,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
           const course = findCourseForRecord(courses, getField(enrollment, "courseId"));
           const score = getField(enrollment, "score");
           const duration = getField(enrollment, "durationMinutes") || getField(course, "demoDuration") || 35;
+          const dueAt = formatShortDate(getField(enrollment, "dueAt"), language);
           const status = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
           const enrollmentId = getField(enrollment, "id");
           const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
@@ -1860,7 +2003,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
               <img src="${getCourseImage(course)}" alt="${getCourseAlt(course, language)}" loading="lazy" />
               <div>
                 <h3>${getCourseTitle(course, language) || "-"}</h3>
-                <p>${status} · ${score ?? "-"}% ${translations[language].platform.score} · ${duration} ${translations[language].platform.duration}</p>
+                <p>${status} · ${dictionary.dueDateLabel}: ${dueAt} · ${score ?? "-"}% ${translations[language].platform.score} · ${duration} ${translations[language].platform.duration}</p>
               </div>
               ${actionMarkup}
             </article>
@@ -1898,7 +2041,12 @@ async function loadWorkerPortalData(language) {
 
   const auth = getStoredAuth();
   if (!auth) {
-    renderWorkerPortal(language, null, translations[language].workerPortal.loginPrompt);
+    window.location.href = "login.html";
+    return;
+  }
+
+  if (!isWorkerRole(getStoredUserRole())) {
+    window.location.href = "platform.html";
     return;
   }
 
@@ -1975,29 +2123,39 @@ async function loadPlatformData(language) {
   if (!auth) {
     platformDataLoadedFromApi = false;
     currentPlatformData = null;
-    setPlatformSession(translations[language].platform.demoSession, false);
-    renderPlatform(language);
+    window.location.href = "login.html";
     return;
   }
 
-  const [profileResult, coursesResult, workersResult, certificatesResult, enrollmentsResult] = await Promise.all([
+  if (!isAdministratorRole(getStoredUserRole())) {
+    window.location.href = "worker.html";
+    return;
+  }
+
+  const [profileResult, coursesResult, workersResult, certificatesResult, enrollmentsResult, summaryResult] = await Promise.all([
     apiRequest("/api/auth/me", { auth: true }),
     apiRequest("/api/courses"),
     apiRequest("/api/workers", { auth: true }),
     apiRequest("/api/certificates", { auth: true }),
     apiRequest("/api/enrollments", { auth: true }),
+    apiRequest("/api/dashboard/summary", { auth: true }),
   ]);
 
   if (!profileResult.ok) {
     clearAuth();
     platformDataLoadedFromApi = false;
     currentPlatformData = null;
-    setPlatformSession(translations[language].platform.apiFallback, false);
-    renderPlatform(language);
+    window.location.href = "login.html";
     return;
   }
 
   const user = profileResult.data;
+  const role = normalizeUserRole(getField(user, "role"));
+  if (!isAdministratorRole(role)) {
+    window.location.href = "worker.html";
+    return;
+  }
+
   const fullName = `${getField(user, "firstName") || ""} ${getField(user, "lastName") || ""}`.trim();
   const companyName = getField(user, "companyName") || "-";
   const liveSession = translations[language].platform.liveSession
@@ -2019,6 +2177,7 @@ async function loadPlatformData(language) {
     workers: workersResult.data || [],
     certificates: certificatesResult.data || [],
     enrollments: enrollmentsResult.data || [],
+    summary: summaryResult.ok ? summaryResult.data : null,
   };
   renderPlatform(language, {
     ...currentPlatformData,
@@ -2323,6 +2482,7 @@ function applyTranslations(language) {
     button.setAttribute("aria-pressed", String(isActive));
   });
 
+  updateNavigationVisibility();
   localStorage.setItem("siteLanguage", language);
   renderScenarios(language);
   loadPlatformData(language);
@@ -2386,18 +2546,19 @@ authPanels.forEach((form) => {
 
     saveAuth(result.data);
     setAuthMessage(isRegisterForm ? dictionary.registerSuccess : dictionary.loginSuccess, "success");
-    window.location.href = "platform.html";
+    window.location.href = getDefaultPageForRole(normalizeUserRole(getField(getField(result.data, "user"), "role")));
   });
 });
 
 platformLogoutButton?.addEventListener("click", () => {
   clearAuth();
+  updateNavigationVisibility();
   platformDataLoadedFromApi = false;
   currentPlatformData = null;
   setWorkerMessage("");
   setEnrollmentMessage("");
   setCompletionMessage("");
-  loadPlatformData(currentLanguage);
+  window.location.href = "login.html";
 });
 
 document.addEventListener("click", (event) => {
@@ -2439,6 +2600,7 @@ workerForm?.addEventListener("submit", async (event) => {
 
   const formData = new FormData(workerForm);
   const submitButton = workerForm.querySelector('button[type="submit"]');
+  const portalPassword = formData.get("portalPassword")?.toString().trim();
   const request = {
     firstName: formData.get("firstName")?.toString().trim(),
     lastName: formData.get("lastName")?.toString().trim(),
@@ -2463,8 +2625,37 @@ workerForm?.addEventListener("submit", async (event) => {
     return;
   }
 
+  if (portalPassword && request.email) {
+    const userResult = await apiRequest("/api/users", {
+      method: "POST",
+      auth: true,
+      body: {
+        email: request.email,
+        password: portalPassword,
+        firstName: request.firstName,
+        lastName: request.lastName,
+        role: "User",
+      },
+    });
+
+    if (!userResult.ok) {
+      workerForm.reset();
+      setWorkerMessage(
+        translations[currentLanguage].platform.addWorkerUserWarning.replace("{error}", userResult.error || "-"),
+        "error",
+      );
+      loadPlatformData(currentLanguage);
+      return;
+    }
+  }
+
   workerForm.reset();
-  setWorkerMessage(translations[currentLanguage].platform.addWorkerSuccess, "success");
+  setWorkerMessage(
+    portalPassword && request.email
+      ? translations[currentLanguage].platform.addWorkerWithUserSuccess
+      : translations[currentLanguage].platform.addWorkerSuccess,
+    "success",
+  );
   loadPlatformData(currentLanguage);
 });
 
@@ -2536,9 +2727,11 @@ enrollmentForm?.addEventListener("submit", async (event) => {
 
   const formData = new FormData(enrollmentForm);
   const submitButton = enrollmentForm.querySelector('button[type="submit"]');
+  const dueAtValue = formData.get("dueAt")?.toString();
   const request = {
     workerId: formData.get("workerId")?.toString(),
     courseId: formData.get("courseId")?.toString(),
+    dueAt: dueAtValue ? new Date(`${dueAtValue}T23:59:59`).toISOString() : null,
   };
 
   setEnrollmentMessage(translations[currentLanguage].platform.assignTrainingWorking);
@@ -2708,7 +2901,10 @@ function updateHeaderState() {
   header.classList.toggle("is-scrolled", window.scrollY > 12);
 }
 
-applyTranslations(getInitialLanguage());
+updateNavigationVisibility();
+if (enforcePageAccess()) {
+  applyTranslations(getInitialLanguage());
+}
 updateHeaderState();
 
 window.addEventListener("scroll", updateHeaderState, { passive: true });
@@ -2720,6 +2916,7 @@ navToggle.addEventListener("click", () => {
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
     applyTranslations(button.dataset.languageOption);
+    updateNavigationVisibility();
     header.classList.remove("is-open");
   });
 });

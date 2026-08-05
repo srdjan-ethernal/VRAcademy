@@ -26,6 +26,8 @@ Stranice:
 - Pocetna: `index.html`
 - Cene: `pricing.html`
 - Sertifikati: `certificates.html`
+- Platforma za administratore kompanije: `platform.html`
+- Portal zaposlenog: `worker.html`
 
 ## Backend
 
@@ -55,6 +57,7 @@ Pocetne rute:
 - `GET /api/users`
 - `POST /api/users`
 - `GET /api/companies`
+- `GET /api/dashboard/summary`
 - `GET /api/scenarios`
 - `GET /api/courses`
 - `GET /api/workers`
@@ -64,6 +67,8 @@ Pocetne rute:
 - `GET /api/certificates`
 
 Korisnik se registruje uz kompaniju. Radnici, upisi i sertifikati se citaju i menjaju samo u okviru kompanije ulogovanog korisnika preko Bearer tokena. Backend podrazumevano koristi SQL Server kroz Entity Framework Core, a za demo hosting podrzan je Azure SQL preko konfiguracije. Sledeci korak je ASP.NET Core Identity ili Microsoft Entra ID prema tipu korisnika.
+
+Uloge su `SystemAdministrator`, `CompanyAdministrator` i `User`. Neulogovani posetioci ne vide interne stranice `Platforma` i `Moj portal`; `CompanyAdministrator` upravlja zaposlenima i dodeljenim kursevima, a `User` vidi samo svoje zakazane i prethodne obuke kroz Moj portal. Kada administrator dodaje radnika, moze odmah uneti i lozinku za portal, cime se za tog zaposlenog kreira `User` nalog sa istom email adresom.
 
 Za lokalnu bazu instalirati SQL Server Express LocalDB ili podesiti `ConnectionStrings:TrainingDatabase` na postojeci SQL Server. Migracije su u `src/VRSimulator.Api/Persistence/Migrations`.
 

@@ -2,8 +2,11 @@ namespace VRSimulator.Api.Domain;
 
 public enum UserRole
 {
-    CompanyAdmin,
-    Instructor,
-    Employee
+    SystemAdministrator,
+    CompanyAdministrator,
+    User,
+    CompanyAdmin = CompanyAdministrator,
+    Instructor = User,
+    Employee = User
 }
 

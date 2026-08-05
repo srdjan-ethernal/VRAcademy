@@ -52,7 +52,7 @@ public static class DemoAccountSeeder
             Email = email,
             FirstName = configuration["DemoAccount:FirstName"]?.Trim() ?? "Srdjan",
             LastName = configuration["DemoAccount:LastName"]?.Trim() ?? "Vukmirovic",
-            Role = UserRole.CompanyAdmin,
+            Role = UserRole.CompanyAdministrator,
             CreatedAt = DateTimeOffset.UtcNow,
             PasswordHash = password.Hash,
             PasswordSalt = password.Salt

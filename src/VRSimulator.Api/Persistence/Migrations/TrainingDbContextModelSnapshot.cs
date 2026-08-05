@@ -278,6 +278,9 @@ namespace VRSimulator.Api.Persistence.Migrations
                     b.Property<int?>("DurationMinutes")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset?>("DueAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<DateTimeOffset>("EnrolledAt")
                         .HasColumnType("datetimeoffset");
 

@@ -143,7 +143,8 @@ public sealed class EfTrainingRepository : ITrainingRepository
             WorkerId = request.WorkerId,
             CourseId = request.CourseId,
             Status = EnrollmentStatus.Enrolled,
-            EnrolledAt = DateTimeOffset.UtcNow
+            EnrolledAt = DateTimeOffset.UtcNow,
+            DueAt = request.DueAt
         };
 
         _dbContext.Enrollments.Add(enrollment);
@@ -227,6 +228,81 @@ public sealed class EfTrainingRepository : ITrainingRepository
         return Result<EnrollmentCompletionResponse>.Success(new EnrollmentCompletionResponse(
             ToDomain(enrollment),
             certificate is null ? null : ToDomain(certificate)));
+    }
+
+    public DashboardSummaryResponse GetDashboardSummary(Guid companyId)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var expiringUntil = now.AddDays(30);
+        var enrollmentStatusCounts = _dbContext.Enrollments
+            .AsNoTracking()
+            .Include(enrollment => enrollment.Worker)
+            .Where(enrollment => enrollment.Worker != null && enrollment.Worker.CompanyId == companyId)
+            .GroupBy(enrollment => enrollment.Status)
+            .Select(group => new { Status = group.Key, Count = group.Count() })
+            .ToList();
+        var certificateStatusCounts = _dbContext.Certificates
+            .AsNoTracking()
+            .Include(certificate => certificate.Worker)
+            .Where(certificate => certificate.Worker != null && certificate.Worker.CompanyId == companyId)
+            .GroupBy(certificate => certificate.Status)
+            .Select(group => new { Status = group.Key, Count = group.Count() })
+            .ToList();
+        var scoredEnrollments = _dbContext.Enrollments
+            .AsNoTracking()
+            .Include(enrollment => enrollment.Worker)
+            .Where(enrollment =>
+                enrollment.Worker != null &&
+                enrollment.Worker.CompanyId == companyId &&
+                enrollment.Score.HasValue)
+            .Select(enrollment => enrollment.Score!.Value)
+            .ToList();
+
+        var passedEnrollmentCount = enrollmentStatusCounts
+            .SingleOrDefault(status => status.Status == EnrollmentStatus.Passed)?.Count ?? 0;
+        var failedEnrollmentCount = enrollmentStatusCounts
+            .SingleOrDefault(status => status.Status == EnrollmentStatus.Failed)?.Count ?? 0;
+        var completedEnrollmentCount = passedEnrollmentCount + failedEnrollmentCount;
+        var averageScore = scoredEnrollments.Count == 0 ? 0 : Math.Round(scoredEnrollments.Average(), 1);
+        var passRate = completedEnrollmentCount == 0 ? 0 : Math.Round((double)passedEnrollmentCount / completedEnrollmentCount * 100, 1);
+
+        return new DashboardSummaryResponse(
+            _dbContext.Courses.Count(),
+            _dbContext.Workers.Count(worker => worker.CompanyId == companyId),
+            enrollmentStatusCounts.Sum(status => status.Count),
+            enrollmentStatusCounts
+                .Where(status => status.Status is EnrollmentStatus.Enrolled or EnrollmentStatus.InProgress)
+                .Sum(status => status.Count),
+            passedEnrollmentCount,
+            failedEnrollmentCount,
+            certificateStatusCounts.Sum(status => status.Count),
+            _dbContext.Certificates.Count(certificate =>
+                certificate.Worker != null &&
+                certificate.Worker.CompanyId == companyId &&
+                certificate.Status == CertificateStatus.Active &&
+                certificate.ValidUntil >= now),
+            _dbContext.Certificates.Count(certificate =>
+                certificate.Worker != null &&
+                certificate.Worker.CompanyId == companyId &&
+                certificate.Status == CertificateStatus.Active &&
+                certificate.ValidUntil >= now &&
+                certificate.ValidUntil <= expiringUntil),
+            _dbContext.Certificates.Count(certificate =>
+                certificate.Worker != null &&
+                certificate.Worker.CompanyId == companyId &&
+                (certificate.Status == CertificateStatus.Expired || certificate.ValidUntil < now)),
+            averageScore,
+            passRate,
+            Enum.GetValues<EnrollmentStatus>()
+                .Select(status => new EnrollmentStatusCountResponse(
+                    status,
+                    enrollmentStatusCounts.SingleOrDefault(item => item.Status == status)?.Count ?? 0))
+                .ToList(),
+            Enum.GetValues<CertificateStatus>()
+                .Select(status => new CertificateStatusCountResponse(
+                    status,
+                    certificateStatusCounts.SingleOrDefault(item => item.Status == status)?.Count ?? 0))
+                .ToList());
     }
 
     public IReadOnlyCollection<Certificate> GetCertificates(Guid companyId)
@@ -342,6 +418,7 @@ public sealed class EfTrainingRepository : ITrainingRepository
             enrollment.CourseId,
             enrollment.Status,
             enrollment.EnrolledAt,
+            enrollment.DueAt,
             enrollment.CompletedAt,
             enrollment.Score,
             enrollment.DurationMinutes);

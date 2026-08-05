@@ -126,6 +126,7 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
                 request.CourseId,
                 EnrollmentStatus.Enrolled,
                 DateTimeOffset.UtcNow,
+                request.DueAt,
                 null,
                 null,
                 null);
@@ -219,6 +220,25 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
         }
     }
 
+    public DashboardSummaryResponse GetDashboardSummary(Guid companyId)
+    {
+        lock (_lock)
+        {
+            var workers = _workers
+                .Where(worker => worker.CompanyId == companyId)
+                .ToList();
+            var workerIds = workers.Select(worker => worker.Id).ToHashSet();
+            var enrollments = _enrollments
+                .Where(enrollment => workerIds.Contains(enrollment.WorkerId))
+                .ToList();
+            var certificates = _certificates
+                .Where(certificate => workerIds.Contains(certificate.WorkerId))
+                .ToList();
+
+            return CreateDashboardSummary(_courses.Count, workers.Count, enrollments, certificates);
+        }
+    }
+
     public IReadOnlyCollection<Certificate> GetCertificates(Guid companyId)
     {
         lock (_lock)
@@ -284,6 +304,56 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
     private bool WorkerBelongsToCompany(Guid workerId, Guid companyId)
     {
         return _workers.Any(worker => worker.Id == workerId && worker.CompanyId == companyId);
+    }
+
+    private static DashboardSummaryResponse CreateDashboardSummary(
+        int courseCount,
+        int workerCount,
+        IReadOnlyCollection<Enrollment> enrollments,
+        IReadOnlyCollection<Certificate> certificates)
+    {
+        var activeEnrollmentCount = enrollments.Count(enrollment =>
+            enrollment.Status is EnrollmentStatus.Enrolled or EnrollmentStatus.InProgress);
+        var passedEnrollmentCount = enrollments.Count(enrollment => enrollment.Status == EnrollmentStatus.Passed);
+        var failedEnrollmentCount = enrollments.Count(enrollment => enrollment.Status == EnrollmentStatus.Failed);
+        var scoredEnrollments = enrollments
+            .Where(enrollment => enrollment.Score.HasValue)
+            .ToList();
+        var averageScore = scoredEnrollments.Count == 0 ? 0 : Math.Round(scoredEnrollments.Average(enrollment => enrollment.Score!.Value), 1);
+        var completedEnrollmentCount = passedEnrollmentCount + failedEnrollmentCount;
+        var passRate = completedEnrollmentCount == 0 ? 0 : Math.Round((double)passedEnrollmentCount / completedEnrollmentCount * 100, 1);
+        var now = DateTimeOffset.UtcNow;
+        var expiringUntil = now.AddDays(30);
+        var activeCertificateCount = certificates.Count(certificate =>
+            certificate.Status == CertificateStatus.Active &&
+            certificate.ValidUntil >= now);
+        var expiringCertificateCount = certificates.Count(certificate =>
+            certificate.Status == CertificateStatus.Active &&
+            certificate.ValidUntil >= now &&
+            certificate.ValidUntil <= expiringUntil);
+        var expiredCertificateCount = certificates.Count(certificate =>
+            certificate.Status == CertificateStatus.Expired ||
+            certificate.ValidUntil < now);
+
+        return new DashboardSummaryResponse(
+            courseCount,
+            workerCount,
+            enrollments.Count,
+            activeEnrollmentCount,
+            passedEnrollmentCount,
+            failedEnrollmentCount,
+            certificates.Count,
+            activeCertificateCount,
+            expiringCertificateCount,
+            expiredCertificateCount,
+            averageScore,
+            passRate,
+            Enum.GetValues<EnrollmentStatus>()
+                .Select(status => new EnrollmentStatusCountResponse(status, enrollments.Count(enrollment => enrollment.Status == status)))
+                .ToList(),
+            Enum.GetValues<CertificateStatus>()
+                .Select(status => new CertificateStatusCountResponse(status, certificates.Count(certificate => certificate.Status == status)))
+                .ToList());
     }
 
     private static string CreateCertificateNumber(string courseCode)
