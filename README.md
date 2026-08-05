@@ -132,11 +132,13 @@ AZURE_WEBAPP_PUBLISH_PROFILE=<sadrzaj publish profile fajla iz Azure App Service
 Potrebno u Azure App Service Configuration / Application settings:
 
 ```text
-DATABASE_URL=postgresql://<user>:<password>@<host>/<database>?sslmode=require
-Database__Provider=PostgreSql
+ConnectionStrings__TrainingDatabase=Server=tcp:<server>.database.windows.net,1433;Initial Catalog=<database>;Persist Security Info=False;User ID=<user>;Password=<password>;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+Database__Provider=SqlServer
 Database__EnsureCreated=true
 Database__FallbackToInMemory=false
 Cors__AllowAnyOrigin=true
 ```
+
+Za Azure SQL free bazu koristi se ADO.NET connection string iz Azure SQL Database stranice. U connection string-u obavezno zameniti `<password>` stvarnom lozinkom baze. Ako App Service ne moze da pristupi bazi, u Azure SQL Server Networking ukljuciti pristup za Azure services ili dodati odgovarajuce firewall pravilo.
 
 Ako se koristi publish profile deployment, u Azure App Service mora biti omogucen basic authentication za publishing profile. Za Linux App Service, ako Azure ne dozvoli download publish profile-a, dodati app setting `WEBSITE_WEBDEPLOY_USE_SCM=true`, sacuvati i zatim ponovo preuzeti publish profile.
