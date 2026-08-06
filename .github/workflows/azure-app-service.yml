@@ -25,13 +25,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore src/VRSimulator.Api/VRSimulator.Api.csproj
+        run: dotnet restore src/VRAcademy.Api/VRAcademy.Api.csproj
 
       - name: Build
-        run: dotnet build src/VRSimulator.Api/VRSimulator.Api.csproj --configuration Release --no-restore
+        run: dotnet build src/VRAcademy.Api/VRAcademy.Api.csproj --configuration Release --no-restore
 
       - name: Publish backend
-        run: dotnet publish src/VRSimulator.Api/VRSimulator.Api.csproj --configuration Release --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: dotnet publish src/VRAcademy.Api/VRAcademy.Api.csproj --configuration Release --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Add frontend files
         run: |

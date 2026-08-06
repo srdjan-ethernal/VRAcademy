@@ -1,12 +1,12 @@
 ---
-title: Safety Sim
+title: VR Academy
 colorFrom: green
 colorTo: blue
 sdk: docker
 app_port: 7860
 ---
 
-# Safety Sim
+# VR Academy
 
 Profesionalni visejezicni sajt za VR simulacije industrijske bezbednosti.
 
@@ -31,7 +31,7 @@ Stranice:
 
 ## Backend
 
-Backend je u folderu `src/VRSimulator.Api`.
+Backend je u folderu `src/VRAcademy.Api`.
 
 Tehnologije:
 
@@ -45,7 +45,7 @@ Tehnologije:
 Pokretanje:
 
 ```powershell
-dotnet run --project src\VRSimulator.Api\VRSimulator.Api.csproj
+dotnet run --project src\VRAcademy.Api\VRAcademy.Api.csproj
 ```
 
 Pocetne rute:
@@ -70,7 +70,7 @@ Korisnik se registruje uz kompaniju. Radnici, upisi i sertifikati se citaju i me
 
 Uloge su `SystemAdministrator`, `CompanyAdministrator` i `User`. Neulogovani posetioci ne vide interne stranice `Platforma` i `Moj portal`; `CompanyAdministrator` upravlja zaposlenima i dodeljenim kursevima, a `User` vidi samo svoje zakazane i prethodne obuke kroz Moj portal. Kada administrator dodaje radnika, moze odmah uneti i lozinku za portal, cime se za tog zaposlenog kreira `User` nalog sa istom email adresom.
 
-Za lokalnu bazu instalirati SQL Server Express LocalDB ili podesiti `ConnectionStrings:TrainingDatabase` na postojeci SQL Server. Migracije su u `src/VRSimulator.Api/Persistence/Migrations`.
+Za lokalnu bazu instalirati SQL Server Express LocalDB ili podesiti `ConnectionStrings:TrainingDatabase` na postojeci SQL Server. Migracije su u `src/VRAcademy.Api/Persistence/Migrations`.
 
 ## Demo deployment: Hugging Face + Neon
 

@@ -1,6 +1,6 @@
-﻿const translations = {
+const translations = {
   sr: {
-    metaTitle: "VR simulacije za industrijsku bezbednost",
+    metaTitle: "VR Academy",
     metaDescription:
       "Profesionalne VR simulacije za obuku iz protivpozarne zastite, upravljanja radioaktivnim materijalima i drugih industrijskih scenarija.",
     brand: { home: "Pocetak" },
@@ -21,8 +21,8 @@
     },
     hero: {
       eyebrow: "VR obuke za visokorizicne procese",
-      title: "VR simulacije za industrijsku bezbednost",
-      copy: "Realisticne, kontrolisane i merljive obuke za timove koji rade u zahtevnim bezbednosnim okruzenjima.",
+      title: "VR Academy",
+      copy: "Profesionalna platforma za realisticne, kontrolisane i merljive VR obuke u zahtevnim bezbednosnim okruzenjima.",
       actions: "Primarne akcije",
       primary: "Pogledajte scenarije",
       secondary: "Kontakt",
@@ -94,21 +94,21 @@
           "Sertifikati za polaznike koji uspesno zavrse VR obuku, sa nazivom kursa, datumom izdavanja i rokom vazenja.",
       },
       login: {
-        metaTitle: "Prijava na Safety Sim platformu",
-        metaDescription: "Prijava i registracija kompanije za Safety Sim platformu za VR obuke.",
+        metaTitle: "Prijava na VR Academy platformu",
+        metaDescription: "Prijava i registracija kompanije za VR Academy platformu za VR obuke.",
       },
       platform: {
-        metaTitle: "Safety Sim platforma za obuke",
+        metaTitle: "VR Academy platforma za obuke",
         metaDescription:
-          "Pregled kompanijskih VR obuka, radnika, kurseva i sertifikata na Safety Sim platformi.",
+          "Pregled kompanijskih VR obuka, radnika, kurseva i sertifikata na VR Academy platformi.",
       },
       worker: {
-        metaTitle: "Moj Safety Sim portal",
+        metaTitle: "Moj VR Academy portal",
         metaDescription: "Radnicki portal za pregled dodeljenih VR obuka, rezultata i sertifikata.",
       },
       verify: {
-        metaTitle: "Provera Safety Sim sertifikata",
-        metaDescription: "Javna provera vazenja Safety Sim sertifikata na osnovu broja sertifikata.",
+        metaTitle: "Provera VR Academy sertifikata",
+        metaDescription: "Javna provera vazenja VR Academy sertifikata na osnovu broja sertifikata.",
       },
     },
     pricing: {
@@ -197,7 +197,7 @@
       certificateIssueLabel: "DATUM IZDAVANJA",
       certificateValidLabel: "VAZI DO",
       certificateNumberLabel: "BROJ SERTIFIKATA",
-      downloadFileName: "safety-sim-diploma",
+      downloadFileName: "vr-academy-diploma",
     },
     verify: {
       eyebrow: "Javna provera",
@@ -383,7 +383,7 @@
     },
   },
   en: {
-    metaTitle: "VR simulations for industrial safety",
+    metaTitle: "VR Academy",
     metaDescription:
       "Professional VR simulations for fire protection training, radioactive material handling, and other industrial safety scenarios.",
     brand: { home: "Home" },
@@ -404,8 +404,8 @@
     },
     hero: {
       eyebrow: "VR training for high-risk processes",
-      title: "VR simulations for industrial safety",
-      copy: "Realistic, controlled, and measurable training for teams operating in demanding safety environments.",
+      title: "VR Academy",
+      copy: "A professional platform for realistic, controlled, and measurable VR training in demanding safety environments.",
       actions: "Primary actions",
       primary: "View scenarios",
       secondary: "Contact",
@@ -477,21 +477,21 @@
           "Certificates for trainees who successfully complete VR training, including course name, issue date, and validity period.",
       },
       login: {
-        metaTitle: "Sign in to the Safety Sim platform",
-        metaDescription: "Company registration and sign in for the Safety Sim VR training platform.",
+        metaTitle: "Sign in to the VR Academy platform",
+        metaDescription: "Company registration and sign in for the VR Academy VR training platform.",
       },
       platform: {
-        metaTitle: "Safety Sim training platform",
+        metaTitle: "VR Academy training platform",
         metaDescription:
-          "Overview of company VR training, workers, courses, and certificates on the Safety Sim platform.",
+          "Overview of company VR training, workers, courses, and certificates on the VR Academy platform.",
       },
       worker: {
-        metaTitle: "My Safety Sim portal",
+        metaTitle: "My VR Academy portal",
         metaDescription: "Worker portal for assigned VR training, results, and certificates.",
       },
       verify: {
-        metaTitle: "Safety Sim certificate verification",
-        metaDescription: "Public Safety Sim certificate validity check by certificate number.",
+        metaTitle: "VR Academy certificate verification",
+        metaDescription: "Public VR Academy certificate validity check by certificate number.",
       },
     },
     pricing: {
@@ -580,7 +580,7 @@
       certificateIssueLabel: "ISSUE DATE",
       certificateValidLabel: "VALID UNTIL",
       certificateNumberLabel: "CERTIFICATE NUMBER",
-      downloadFileName: "safety-sim-certificate",
+      downloadFileName: "vr-academy-certificate",
     },
     verify: {
       eyebrow: "Public verification",
@@ -1539,7 +1539,7 @@ function exportWorkersReport() {
     }),
   ];
 
-  downloadCsv("safety-sim-workers.csv", rows);
+  downloadCsv("vr-academy-workers.csv", rows);
 }
 
 function exportEnrollmentsReport() {
@@ -1563,7 +1563,7 @@ function exportEnrollmentsReport() {
     }),
   ];
 
-  downloadCsv("safety-sim-training.csv", rows);
+  downloadCsv("vr-academy-training.csv", rows);
 }
 
 function exportCertificatesReport() {
@@ -1588,7 +1588,7 @@ function exportCertificatesReport() {
     }),
   ];
 
-  downloadCsv("safety-sim-certificates.csv", rows);
+  downloadCsv("vr-academy-certificates.csv", rows);
 }
 
 function renderNotifications(notifications, language) {
@@ -2375,7 +2375,7 @@ function printCertificate() {
     <!doctype html>
     <html>
       <head>
-        <title>Safety Sim certificate</title>
+        <title>VR Academy certificate</title>
         <style>
           @page { size: A4 landscape; margin: 10mm; }
           body { margin: 0; background: #ffffff; }

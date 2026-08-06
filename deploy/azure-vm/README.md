@@ -28,8 +28,8 @@ sudo usermod -aG docker "$USER"
 Log out and back in, then clone and configure:
 
 ```bash
-git clone https://github.com/srdjan-ethernal/VRSimulator.git
-cd VRSimulator
+git clone https://github.com/srdjan-ethernal/VRAcademy.git
+cd VRAcademy
 cp deploy/azure-vm/.env.example deploy/azure-vm/.env
 nano deploy/azure-vm/.env
 ```
@@ -57,7 +57,7 @@ bash deploy/azure-vm/deploy.sh
 ## Update
 
 ```bash
-cd VRSimulator
+cd VRAcademy
 git pull
 bash deploy/azure-vm/deploy.sh
 ```

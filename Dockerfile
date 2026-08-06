@@ -1,12 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY VRSimulator.sln ./
-COPY src/VRSimulator.Api/VRSimulator.Api.csproj src/VRSimulator.Api/
-RUN dotnet restore src/VRSimulator.Api/VRSimulator.Api.csproj
+COPY VRAcademy.sln ./
+COPY src/VRAcademy.Api/VRAcademy.Api.csproj src/VRAcademy.Api/
+RUN dotnet restore src/VRAcademy.Api/VRAcademy.Api.csproj
 
-COPY src/VRSimulator.Api/ src/VRSimulator.Api/
-RUN dotnet publish src/VRSimulator.Api/VRSimulator.Api.csproj -c Release -o /app/publish --no-restore
+COPY src/VRAcademy.Api/ src/VRAcademy.Api/
+RUN dotnet publish src/VRAcademy.Api/VRAcademy.Api.csproj -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
@@ -28,4 +28,4 @@ RUN mkdir -p wwwroot \
 
 EXPOSE 7860
 
-ENTRYPOINT ["dotnet", "VRSimulator.Api.dll"]
+ENTRYPOINT ["dotnet", "VRAcademy.Api.dll"]

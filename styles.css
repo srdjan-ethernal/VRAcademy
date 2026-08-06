@@ -67,15 +67,11 @@ a {
   letter-spacing: 0;
 }
 
-.brand-mark {
-  display: grid;
+.brand-icon {
   width: 42px;
   height: 42px;
-  place-items: center;
   border-radius: var(--radius);
-  background: var(--ink);
-  color: #fff;
-  font-size: 14px;
+  box-shadow: 0 10px 24px rgba(23, 32, 42, 0.16);
 }
 
 .brand-text {
