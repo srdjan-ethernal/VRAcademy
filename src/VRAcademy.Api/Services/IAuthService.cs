@@ -8,6 +8,8 @@ public interface IAuthService
 
     Result<AuthResponse> Login(LoginRequest request);
 
+    Result<AuthResponse> LoginWithExternalProvider(ExternalLoginRequest request);
+
     Result<UserProfileResponse> GetCurrentUser(string accessToken);
 
     IReadOnlyCollection<UserProfileResponse> GetUsersForCompany(Guid companyId);

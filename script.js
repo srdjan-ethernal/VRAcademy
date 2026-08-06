@@ -238,6 +238,11 @@ const translations = {
       company: "Kompanija",
       loginButton: "Prijavi se",
       registerButton: "Kreiraj nalog",
+      or: "ili",
+      googleLoginButton: "Prijava preko Google naloga",
+      googleRegisterButton: "Registracija preko Google naloga",
+      googleCompanyRequired: "Unesite naziv kompanije pre Google registracije.",
+      googleWorking: "Preusmeravanje na Google...",
       working: "Povezivanje sa platformom...",
       loginSuccess: "Uspesno ste prijavljeni.",
       registerSuccess: "Nalog je kreiran i prijavljeni ste.",
@@ -679,6 +684,11 @@ const translations = {
       company: "Company",
       loginButton: "Sign in",
       registerButton: "Create account",
+      or: "or",
+      googleLoginButton: "Sign in with Google",
+      googleRegisterButton: "Register with Google",
+      googleCompanyRequired: "Enter the company name before Google registration.",
+      googleWorking: "Redirecting to Google...",
       working: "Connecting to the platform...",
       loginSuccess: "You are signed in.",
       registerSuccess: "The account has been created and you are signed in.",
@@ -1078,6 +1088,7 @@ const scenarioCount = document.querySelector("[data-scenario-count]");
 const pageName = document.body.dataset.page || "home";
 const authTabs = document.querySelectorAll("[data-auth-tab]");
 const authPanels = document.querySelectorAll("[data-auth-panel]");
+const googleAuthButtons = document.querySelectorAll("[data-google-auth]");
 const platformCourses = document.querySelector("[data-platform-courses]");
 const workerList = document.querySelector("[data-worker-list]");
 const certificateRecords = document.querySelector("[data-certificate-records]");
@@ -1152,6 +1163,11 @@ if (pageName === "login") {
       input.value = "";
     });
   });
+
+  const authError = new URLSearchParams(window.location.search).get("authError");
+  if (authError) {
+    window.setTimeout(() => setAuthMessage(authError, "error"), 0);
+  }
 }
 
 const demoWorkers = [
@@ -2853,6 +2869,31 @@ authPanels.forEach((form) => {
     saveAuth(result.data);
     setAuthMessage(isRegisterForm ? dictionary.registerSuccess : dictionary.loginSuccess, "success");
     window.location.href = getDefaultPageForRole(normalizeUserRole(getField(getField(result.data, "user"), "role")));
+  });
+});
+
+googleAuthButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const mode = button.dataset.googleAuth === "register" ? "register" : "login";
+    const form = button.closest("[data-auth-panel]");
+    const formData = form ? new FormData(form) : new FormData();
+    const params = new URLSearchParams({
+      mode,
+      returnUrl: "login.html",
+    });
+
+    if (mode === "register") {
+      const companyName = formData.get("companyName")?.toString().trim();
+      if (!companyName) {
+        setAuthMessage(translations[currentLanguage].auth.googleCompanyRequired, "error");
+        return;
+      }
+
+      params.set("companyName", companyName);
+    }
+
+    setAuthMessage(translations[currentLanguage].auth.googleWorking);
+    window.location.href = `${apiBaseUrl}/api/auth/google/start?${params.toString()}`;
   });
 });
 

@@ -89,6 +89,59 @@ public sealed class InMemoryAuthService : IAuthService
         }
     }
 
+    public Result<AuthResponse> LoginWithExternalProvider(ExternalLoginRequest request)
+    {
+        var validationError = ValidateExternalLogin(request);
+        if (validationError is not null)
+        {
+            return Result<AuthResponse>.Failure(validationError);
+        }
+
+        var normalizedEmail = NormalizeEmail(request.Email);
+        lock (_lock)
+        {
+            var storedUser = _users.SingleOrDefault(user =>
+                user.Email.Equals(normalizedEmail, StringComparison.OrdinalIgnoreCase));
+            if (storedUser is not null)
+            {
+                var existingCompany = _companies.Single(company => company.Id == storedUser.CompanyId);
+                return Result<AuthResponse>.Success(CreateAuthResponse(storedUser, existingCompany));
+            }
+
+            if (string.IsNullOrWhiteSpace(request.CompanyName))
+            {
+                return Result<AuthResponse>.Failure("Google nalog nije registrovan. Otvorite tab Registracija i unesite naziv kompanije.");
+            }
+
+            var companyName = request.CompanyName.Trim();
+            var company = _companies.SingleOrDefault(existingCompany =>
+                existingCompany.Name.Equals(companyName, StringComparison.OrdinalIgnoreCase));
+            if (company is null)
+            {
+                company = new Company(
+                    Guid.NewGuid(),
+                    companyName,
+                    SubscriptionLevel.SmallBusiness,
+                    DateTimeOffset.UtcNow);
+                _companies.Add(company);
+            }
+
+            var password = HashPassword(CreateTemporaryPassword());
+            var account = new UserAccount(
+                Guid.NewGuid(),
+                company.Id,
+                normalizedEmail,
+                request.FirstName.Trim(),
+                request.LastName.Trim(),
+                UserRole.CompanyAdministrator,
+                DateTimeOffset.UtcNow);
+            storedUser = new StoredUser(account, password.Hash, password.Salt);
+            _users.Add(storedUser);
+
+            return Result<AuthResponse>.Success(CreateAuthResponse(storedUser, company));
+        }
+    }
+
     public Result<UserProfileResponse> GetCurrentUser(string accessToken)
     {
         lock (_lock)
@@ -395,6 +448,26 @@ public sealed class InMemoryAuthService : IAuthService
         if (request.Password.Length < 5)
         {
             return "Lozinka mora imati najmanje 5 karaktera.";
+        }
+
+        return null;
+    }
+
+    private static string? ValidateExternalLogin(ExternalLoginRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return "Google nalog nije vratio email adresu.";
+        }
+
+        if (!request.Email.Contains('@') || request.Email.Length > 254)
+        {
+            return "Google email adresa nije ispravna.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.LastName))
+        {
+            return "Google nalog nije vratio ime i prezime.";
         }
 
         return null;

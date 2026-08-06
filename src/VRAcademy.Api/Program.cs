@@ -1,3 +1,7 @@
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Json;
@@ -49,6 +53,7 @@ var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get
     ?? Array.Empty<string>();
 var allowAnyOrigin = builder.Configuration.GetValue<bool>("Cors:AllowAnyOrigin");
 const string frontendCorsPolicy = "Frontend";
+const string GoogleOAuthStateCookieName = "vr_academy_google_oauth_state";
 
 if (useInMemoryServices && invalidConnectionStringSources.Length > 0)
 {
@@ -110,6 +115,7 @@ else
     builder.Services.AddScoped<IAuthService, EfAuthService>();
 }
 builder.Services.AddScoped<IEmailNotificationService, SmtpEmailNotificationService>();
+builder.Services.AddHttpClient();
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -167,6 +173,8 @@ app.MapGet("/api", () => Results.Ok(new
         "GET /api/health",
         "POST /api/auth/register",
         "POST /api/auth/login",
+        "GET /api/auth/google/start",
+        "GET /api/auth/google/callback",
         "GET /api/auth/me",
         "GET /api/system/companies",
         "POST /api/system/companies",
@@ -257,6 +265,142 @@ app.MapPost("/api/auth/login", (LoginRequest request, IAuthService authService) 
     return result.Match(
         auth => Results.Ok(auth),
         error => Results.BadRequest(new ProblemResponse(error)));
+});
+
+app.MapGet("/api/auth/google/start", (
+    HttpRequest request,
+    HttpResponse response,
+    IConfiguration configuration,
+    string? mode,
+    string? companyName,
+    string? returnUrl) =>
+{
+    var googleClientId = GetGoogleClientId(configuration);
+    if (string.IsNullOrWhiteSpace(googleClientId))
+    {
+        return RedirectToLoginWithError("Google login nije konfigurisan.");
+    }
+
+    var normalizedMode = string.Equals(mode, "register", StringComparison.OrdinalIgnoreCase)
+        ? "register"
+        : "login";
+    if (normalizedMode == "register" && string.IsNullOrWhiteSpace(companyName))
+    {
+        return RedirectToLoginWithError("Naziv kompanije je obavezan za Google registraciju.");
+    }
+
+    var nonce = CreateBase64Url(RandomNumberGenerator.GetBytes(32));
+    var state = EncodeGoogleOAuthState(new GoogleOAuthState(
+        nonce,
+        normalizedMode,
+        normalizedMode == "register" ? companyName?.Trim() : null,
+        NormalizeLocalReturnUrl(returnUrl)));
+    response.Cookies.Append(GoogleOAuthStateCookieName, nonce, new CookieOptions
+    {
+        HttpOnly = true,
+        IsEssential = true,
+        SameSite = SameSiteMode.Lax,
+        Secure = request.IsHttps,
+        Expires = DateTimeOffset.UtcNow.AddMinutes(10)
+    });
+
+    var authorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth" + BuildQueryString(new Dictionary<string, string?>
+    {
+        ["client_id"] = googleClientId,
+        ["redirect_uri"] = GetGoogleCallbackUrl(request),
+        ["response_type"] = "code",
+        ["scope"] = "openid email profile",
+        ["state"] = state,
+        ["prompt"] = "select_account"
+    });
+
+    return Results.Redirect(authorizationUrl);
+});
+
+app.MapGet("/api/auth/google/callback", async (
+    HttpRequest request,
+    HttpResponse response,
+    IConfiguration configuration,
+    IHttpClientFactory httpClientFactory,
+    IAuthService authService,
+    string? code,
+    string? state,
+    string? error) =>
+{
+    if (!string.IsNullOrWhiteSpace(error))
+    {
+        return RedirectToLoginWithError($"Google prijava nije uspela: {error}");
+    }
+
+    if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(state))
+    {
+        return RedirectToLoginWithError("Google nije vratio kompletan odgovor.");
+    }
+
+    if (!TryDecodeGoogleOAuthState(state, out var oauthState) ||
+        !request.Cookies.TryGetValue(GoogleOAuthStateCookieName, out var expectedNonce) ||
+        !string.Equals(oauthState.Nonce, expectedNonce, StringComparison.Ordinal))
+    {
+        return RedirectToLoginWithError("Google prijava je istekla. Pokusajte ponovo.");
+    }
+
+    response.Cookies.Delete(GoogleOAuthStateCookieName);
+
+    var googleClientId = GetGoogleClientId(configuration);
+    var googleClientSecret = GetGoogleClientSecret(configuration);
+    if (string.IsNullOrWhiteSpace(googleClientId) || string.IsNullOrWhiteSpace(googleClientSecret))
+    {
+        return RedirectToLoginWithError("Google login nije konfigurisan.");
+    }
+
+    var httpClient = httpClientFactory.CreateClient();
+    var tokenResponse = await httpClient.PostAsync("https://oauth2.googleapis.com/token", new FormUrlEncodedContent(new Dictionary<string, string>
+    {
+        ["client_id"] = googleClientId,
+        ["client_secret"] = googleClientSecret,
+        ["code"] = code,
+        ["grant_type"] = "authorization_code",
+        ["redirect_uri"] = GetGoogleCallbackUrl(request)
+    }));
+
+    if (!tokenResponse.IsSuccessStatusCode)
+    {
+        return RedirectToLoginWithError("Google token nije dobijen.");
+    }
+
+    await using var tokenStream = await tokenResponse.Content.ReadAsStreamAsync();
+    using var tokenJson = await JsonDocument.ParseAsync(tokenStream);
+    var accessToken = GetJsonString(tokenJson.RootElement, "access_token");
+    if (string.IsNullOrWhiteSpace(accessToken))
+    {
+        return RedirectToLoginWithError("Google nije vratio access token.");
+    }
+
+    using var userInfoRequest = new HttpRequestMessage(HttpMethod.Get, "https://openidconnect.googleapis.com/v1/userinfo");
+    userInfoRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+    var userInfoResponse = await httpClient.SendAsync(userInfoRequest);
+    if (!userInfoResponse.IsSuccessStatusCode)
+    {
+        return RedirectToLoginWithError("Google profil nije procitan.");
+    }
+
+    await using var userInfoStream = await userInfoResponse.Content.ReadAsStreamAsync();
+    using var userInfoJson = await JsonDocument.ParseAsync(userInfoStream);
+    var googleProfile = ReadGoogleProfile(userInfoJson.RootElement);
+    if (googleProfile is null)
+    {
+        return RedirectToLoginWithError("Google nalog nije vratio validan email.");
+    }
+
+    var authResult = authService.LoginWithExternalProvider(new ExternalLoginRequest(
+        googleProfile.Email,
+        googleProfile.FirstName,
+        googleProfile.LastName,
+        oauthState.Mode == "register" ? oauthState.CompanyName : null));
+
+    return authResult.Match(
+        auth => Results.Content(BuildGoogleAuthSuccessHtml(auth), "text/html", Encoding.UTF8),
+        authError => RedirectToLoginWithError(authError));
 });
 
 app.MapGet("/api/auth/me", (HttpRequest request, IAuthService authService) =>
@@ -802,6 +946,157 @@ static string GetApplicationBaseUrl(HttpRequest request)
     return $"{scheme}://{host}";
 }
 
+static string GetGoogleCallbackUrl(HttpRequest request)
+{
+    return $"{GetApplicationBaseUrl(request)}/api/auth/google/callback";
+}
+
+static string? GetGoogleClientId(IConfiguration configuration)
+{
+    return configuration["Authentication:Google:ClientId"] ?? configuration["GoogleAuth:ClientId"];
+}
+
+static string? GetGoogleClientSecret(IConfiguration configuration)
+{
+    return configuration["Authentication:Google:ClientSecret"] ?? configuration["GoogleAuth:ClientSecret"];
+}
+
+static string BuildQueryString(IReadOnlyDictionary<string, string?> values)
+{
+    var query = values
+        .Where(value => !string.IsNullOrWhiteSpace(value.Value))
+        .Select(value => $"{Uri.EscapeDataString(value.Key)}={Uri.EscapeDataString(value.Value!)}");
+    return $"?{string.Join("&", query)}";
+}
+
+static string NormalizeLocalReturnUrl(string? returnUrl)
+{
+    if (string.IsNullOrWhiteSpace(returnUrl))
+    {
+        return "login.html";
+    }
+
+    var trimmed = returnUrl.Trim();
+    return Uri.TryCreate(trimmed, UriKind.Absolute, out _) || trimmed.StartsWith("//", StringComparison.Ordinal)
+        ? "login.html"
+        : trimmed;
+}
+
+static string EncodeGoogleOAuthState(GoogleOAuthState state)
+{
+    return CreateBase64Url(JsonSerializer.SerializeToUtf8Bytes(state));
+}
+
+static bool TryDecodeGoogleOAuthState(string value, out GoogleOAuthState state)
+{
+    state = new GoogleOAuthState(string.Empty, "login", null, "login.html");
+    try
+    {
+        var bytes = DecodeBase64Url(value);
+        var parsedState = JsonSerializer.Deserialize<GoogleOAuthState>(bytes);
+        if (parsedState is null || string.IsNullOrWhiteSpace(parsedState.Nonce))
+        {
+            return false;
+        }
+
+        state = parsedState;
+        return true;
+    }
+    catch
+    {
+        return false;
+    }
+}
+
+static GoogleProfile? ReadGoogleProfile(JsonElement userInfo)
+{
+    var email = GetJsonString(userInfo, "email");
+    var verifiedEmail = userInfo.TryGetProperty("email_verified", out var verifiedProperty) &&
+        verifiedProperty.ValueKind == JsonValueKind.True;
+    if (string.IsNullOrWhiteSpace(email) || !verifiedEmail)
+    {
+        return null;
+    }
+
+    var firstName = GetJsonString(userInfo, "given_name");
+    var lastName = GetJsonString(userInfo, "family_name");
+    if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+    {
+        var displayName = GetJsonString(userInfo, "name");
+        var nameParts = (displayName ?? email.Split('@')[0])
+            .Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        firstName = string.IsNullOrWhiteSpace(firstName) ? nameParts.FirstOrDefault() ?? "Google" : firstName;
+        lastName = string.IsNullOrWhiteSpace(lastName)
+            ? nameParts.Skip(1).FirstOrDefault() ?? "User"
+            : lastName;
+    }
+
+    return new GoogleProfile(email, firstName, lastName);
+}
+
+static string? GetJsonString(JsonElement element, string propertyName)
+{
+    return element.TryGetProperty(propertyName, out var property) && property.ValueKind == JsonValueKind.String
+        ? property.GetString()
+        : null;
+}
+
+static IResult RedirectToLoginWithError(string message)
+{
+    return Results.Redirect($"login.html?authError={Uri.EscapeDataString(message)}");
+}
+
+static string BuildGoogleAuthSuccessHtml(AuthResponse auth)
+{
+    var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+    options.Converters.Add(new JsonStringEnumConverter());
+    var authJson = JsonSerializer.Serialize(auth, options);
+    var role = auth.User.Role;
+    var redirectUrl = role == UserRole.SystemAdministrator
+        ? "system-admin.html"
+        : role == UserRole.User
+            ? "worker.html"
+            : "platform.html";
+
+    return $$"""
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>VR Academy Google sign in</title>
+  </head>
+  <body>
+    <script>
+      localStorage.setItem("safetySimAuth", JSON.stringify({{authJson}}));
+      window.location.replace("{{redirectUrl}}");
+    </script>
+  </body>
+</html>
+""";
+}
+
+static string CreateBase64Url(byte[] bytes)
+{
+    return Convert.ToBase64String(bytes)
+        .TrimEnd('=')
+        .Replace("+", "-", StringComparison.Ordinal)
+        .Replace("/", "_", StringComparison.Ordinal);
+}
+
+static byte[] DecodeBase64Url(string value)
+{
+    var base64 = value
+        .Replace("-", "+", StringComparison.Ordinal)
+        .Replace("_", "/", StringComparison.Ordinal);
+    var padding = base64.Length % 4;
+    if (padding > 0)
+    {
+        base64 = base64.PadRight(base64.Length + 4 - padding, '=');
+    }
+
+    return Convert.FromBase64String(base64);
+}
+
 static string? NormalizeConnectionString(string? value, string provider)
 {
     if (string.IsNullOrWhiteSpace(value))
@@ -897,3 +1192,7 @@ static Dictionary<string, string> ParseQuery(string query)
 }
 
 public sealed record ConnectionStringCandidate(string Source, string? Value);
+
+public sealed record GoogleOAuthState(string Nonce, string Mode, string? CompanyName, string ReturnUrl);
+
+public sealed record GoogleProfile(string Email, string FirstName, string LastName);

@@ -93,6 +93,62 @@ public sealed class EfAuthService : IAuthService
         return Result<AuthResponse>.Success(CreateAuthResponse(user, user.Company!));
     }
 
+    public Result<AuthResponse> LoginWithExternalProvider(ExternalLoginRequest request)
+    {
+        var validationError = ValidateExternalLogin(request);
+        if (validationError is not null)
+        {
+            return Result<AuthResponse>.Failure(validationError);
+        }
+
+        var normalizedEmail = NormalizeEmail(request.Email);
+        var user = _dbContext.Users
+            .Include(existingUser => existingUser.Company)
+            .SingleOrDefault(existingUser => existingUser.Email == normalizedEmail);
+
+        if (user?.Company is not null)
+        {
+            return Result<AuthResponse>.Success(CreateAuthResponse(user, user.Company));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.CompanyName))
+        {
+            return Result<AuthResponse>.Failure("Google nalog nije registrovan. Otvorite tab Registracija i unesite naziv kompanije.");
+        }
+
+        var companyName = request.CompanyName.Trim();
+        var company = _dbContext.Companies.SingleOrDefault(existingCompany => existingCompany.Name == companyName);
+        if (company is null)
+        {
+            company = new CompanyEntity
+            {
+                Id = Guid.NewGuid(),
+                Name = companyName,
+                SubscriptionLevel = SubscriptionLevel.SmallBusiness,
+                CreatedAt = DateTimeOffset.UtcNow
+            };
+            _dbContext.Companies.Add(company);
+        }
+
+        var password = HashPassword(CreateTemporaryPassword());
+        user = new UserEntity
+        {
+            Id = Guid.NewGuid(),
+            CompanyId = company.Id,
+            Email = normalizedEmail,
+            FirstName = request.FirstName.Trim(),
+            LastName = request.LastName.Trim(),
+            Role = UserRole.CompanyAdministrator,
+            CreatedAt = DateTimeOffset.UtcNow,
+            PasswordHash = password.Hash,
+            PasswordSalt = password.Salt
+        };
+
+        _dbContext.Users.Add(user);
+        _dbContext.SaveChanges();
+        return Result<AuthResponse>.Success(CreateAuthResponse(user, company));
+    }
+
     public Result<UserProfileResponse> GetCurrentUser(string accessToken)
     {
         RemoveExpiredSessions();
@@ -383,6 +439,26 @@ public sealed class EfAuthService : IAuthService
         if (request.Password.Length < 5)
         {
             return "Lozinka mora imati najmanje 5 karaktera.";
+        }
+
+        return null;
+    }
+
+    private static string? ValidateExternalLogin(ExternalLoginRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return "Google nalog nije vratio email adresu.";
+        }
+
+        if (!request.Email.Contains('@') || request.Email.Length > 254)
+        {
+            return "Google email adresa nije ispravna.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.LastName))
+        {
+            return "Google nalog nije vratio ime i prezime.";
         }
 
         return null;

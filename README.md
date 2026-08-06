@@ -54,6 +54,8 @@ Pocetne rute:
 - `GET /api/health`
 - `POST /api/auth/register`
 - `POST /api/auth/login`
+- `GET /api/auth/google/start`
+- `GET /api/auth/google/callback`
 - `GET /api/auth/me`
 - `GET /api/system/companies`
 - `POST /api/system/companies`
@@ -78,6 +80,19 @@ Korisnik se registruje uz kompaniju. Radnici, upisi i sertifikati se citaju i me
 Uloge su `SystemAdministrator`, `CompanyAdministrator` i `User`. Neulogovani posetioci ne vide interne stranice `Admin`, `Platforma` i `Moj portal`; `SystemAdministrator` upravlja kompanijama i nivoima preplate, `CompanyAdministrator` upravlja zaposlenima i dodeljenim kursevima, a `User` vidi samo svoje zakazane i prethodne obuke kroz Moj portal. Kada administrator pozove zaposlenog, moze uneti privremenu lozinku i broj zaposlenog; sistem kreira korisnicki nalog i po potrebi worker zapis sa istom email adresom.
 
 Svaka dodeljena obuka dobija `ExamId`. Poseban program za polaganje dobija taj `ExamId`, a rezultat vraca kroz `POST /api/exams/{examId}/result` sa statusom, rezultatom i trajanjem. Backend na osnovu rezultata oznacava polaganje kao polozeno ili nepolozeno i kreira sertifikat kada je kurs polozen.
+
+Google login/registracija koristi OAuth 2.0 redirect tok. Na hostingu treba podesiti:
+
+```text
+Authentication__Google__ClientId=<google-client-id>
+Authentication__Google__ClientSecret=<google-client-secret>
+```
+
+Google OAuth authorized redirect URI treba da bude:
+
+```text
+https://<vas-domen>/api/auth/google/callback
+```
 
 Za lokalnu bazu instalirati SQL Server Express LocalDB ili podesiti `ConnectionStrings:TrainingDatabase` na postojeci SQL Server. Migracije su u `src/VRAcademy.Api/Persistence/Migrations`.
 

@@ -141,6 +141,36 @@ Authorization: Bearer <accessToken>
 
 `GET /api/auth/me`
 
+### Google login i registracija
+
+Frontend otvara:
+
+```text
+GET /api/auth/google/start?mode=login
+GET /api/auth/google/start?mode=register&companyName=<naziv-kompanije>
+```
+
+Backend radi Google OAuth callback na:
+
+```text
+GET /api/auth/google/callback
+```
+
+Ako Google email vec postoji u bazi, korisnik se prijavljuje. Ako ne postoji, registracija zahteva `companyName` i kreira `CompanyAdministrator` nalog.
+
+Potrebna konfiguracija:
+
+```text
+Authentication__Google__ClientId=<google-client-id>
+Authentication__Google__ClientSecret=<google-client-secret>
+```
+
+Google OAuth authorized redirect URI:
+
+```text
+https://<vas-domen>/api/auth/google/callback
+```
+
 ### Korisnici kompanije
 
 `GET /api/users`

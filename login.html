@@ -74,6 +74,11 @@
               <input type="password" name="password" autocomplete="new-password" minlength="5" />
             </label>
             <button class="button primary" type="submit" data-i18n="auth.loginButton">Prijavi se</button>
+            <div class="oauth-divider"><span data-i18n="auth.or">ili</span></div>
+            <button class="google-auth-button" type="button" data-google-auth="login">
+              <span aria-hidden="true">G</span>
+              <span data-i18n="auth.googleLoginButton">Prijava preko Google naloga</span>
+            </button>
           </form>
 
           <form class="auth-form" data-auth-panel="register" autocomplete="off">
@@ -100,6 +105,11 @@
               <input type="password" name="password" autocomplete="new-password" minlength="5" />
             </label>
             <button class="button primary" type="submit" data-i18n="auth.registerButton">Kreiraj nalog</button>
+            <div class="oauth-divider"><span data-i18n="auth.or">ili</span></div>
+            <button class="google-auth-button" type="button" data-google-auth="register">
+              <span aria-hidden="true">G</span>
+              <span data-i18n="auth.googleRegisterButton">Registracija preko Google naloga</span>
+            </button>
           </form>
 
           <p class="auth-message" data-auth-message></p>
