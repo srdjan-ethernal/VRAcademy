@@ -25,6 +25,8 @@ public interface ITrainingRepository
 
     Result<EnrollmentCompletionResponse> CompleteEnrollment(Guid companyId, Guid enrollmentId, CompleteTrainingRequest request);
 
+    Result<EnrollmentCompletionResponse> CompleteExternalExam(string examId, ExternalExamResultRequest request);
+
     DashboardSummaryResponse GetDashboardSummary(Guid companyId);
 
     IReadOnlyCollection<Certificate> GetCertificates(Guid companyId);

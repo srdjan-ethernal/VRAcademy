@@ -10,6 +10,7 @@ const translations = {
       open: "Otvori navigaciju",
       scenarios: "Scenariji",
       method: "Metodologija",
+      systemAdmin: "Admin",
       platform: "Platforma",
       workerPortal: "Moj portal",
       pricing: "Cene",
@@ -102,6 +103,10 @@ const translations = {
         metaDescription:
           "Pregled kompanijskih VR obuka, radnika, kurseva i sertifikata na VR Academy platformi.",
       },
+      systemAdmin: {
+        metaTitle: "VR Academy system admin",
+        metaDescription: "System administrator portal za upravljanje kompanijama i nivoima preplate.",
+      },
       worker: {
         metaTitle: "Moj VR Academy portal",
         metaDescription: "Radnicki portal za pregled dodeljenih VR obuka, rezultata i sertifikata.",
@@ -117,8 +122,8 @@ const translations = {
       copy: "Model je napravljen da bude jasan za male timove i skalabilan za vece organizacije.",
       monthlyLabel: "Mesecno",
       yearlyLabel: "Godisnje",
-      monthlyPrice: "1 EUR",
-      yearlyPrice: "10 EUR",
+      monthlyPrice: "10 EUR",
+      yearlyPrice: "100 EUR",
       perEmployeeMonth: "po radniku / mesecno",
       perEmployeeYear: "po radniku / godisnje",
       note: "Godisnji plan donosi 2 meseca ustede u odnosu na placanje svakog meseca.",
@@ -126,8 +131,8 @@ const translations = {
         small: {
           label: "Mala preduzeca",
           title: "Do 10 radnika",
-          monthly: "Do 10 EUR mesecno",
-          yearly: "Do 100 EUR godisnje",
+          monthly: "Do 100 EUR mesecno",
+          yearly: "Do 1.000 EUR godisnje",
           point1: "Za male timove i pilot obuke",
           point2: "Pristup svim dostupnim scenarijima",
           point3: "Dobar pocetak za internu prezentaciju",
@@ -135,8 +140,8 @@ const translations = {
         medium: {
           label: "Srednja preduzeca",
           title: "Do 100 radnika",
-          monthly: "Do 100 EUR mesecno",
-          yearly: "Do 1.000 EUR godisnje",
+          monthly: "Do 1.000 EUR mesecno",
+          yearly: "Do 10.000 EUR godisnje",
           point1: "Za redovne obuke vise timova",
           point2: "Standardizovan pristup po zaposlenom",
           point3: "Pogodno za vise lokacija ili smena",
@@ -144,8 +149,8 @@ const translations = {
         large: {
           label: "Velika preduzeca",
           title: "Preko 100 radnika",
-          monthly: "1 EUR x broj radnika",
-          yearly: "10 EUR x broj radnika",
+          monthly: "10 EUR x broj radnika",
+          yearly: "100 EUR x broj radnika",
           point1: "Za organizacije sa vecim brojem polaznika",
           point2: "Skaliranje po stvarnom broju zaposlenih",
           point3: "Moguce planiranje po sektorima i lokacijama",
@@ -315,15 +320,29 @@ const translations = {
       importWorkersSuccess: "Importovano radnika: {count}.",
       importWorkersEmpty: "CSV fajl ne sadrzi radnike za import.",
       importWorkersHint: "CSV kolone: firstName,lastName,email,employeeNumber,department",
+      inviteLabel: "Pozivnica",
+      inviteTitle: "Pozovi zaposlenog",
+      inviteTemporaryPassword: "Privremena lozinka",
+      inviteButton: "Posalji pozivnicu",
+      inviteWorking: "Kreiranje pozivnice...",
+      inviteSuccess: "Pozivnica je spremna. Link: {url} | Privremena lozinka: {password}",
+      resetLabel: "Nalozi",
+      resetTitle: "Reset lozinke",
+      resetEmail: "Email korisnika",
+      resetNewPassword: "Nova lozinka",
+      resetButton: "Resetuj lozinku",
+      resetWorking: "Resetovanje lozinke...",
+      resetSuccess: "Lozinka je resetovana za {email}.",
       assignWorker: "Radnik",
       assignCourse: "Kurs",
       assignDueAt: "Rok za polaganje",
       assignTraining: "Dodeli obuku",
       assignTrainingLoginRequired: "Prijavite se da biste dodelili obuku.",
       assignTrainingWorking: "Dodeljivanje obuke...",
-      assignTrainingSuccess: "Obuka je dodeljena.",
+      assignTrainingSuccess: "Obuka je dodeljena. ExamId: {examId}.",
       enrollmentsLabel: "Obuke",
       enrollmentsTitle: "Dodeljene obuke",
+      enrollmentExamId: "ExamId",
       enrollmentDueAt: "Rok",
       enrollmentStatus: "Status",
       enrollmentScore: "Rezultat",
@@ -369,6 +388,7 @@ const translations = {
       apiFallback: "API nije dostupan, prikazan je demo radnicki portal.",
       dueDateLabel: "Rok",
       startTraining: "Pokreni obuku",
+      openExternalExam: "Otvori polaganje",
       startWorking: "Pokretanje obuke...",
       startSuccess: "Obuka je pokrenuta.",
       completeScore: "Rezultat",
@@ -380,6 +400,44 @@ const translations = {
       loginRequired: "Prijavite se da biste koristili radnicki portal.",
       actionUnavailable: "Akcija je dostupna kada je portal povezan sa backendom.",
       downloadCertificate: "Proveri",
+      examIdLabel: "ExamId",
+      externalExamReady: "Za spoljni program koristite ExamId: {examId}.",
+    },
+    systemAdmin: {
+      eyebrow: "System admin",
+      title: "Kompanije i preplate",
+      copy: "Upravljanje kompanijama, nivoima preplate i administratorskim nalozima.",
+      session: "Prijavljeni ste kao system administrator: {name}.",
+      loginRequired: "Prijavite se kao System Administrator.",
+      apiFallback: "System admin podaci nisu dostupni dok se API ne poveze.",
+      companiesLabel: "Kompanije",
+      companiesTitle: "Aktivne kompanije",
+      newCompanyLabel: "Nova kompanija",
+      newCompanyTitle: "Dodaj kompaniju",
+      companyName: "Naziv kompanije",
+      subscriptionLevel: "Nivo preplate",
+      subscriptionSmall: "Mala preduzeca",
+      subscriptionMedium: "Srednja preduzeca",
+      subscriptionEnterprise: "Velika preduzeca",
+      createCompany: "Kreiraj kompaniju",
+      createWorking: "Kreiranje kompanije...",
+      createSuccess: "Kompanija je kreirana.",
+      updateSubscription: "Sacuvaj",
+      updateWorking: "Cuvanje...",
+      updateSuccess: "Preplata je promenjena.",
+      emptyCompanies: "Nema kompanija za prikaz.",
+      adminFirstName: "Ime admina",
+      adminLastName: "Prezime admina",
+      adminEmail: "Email admina",
+      adminPassword: "Lozinka admina",
+      resetLabel: "Nalozi",
+      resetTitle: "Reset lozinke korisnika",
+      resetEmail: "Email korisnika",
+      newPassword: "Nova lozinka",
+      resetPassword: "Resetuj lozinku",
+      resetWorking: "Resetovanje lozinke...",
+      resetSuccess: "Lozinka je resetovana za {email}.",
+      createdAt: "Kreirana",
     },
   },
   en: {
@@ -393,6 +451,7 @@ const translations = {
       open: "Open navigation",
       scenarios: "Scenarios",
       method: "Methodology",
+      systemAdmin: "Admin",
       platform: "Platform",
       workerPortal: "My portal",
       pricing: "Pricing",
@@ -485,6 +544,10 @@ const translations = {
         metaDescription:
           "Overview of company VR training, workers, courses, and certificates on the VR Academy platform.",
       },
+      systemAdmin: {
+        metaTitle: "VR Academy system admin",
+        metaDescription: "System administrator portal for company and subscription management.",
+      },
       worker: {
         metaTitle: "My VR Academy portal",
         metaDescription: "Worker portal for assigned VR training, results, and certificates.",
@@ -500,8 +563,8 @@ const translations = {
       copy: "The model is designed to be clear for small teams and scalable for larger organizations.",
       monthlyLabel: "Monthly",
       yearlyLabel: "Annual",
-      monthlyPrice: "1 EUR",
-      yearlyPrice: "10 EUR",
+      monthlyPrice: "10 EUR",
+      yearlyPrice: "100 EUR",
       perEmployeeMonth: "per employee / month",
       perEmployeeYear: "per employee / year",
       note: "The annual plan includes 2 months of savings compared with monthly billing.",
@@ -509,8 +572,8 @@ const translations = {
         small: {
           label: "Small companies",
           title: "Up to 10 employees",
-          monthly: "Up to 10 EUR monthly",
-          yearly: "Up to 100 EUR annually",
+          monthly: "Up to 100 EUR monthly",
+          yearly: "Up to 1,000 EUR annually",
           point1: "For small teams and pilot training",
           point2: "Access to all available scenarios",
           point3: "A strong start for internal presentation",
@@ -518,8 +581,8 @@ const translations = {
         medium: {
           label: "Medium companies",
           title: "Up to 100 employees",
-          monthly: "Up to 100 EUR monthly",
-          yearly: "Up to 1,000 EUR annually",
+          monthly: "Up to 1,000 EUR monthly",
+          yearly: "Up to 10,000 EUR annually",
           point1: "For regular training across multiple teams",
           point2: "Standardized access per employee",
           point3: "Suitable for multiple locations or shifts",
@@ -527,8 +590,8 @@ const translations = {
         large: {
           label: "Large companies",
           title: "Over 100 employees",
-          monthly: "1 EUR x number of employees",
-          yearly: "10 EUR x number of employees",
+          monthly: "10 EUR x number of employees",
+          yearly: "100 EUR x number of employees",
           point1: "For organizations with larger trainee groups",
           point2: "Scaling based on actual employee count",
           point3: "Planning by department and location",
@@ -697,15 +760,29 @@ const translations = {
       importWorkersSuccess: "Imported workers: {count}.",
       importWorkersEmpty: "The CSV file does not contain workers to import.",
       importWorkersHint: "CSV columns: firstName,lastName,email,employeeNumber,department",
+      inviteLabel: "Invitation",
+      inviteTitle: "Invite employee",
+      inviteTemporaryPassword: "Temporary password",
+      inviteButton: "Send invitation",
+      inviteWorking: "Creating invitation...",
+      inviteSuccess: "Invitation is ready. Link: {url} | Temporary password: {password}",
+      resetLabel: "Accounts",
+      resetTitle: "Reset password",
+      resetEmail: "User email",
+      resetNewPassword: "New password",
+      resetButton: "Reset password",
+      resetWorking: "Resetting password...",
+      resetSuccess: "Password has been reset for {email}.",
       assignWorker: "Worker",
       assignCourse: "Course",
       assignDueAt: "Due date",
       assignTraining: "Assign training",
       assignTrainingLoginRequired: "Sign in to assign training.",
       assignTrainingWorking: "Assigning training...",
-      assignTrainingSuccess: "Training has been assigned.",
+      assignTrainingSuccess: "Training has been assigned. ExamId: {examId}.",
       enrollmentsLabel: "Training",
       enrollmentsTitle: "Assigned training",
+      enrollmentExamId: "ExamId",
       enrollmentDueAt: "Due date",
       enrollmentStatus: "Status",
       enrollmentScore: "Score",
@@ -751,6 +828,7 @@ const translations = {
       apiFallback: "The API is unavailable, so a demo worker portal is shown.",
       dueDateLabel: "Due",
       startTraining: "Start training",
+      openExternalExam: "Open exam",
       startWorking: "Starting training...",
       startSuccess: "Training has been started.",
       completeScore: "Score",
@@ -762,6 +840,44 @@ const translations = {
       loginRequired: "Sign in to use the worker portal.",
       actionUnavailable: "This action is available when the portal is connected to the backend.",
       downloadCertificate: "Verify",
+      examIdLabel: "ExamId",
+      externalExamReady: "Use this ExamId in the external exam program: {examId}.",
+    },
+    systemAdmin: {
+      eyebrow: "System admin",
+      title: "Companies and subscriptions",
+      copy: "Manage companies, subscription levels, and administrator accounts.",
+      session: "Signed in as system administrator: {name}.",
+      loginRequired: "Sign in as System Administrator.",
+      apiFallback: "System admin data is unavailable until the API is connected.",
+      companiesLabel: "Companies",
+      companiesTitle: "Active companies",
+      newCompanyLabel: "New company",
+      newCompanyTitle: "Add company",
+      companyName: "Company name",
+      subscriptionLevel: "Subscription level",
+      subscriptionSmall: "Small business",
+      subscriptionMedium: "Medium business",
+      subscriptionEnterprise: "Enterprise",
+      createCompany: "Create company",
+      createWorking: "Creating company...",
+      createSuccess: "Company has been created.",
+      updateSubscription: "Save",
+      updateWorking: "Saving...",
+      updateSuccess: "Subscription has been changed.",
+      emptyCompanies: "No companies to show.",
+      adminFirstName: "Admin first name",
+      adminLastName: "Admin last name",
+      adminEmail: "Admin email",
+      adminPassword: "Admin password",
+      resetLabel: "Accounts",
+      resetTitle: "Reset user password",
+      resetEmail: "User email",
+      newPassword: "New password",
+      resetPassword: "Reset password",
+      resetWorking: "Resetting password...",
+      resetSuccess: "Password has been reset for {email}.",
+      createdAt: "Created",
     },
   },
 };
@@ -1004,9 +1120,19 @@ const workerPortalMessage = document.querySelector("[data-worker-portal-message]
 const workerPortalMetrics = document.querySelectorAll("[data-worker-metric]");
 const workerPortalEnrollments = document.querySelector("[data-worker-enrollments]");
 const workerPortalCertificates = document.querySelector("[data-worker-certificates]");
+const systemAdminMessage = document.querySelector("[data-system-admin-message]");
+const systemAdminLogoutButton = document.querySelector("[data-system-admin-logout]");
+const systemCompanyList = document.querySelector("[data-system-company-list]");
+const systemCompanyForm = document.querySelector("[data-system-company-form]");
+const systemCompanyMessage = document.querySelector("[data-system-company-message]");
+const resetPasswordForms = document.querySelectorAll("[data-reset-password-form]");
+const inviteForm = document.querySelector("[data-invite-form]");
+const inviteMessage = document.querySelector("[data-invite-message]");
 let currentLanguage = "sr";
 let platformDataLoadedFromApi = false;
+let systemAdminDataLoadedFromApi = false;
 let currentPlatformData = null;
+let currentSystemCompanies = [];
 let workerSearchTerm = "";
 const defaultApiBaseUrl =
   window.location.protocol.startsWith("http") &&
@@ -1017,6 +1143,7 @@ const apiBaseUrl =
   window.SAFETY_SIM_API_BASE_URL ||
   localStorage.getItem("safetySimApiBaseUrl") ||
   defaultApiBaseUrl;
+const externalExamBaseUrl = window.VR_ACADEMY_EXAM_BASE_URL || localStorage.getItem("vrAcademyExamBaseUrl") || "";
 const authStorageKey = "safetySimAuth";
 
 if (pageName === "login") {
@@ -1118,11 +1245,19 @@ function isAdministratorRole(role) {
   return role === "systemAdministrator" || role === "companyAdministrator";
 }
 
+function isSystemAdministratorRole(role) {
+  return role === "systemAdministrator";
+}
+
 function isWorkerRole(role) {
   return role === "user";
 }
 
 function getDefaultPageForRole(role) {
+  if (isSystemAdministratorRole(role)) {
+    return "system-admin.html";
+  }
+
   return isWorkerRole(role) ? "worker.html" : "platform.html";
 }
 
@@ -1131,11 +1266,15 @@ function updateNavigationVisibility() {
   const isLoggedIn = Boolean(getAccessToken());
 
   document.querySelectorAll('a[href="platform.html"]').forEach((link) => {
-    link.hidden = !isLoggedIn || !isAdministratorRole(role);
+    link.hidden = !isLoggedIn || role !== "companyAdministrator";
   });
 
   document.querySelectorAll('a[href="worker.html"]').forEach((link) => {
     link.hidden = !isLoggedIn || !isWorkerRole(role);
+  });
+
+  document.querySelectorAll('a[href="system-admin.html"]').forEach((link) => {
+    link.hidden = !isLoggedIn || !isSystemAdministratorRole(role);
   });
 
   if (!headerActionLink) {
@@ -1146,9 +1285,11 @@ function updateNavigationVisibility() {
     headerActionLink.href = getDefaultPageForRole(role);
     headerActionLink.removeAttribute("data-i18n");
     headerActionLink.removeAttribute("aria-current");
-    headerActionLink.textContent = isWorkerRole(role)
-      ? translations[currentLanguage].nav.workerPortal
-      : translations[currentLanguage].nav.platform;
+    headerActionLink.textContent = isSystemAdministratorRole(role)
+      ? translations[currentLanguage].nav.systemAdmin
+      : isWorkerRole(role)
+        ? translations[currentLanguage].nav.workerPortal
+        : translations[currentLanguage].nav.platform;
     return;
   }
 
@@ -1161,13 +1302,18 @@ function enforcePageAccess() {
   const isLoggedIn = Boolean(getAccessToken());
   const role = getStoredUserRole();
 
-  if (pageName === "platform" && (!isLoggedIn || !isAdministratorRole(role))) {
-    window.location.href = isWorkerRole(role) ? "worker.html" : "login.html";
+  if (pageName === "systemAdmin" && (!isLoggedIn || !isSystemAdministratorRole(role))) {
+    window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
+    return false;
+  }
+
+  if (pageName === "platform" && (!isLoggedIn || role !== "companyAdministrator")) {
+    window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
 
   if (pageName === "worker" && (!isLoggedIn || !isWorkerRole(role))) {
-    window.location.href = isAdministratorRole(role) ? "platform.html" : "login.html";
+    window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
 
@@ -1256,6 +1402,47 @@ function setReportMessage(message, tone = "") {
   reportMessage.textContent = message;
   reportMessage.classList.toggle("is-error", tone === "error");
   reportMessage.classList.toggle("is-success", tone === "success");
+}
+
+function setSystemAdminMessage(message, tone = "") {
+  if (!systemAdminMessage) {
+    return;
+  }
+
+  systemAdminMessage.textContent = message;
+  systemAdminMessage.classList.toggle("is-error", tone === "error");
+  systemAdminMessage.classList.toggle("is-success", tone === "success");
+}
+
+function setSystemCompanyMessage(message, tone = "") {
+  if (!systemCompanyMessage) {
+    return;
+  }
+
+  systemCompanyMessage.textContent = message;
+  systemCompanyMessage.classList.toggle("is-error", tone === "error");
+  systemCompanyMessage.classList.toggle("is-success", tone === "success");
+}
+
+function setInviteMessage(message, tone = "") {
+  if (!inviteMessage) {
+    return;
+  }
+
+  inviteMessage.textContent = message;
+  inviteMessage.classList.toggle("is-error", tone === "error");
+  inviteMessage.classList.toggle("is-success", tone === "success");
+}
+
+function setResetPasswordMessage(form, message, tone = "") {
+  const messageElement = form?.parentElement?.querySelector("[data-reset-password-message]");
+  if (!messageElement) {
+    return;
+  }
+
+  messageElement.textContent = message;
+  messageElement.classList.toggle("is-error", tone === "error");
+  messageElement.classList.toggle("is-success", tone === "success");
 }
 
 function getInitialLanguage() {
@@ -1376,6 +1563,19 @@ function getAverageScore(enrollments) {
 
 function getCourseById(courseMap, courseId) {
   return courseMap.get(String(courseId));
+}
+
+function getExamId(enrollment) {
+  return getField(enrollment, "examId") || getField(enrollment, "ExamId") || "-";
+}
+
+function getExternalExamUrl(examId) {
+  if (!externalExamBaseUrl || !examId || examId === "-") {
+    return "";
+  }
+
+  const separator = externalExamBaseUrl.includes("?") ? "&" : "?";
+  return `${externalExamBaseUrl}${separator}ExamId=${encodeURIComponent(examId)}`;
 }
 
 function buildNotifications({ workers, courses, certificates, enrollments, language, workerMap, courseMap }) {
@@ -1545,7 +1745,7 @@ function exportWorkersReport() {
 function exportEnrollmentsReport() {
   const data = getReportData();
   const rows = [
-    ["Worker", "Course", "Status", "Score", "Duration minutes", "Enrolled at", "Due at", "Completed at"],
+    ["Worker", "Course", "ExamId", "Status", "Score", "Duration minutes", "Enrolled at", "Due at", "Completed at"],
     ...(data.enrollments || []).map((enrollment) => {
       const worker = data.workerMap.get(String(getField(enrollment, "workerId")));
       const course = data.courseMap.get(String(getField(enrollment, "courseId")));
@@ -1553,6 +1753,7 @@ function exportEnrollmentsReport() {
       return [
         getWorkerName(worker),
         getCourseTitle(course, currentLanguage) || "",
+        getExamId(enrollment),
         getEnrollmentStatusLabel(getField(enrollment, "status"), currentLanguage),
         getField(enrollment, "score") ?? "",
         getField(enrollment, "durationMinutes") ?? "",
@@ -1701,7 +1902,7 @@ function renderCompletionSelector(enrollments, workerMap, courseMap, language) {
     .map((enrollment) => {
       const worker = workerMap.get(String(getField(enrollment, "workerId")));
       const course = courseMap.get(String(getField(enrollment, "courseId")));
-      return `<option value="${getField(enrollment, "id")}">${getWorkerName(worker)} - ${getCourseTitle(course, language)}</option>`;
+      return `<option value="${getField(enrollment, "id")}">${getWorkerName(worker)} - ${getCourseTitle(course, language)} (${getExamId(enrollment)})</option>`;
     })
     .join("");
 }
@@ -1848,11 +2049,13 @@ function renderPlatform(language, apiData = null) {
             const course = courseMap.get(String(getField(enrollment, "courseId")));
             const score = getField(enrollment, "score");
             const dueAt = formatShortDate(getField(enrollment, "dueAt"), language);
+            const examId = getExamId(enrollment);
 
             return `
               <div role="row" class="record-row enrollment-row">
                 <span role="cell">${getWorkerName(worker)}</span>
                 <span role="cell">${getCourseTitle(course, language) || "-"}</span>
+                <span role="cell">${examId}</span>
                 <span role="cell">${dueAt}</span>
                 <span role="cell">${getEnrollmentStatusLabel(getField(enrollment, "status"), language)}</span>
                 <span role="cell">${score ?? "-"}</span>
@@ -1860,8 +2063,108 @@ function renderPlatform(language, apiData = null) {
             `;
           })
           .join("")
-      : `<div role="row" class="record-row enrollment-row"><span role="cell">${dictionary.enrollmentEmpty}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
+      : `<div role="row" class="record-row enrollment-row"><span role="cell">${dictionary.enrollmentEmpty}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
   }
+}
+
+function getSubscriptionLabel(level, language) {
+  const dictionary = translations[language].systemAdmin;
+  const normalized = String(level || "SmallBusiness").toLowerCase();
+
+  if (normalized === "enterprise") {
+    return dictionary.subscriptionEnterprise;
+  }
+
+  if (normalized === "mediumbusiness") {
+    return dictionary.subscriptionMedium;
+  }
+
+  return dictionary.subscriptionSmall;
+}
+
+function renderSubscriptionOptions(selectedLevel, language) {
+  const dictionary = translations[language].systemAdmin;
+  const selected = String(selectedLevel || "SmallBusiness");
+  const options = [
+    ["SmallBusiness", dictionary.subscriptionSmall],
+    ["MediumBusiness", dictionary.subscriptionMedium],
+    ["Enterprise", dictionary.subscriptionEnterprise],
+  ];
+
+  return options
+    .map(([value, label]) => `<option value="${value}" ${selected === value ? "selected" : ""}>${label}</option>`)
+    .join("");
+}
+
+function renderSystemAdmin(language, companies = currentSystemCompanies) {
+  if (!systemCompanyList) {
+    return;
+  }
+
+  const dictionary = translations[language].systemAdmin;
+  systemCompanyList.innerHTML = companies.length
+    ? companies
+        .map((company) => {
+          const companyId = getField(company, "id");
+          const subscriptionLevel = getField(company, "subscriptionLevel") || "SmallBusiness";
+          const createdAt = formatShortDate(getField(company, "createdAt"), language);
+
+          return `
+            <article class="company-admin-item">
+              <div>
+                <h3>${getField(company, "name") || "-"}</h3>
+                <p>${dictionary.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)} &middot; ${dictionary.createdAt}: ${createdAt}</p>
+              </div>
+              <form data-company-subscription-form data-company-id="${escapeAttribute(companyId)}">
+                <select name="subscriptionLevel" aria-label="${dictionary.subscriptionLevel}">
+                  ${renderSubscriptionOptions(subscriptionLevel, language)}
+                </select>
+                <button class="button secondary" type="submit">${dictionary.updateSubscription}</button>
+              </form>
+            </article>
+          `;
+        })
+        .join("")
+    : `<article class="worker-item"><h3>${dictionary.emptyCompanies}</h3><p>${dictionary.apiFallback}</p></article>`;
+}
+
+async function loadSystemAdminData(language) {
+  if (!systemCompanyList) {
+    return;
+  }
+
+  const auth = getStoredAuth();
+  const role = getStoredUserRole();
+  if (!auth || !isSystemAdministratorRole(role)) {
+    window.location.href = auth ? getDefaultPageForRole(role) : "login.html";
+    return;
+  }
+
+  const profileResult = await apiRequest("/api/auth/me", { auth: true });
+  if (!profileResult.ok) {
+    clearAuth();
+    systemAdminDataLoadedFromApi = false;
+    window.location.href = "login.html";
+    return;
+  }
+
+  const fullName = `${getField(profileResult.data, "firstName") || ""} ${getField(profileResult.data, "lastName") || ""}`.trim();
+  setSystemAdminMessage(
+    translations[language].systemAdmin.session.replace("{name}", fullName || getField(profileResult.data, "email") || "-"),
+  );
+
+  const companiesResult = await apiRequest("/api/system/companies", { auth: true });
+  if (!companiesResult.ok) {
+    systemAdminDataLoadedFromApi = false;
+    currentSystemCompanies = [];
+    setSystemAdminMessage(companiesResult.error || translations[language].systemAdmin.apiFallback, "error");
+    renderSystemAdmin(language, []);
+    return;
+  }
+
+  systemAdminDataLoadedFromApi = true;
+  currentSystemCompanies = companiesResult.data || [];
+  renderSystemAdmin(language, currentSystemCompanies);
 }
 
 function setWorkerPortalMetric(metricName, value) {
@@ -1896,6 +2199,7 @@ function getDemoWorkerPortalData() {
       {
         id: "demo-enrollment-fire",
         courseId: demoCourses[0].id,
+        examId: "EX-DEMO-FIRE-001",
         status: "Passed",
         score: 92,
         durationMinutes: 34,
@@ -1905,6 +2209,7 @@ function getDemoWorkerPortalData() {
       {
         id: "demo-enrollment-chemical",
         courseId: demoCourses[1].id,
+        examId: "EX-DEMO-CHEM-002",
         status: "InProgress",
         score: null,
         durationMinutes: 0,
@@ -1914,6 +2219,7 @@ function getDemoWorkerPortalData() {
       {
         id: "demo-enrollment-radioactive",
         courseId: demoCourses[2].id,
+        examId: "EX-DEMO-RAD-003",
         status: "Enrolled",
         score: null,
         durationMinutes: 0,
@@ -1972,10 +2278,15 @@ function renderWorkerPortal(language, apiData = null, message = "") {
           const dueAt = formatShortDate(getField(enrollment, "dueAt"), language);
           const status = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
           const enrollmentId = getField(enrollment, "id");
+          const examId = getExamId(enrollment);
+          const externalExamUrl = getExternalExamUrl(examId);
           const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
           const canStart = normalizedStatus === "enrolled";
-          const canComplete = normalizedStatus === "enrolled" || normalizedStatus === "inprogress";
-          const actionMarkup = canComplete
+          const canOpenExternalExam = normalizedStatus === "enrolled" || normalizedStatus === "inprogress";
+          const externalExamMarkup = externalExamUrl && canOpenExternalExam
+            ? `<a class="status-pill" href="${externalExamUrl}" target="_blank" rel="noopener noreferrer">${dictionary.openExternalExam}</a>`
+            : "";
+          const actionMarkup = canStart || externalExamMarkup
             ? `
               <div class="worker-course-actions">
                 ${
@@ -1983,17 +2294,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
                     ? `<button class="status-pill" type="button" data-worker-start-enrollment="${escapeAttribute(enrollmentId)}" ${isLive ? "" : "disabled"}>${dictionary.startTraining}</button>`
                     : ""
                 }
-                <form class="worker-complete-form" data-worker-complete-form data-worker-enrollment-id="${escapeAttribute(enrollmentId)}">
-                  <label>
-                    <span>${dictionary.completeScore}</span>
-                    <input type="number" name="score" min="0" max="100" value="90" ${isLive ? "" : "disabled"} />
-                  </label>
-                  <label>
-                    <span>${dictionary.completeDuration}</span>
-                    <input type="number" name="durationMinutes" min="1" value="${duration}" ${isLive ? "" : "disabled"} />
-                  </label>
-                  <button class="status-pill" type="submit" ${isLive ? "" : "disabled"}>${dictionary.completeTraining}</button>
-                </form>
+                ${externalExamMarkup}
               </div>
             `
             : `<span class="status-pill">${status}</span>`;
@@ -2003,7 +2304,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
               <img src="${getCourseImage(course)}" alt="${getCourseAlt(course, language)}" loading="lazy" />
               <div>
                 <h3>${getCourseTitle(course, language) || "-"}</h3>
-                <p>${status} · ${dictionary.dueDateLabel}: ${dueAt} · ${score ?? "-"}% ${translations[language].platform.score} · ${duration} ${translations[language].platform.duration}</p>
+                <p>${status} &middot; ${dictionary.dueDateLabel}: ${dueAt} &middot; ${dictionary.examIdLabel}: ${examId} &middot; ${score ?? "-"}% ${translations[language].platform.score} &middot; ${duration} ${translations[language].platform.duration}</p>
               </div>
               ${actionMarkup}
             </article>
@@ -2046,7 +2347,7 @@ async function loadWorkerPortalData(language) {
   }
 
   if (!isWorkerRole(getStoredUserRole())) {
-    window.location.href = "platform.html";
+    window.location.href = getDefaultPageForRole(getStoredUserRole());
     return;
   }
 
@@ -2080,7 +2381,11 @@ async function startWorkerPortalEnrollment(enrollmentId) {
     return;
   }
 
-  setWorkerPortalMessage(translations[currentLanguage].workerPortal.startSuccess);
+  const examId = getExamId(result.data);
+  setWorkerPortalMessage(
+    translations[currentLanguage].workerPortal.externalExamReady.replace("{examId}", examId) ||
+      translations[currentLanguage].workerPortal.startSuccess,
+  );
   loadWorkerPortalData(currentLanguage);
 }
 
@@ -2127,8 +2432,8 @@ async function loadPlatformData(language) {
     return;
   }
 
-  if (!isAdministratorRole(getStoredUserRole())) {
-    window.location.href = "worker.html";
+  if (getStoredUserRole() !== "companyAdministrator") {
+    window.location.href = getDefaultPageForRole(getStoredUserRole());
     return;
   }
 
@@ -2151,8 +2456,8 @@ async function loadPlatformData(language) {
 
   const user = profileResult.data;
   const role = normalizeUserRole(getField(user, "role"));
-  if (!isAdministratorRole(role)) {
-    window.location.href = "worker.html";
+  if (role !== "companyAdministrator") {
+    window.location.href = getDefaultPageForRole(role);
     return;
   }
 
@@ -2487,6 +2792,7 @@ function applyTranslations(language) {
   renderScenarios(language);
   loadPlatformData(language);
   loadWorkerPortalData(language);
+  loadSystemAdminData(language);
   updateCertificate(language);
   if (verifyNumberInput?.value) {
     verifyCertificate(verifyNumberInput.value);
@@ -2559,6 +2865,92 @@ platformLogoutButton?.addEventListener("click", () => {
   setEnrollmentMessage("");
   setCompletionMessage("");
   window.location.href = "login.html";
+});
+
+systemAdminLogoutButton?.addEventListener("click", () => {
+  clearAuth();
+  updateNavigationVisibility();
+  systemAdminDataLoadedFromApi = false;
+  currentSystemCompanies = [];
+  window.location.href = "login.html";
+});
+
+systemCompanyForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!getAccessToken() || !systemAdminDataLoadedFromApi) {
+    setSystemCompanyMessage(translations[currentLanguage].systemAdmin.loginRequired, "error");
+    return;
+  }
+
+  const formData = new FormData(systemCompanyForm);
+  const submitButton = systemCompanyForm.querySelector('button[type="submit"]');
+  const request = {
+    name: formData.get("name")?.toString().trim(),
+    subscriptionLevel: formData.get("subscriptionLevel")?.toString(),
+    administratorFirstName: formData.get("administratorFirstName")?.toString().trim() || null,
+    administratorLastName: formData.get("administratorLastName")?.toString().trim() || null,
+    administratorEmail: formData.get("administratorEmail")?.toString().trim() || null,
+    administratorPassword: formData.get("administratorPassword")?.toString() || null,
+  };
+
+  setSystemCompanyMessage(translations[currentLanguage].systemAdmin.createWorking);
+  submitButton.disabled = true;
+
+  const result = await apiRequest("/api/system/companies", {
+    method: "POST",
+    auth: true,
+    body: request,
+  });
+
+  submitButton.disabled = false;
+
+  if (!result.ok) {
+    setSystemCompanyMessage(result.error, "error");
+    return;
+  }
+
+  systemCompanyForm.reset();
+  setSystemCompanyMessage(translations[currentLanguage].systemAdmin.createSuccess, "success");
+  loadSystemAdminData(currentLanguage);
+});
+
+document.addEventListener("submit", async (event) => {
+  const form = event.target.closest("[data-company-subscription-form]");
+  if (!form) {
+    return;
+  }
+
+  event.preventDefault();
+  const companyId = form.dataset.companyId;
+  const formData = new FormData(form);
+  const submitButton = form.querySelector('button[type="submit"]');
+
+  if (!companyId || !getAccessToken()) {
+    setSystemAdminMessage(translations[currentLanguage].systemAdmin.loginRequired, "error");
+    return;
+  }
+
+  setSystemAdminMessage(translations[currentLanguage].systemAdmin.updateWorking);
+  submitButton.disabled = true;
+
+  const result = await apiRequest(`/api/system/companies/${encodeURIComponent(companyId)}/subscription`, {
+    method: "PATCH",
+    auth: true,
+    body: {
+      subscriptionLevel: formData.get("subscriptionLevel")?.toString(),
+    },
+  });
+
+  submitButton.disabled = false;
+
+  if (!result.ok) {
+    setSystemAdminMessage(result.error, "error");
+    return;
+  }
+
+  setSystemAdminMessage(translations[currentLanguage].systemAdmin.updateSuccess, "success");
+  loadSystemAdminData(currentLanguage);
 });
 
 document.addEventListener("click", (event) => {
@@ -2659,6 +3051,92 @@ workerForm?.addEventListener("submit", async (event) => {
   loadPlatformData(currentLanguage);
 });
 
+inviteForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!getAccessToken() || !platformDataLoadedFromApi) {
+    setInviteMessage(translations[currentLanguage].platform.addWorkerLoginRequired, "error");
+    return;
+  }
+
+  const formData = new FormData(inviteForm);
+  const submitButton = inviteForm.querySelector('button[type="submit"]');
+  const request = {
+    email: formData.get("email")?.toString().trim(),
+    firstName: formData.get("firstName")?.toString().trim(),
+    lastName: formData.get("lastName")?.toString().trim(),
+    temporaryPassword: formData.get("temporaryPassword")?.toString() || null,
+    employeeNumber: formData.get("employeeNumber")?.toString().trim() || null,
+    department: formData.get("department")?.toString().trim() || null,
+  };
+
+  setInviteMessage(translations[currentLanguage].platform.inviteWorking);
+  submitButton.disabled = true;
+
+  const result = await apiRequest("/api/invitations", {
+    method: "POST",
+    auth: true,
+    body: request,
+  });
+
+  submitButton.disabled = false;
+
+  if (!result.ok) {
+    setInviteMessage(result.error, "error");
+    return;
+  }
+
+  inviteForm.reset();
+  const invitationUrl = getField(result.data, "invitationUrl") || "-";
+  const temporaryPassword = getField(result.data, "temporaryPassword") || "-";
+  setInviteMessage(
+    translations[currentLanguage].platform.inviteSuccess
+      .replace("{url}", invitationUrl)
+      .replace("{password}", temporaryPassword),
+    "success",
+  );
+  loadPlatformData(currentLanguage);
+});
+
+resetPasswordForms.forEach((form) => {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!getAccessToken()) {
+      setResetPasswordMessage(form, translations[currentLanguage].workerPortal.loginRequired, "error");
+      return;
+    }
+
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    const email = formData.get("email")?.toString().trim();
+    const request = {
+      email,
+      newPassword: formData.get("newPassword")?.toString(),
+    };
+    const dictionary = pageName === "systemAdmin" ? translations[currentLanguage].systemAdmin : translations[currentLanguage].platform;
+
+    setResetPasswordMessage(form, dictionary.resetWorking);
+    submitButton.disabled = true;
+
+    const result = await apiRequest("/api/users/reset-password", {
+      method: "POST",
+      auth: true,
+      body: request,
+    });
+
+    submitButton.disabled = false;
+
+    if (!result.ok) {
+      setResetPasswordMessage(form, result.error, "error");
+      return;
+    }
+
+    form.reset();
+    setResetPasswordMessage(form, dictionary.resetSuccess.replace("{email}", email || "-"), "success");
+  });
+});
+
 workerSearchInput?.addEventListener("input", () => {
   workerSearchTerm = workerSearchInput.value.trim();
   renderPlatform(currentLanguage, currentPlatformData);
@@ -2750,7 +3228,10 @@ enrollmentForm?.addEventListener("submit", async (event) => {
     return;
   }
 
-  setEnrollmentMessage(translations[currentLanguage].platform.assignTrainingSuccess, "success");
+  setEnrollmentMessage(
+    translations[currentLanguage].platform.assignTrainingSuccess.replace("{examId}", getExamId(result.data)),
+    "success",
+  );
   loadPlatformData(currentLanguage);
 });
 

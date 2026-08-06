@@ -95,6 +95,11 @@ namespace VRAcademy.Api.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("SubscriptionLevel")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -283,6 +288,10 @@ namespace VRAcademy.Api.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("EnrolledAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ExamId")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
                     b.Property<int?>("Score")
                         .HasColumnType("int");

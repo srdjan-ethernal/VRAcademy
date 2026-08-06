@@ -26,6 +26,7 @@ Stranice:
 - Pocetna: `index.html`
 - Cene: `pricing.html`
 - Sertifikati: `certificates.html`
+- System admin: `system-admin.html`
 - Platforma za administratore kompanije: `platform.html`
 - Portal zaposlenog: `worker.html`
 
@@ -54,8 +55,13 @@ Pocetne rute:
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
+- `GET /api/system/companies`
+- `POST /api/system/companies`
+- `PATCH /api/system/companies/{companyId}/subscription`
 - `GET /api/users`
 - `POST /api/users`
+- `POST /api/users/reset-password`
+- `POST /api/invitations`
 - `GET /api/companies`
 - `GET /api/dashboard/summary`
 - `GET /api/scenarios`
@@ -64,11 +70,14 @@ Pocetne rute:
 - `POST /api/workers`
 - `POST /api/enrollments`
 - `POST /api/enrollments/{enrollmentId}/complete`
+- `POST /api/exams/{examId}/result`
 - `GET /api/certificates`
 
 Korisnik se registruje uz kompaniju. Radnici, upisi i sertifikati se citaju i menjaju samo u okviru kompanije ulogovanog korisnika preko Bearer tokena. Backend podrazumevano koristi SQL Server kroz Entity Framework Core, a za demo hosting podrzan je Azure SQL preko konfiguracije. Sledeci korak je ASP.NET Core Identity ili Microsoft Entra ID prema tipu korisnika.
 
-Uloge su `SystemAdministrator`, `CompanyAdministrator` i `User`. Neulogovani posetioci ne vide interne stranice `Platforma` i `Moj portal`; `CompanyAdministrator` upravlja zaposlenima i dodeljenim kursevima, a `User` vidi samo svoje zakazane i prethodne obuke kroz Moj portal. Kada administrator dodaje radnika, moze odmah uneti i lozinku za portal, cime se za tog zaposlenog kreira `User` nalog sa istom email adresom.
+Uloge su `SystemAdministrator`, `CompanyAdministrator` i `User`. Neulogovani posetioci ne vide interne stranice `Admin`, `Platforma` i `Moj portal`; `SystemAdministrator` upravlja kompanijama i nivoima preplate, `CompanyAdministrator` upravlja zaposlenima i dodeljenim kursevima, a `User` vidi samo svoje zakazane i prethodne obuke kroz Moj portal. Kada administrator pozove zaposlenog, moze uneti privremenu lozinku i broj zaposlenog; sistem kreira korisnicki nalog i po potrebi worker zapis sa istom email adresom.
+
+Svaka dodeljena obuka dobija `ExamId`. Poseban program za polaganje dobija taj `ExamId`, a rezultat vraca kroz `POST /api/exams/{examId}/result` sa statusom, rezultatom i trajanjem. Backend na osnovu rezultata oznacava polaganje kao polozeno ili nepolozeno i kreira sertifikat kada je kurs polozen.
 
 Za lokalnu bazu instalirati SQL Server Express LocalDB ili podesiti `ConnectionStrings:TrainingDatabase` na postojeci SQL Server. Migracije su u `src/VRAcademy.Api/Persistence/Migrations`.
 

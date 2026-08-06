@@ -124,6 +124,7 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
                 Guid.NewGuid(),
                 request.WorkerId,
                 request.CourseId,
+                CreateExamId(),
                 EnrollmentStatus.Enrolled,
                 DateTimeOffset.UtcNow,
                 request.DueAt,
@@ -211,6 +212,76 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
                     DateTimeOffset.UtcNow.AddMonths(course.ValidityMonths),
                     CertificateStatus.Active);
 
+                _certificates.Add(certificate);
+            }
+
+            return Result<EnrollmentCompletionResponse>.Success(new EnrollmentCompletionResponse(
+                completedEnrollment,
+                certificate));
+        }
+    }
+
+    public Result<EnrollmentCompletionResponse> CompleteExternalExam(string examId, ExternalExamResultRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(examId))
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("ExamId je obavezan.");
+        }
+
+        if (request.Score < 0 || request.Score > 100)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Rezultat mora biti izmedju 0 i 100.");
+        }
+
+        if (request.DurationMinutes <= 0)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Trajanje obuke mora biti vece od 0.");
+        }
+
+        var normalizedStatus = request.Status.Trim().ToLowerInvariant();
+        var passed = normalizedStatus is "passed" or "pass" or "polozeno" or "prosao";
+        var failed = normalizedStatus is "failed" or "fail" or "pao" or "nije polozeno";
+        if (!passed && !failed)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Status mora biti Passed ili Failed.");
+        }
+
+        lock (_lock)
+        {
+            var enrollmentIndex = _enrollments.FindIndex(enrollment =>
+                string.Equals(enrollment.ExamId, examId.Trim(), StringComparison.OrdinalIgnoreCase));
+            if (enrollmentIndex < 0)
+            {
+                return Result<EnrollmentCompletionResponse>.Failure("ExamId nije pronadjen.");
+            }
+
+            var enrollment = _enrollments[enrollmentIndex];
+            if (enrollment.Status is EnrollmentStatus.Passed or EnrollmentStatus.Failed)
+            {
+                return Result<EnrollmentCompletionResponse>.Failure("Obuka je vec zavrsena.");
+            }
+
+            var course = _courses.Single(existingCourse => existingCourse.Id == enrollment.CourseId);
+            var completedEnrollment = enrollment with
+            {
+                Status = passed ? EnrollmentStatus.Passed : EnrollmentStatus.Failed,
+                CompletedAt = DateTimeOffset.UtcNow,
+                Score = request.Score,
+                DurationMinutes = request.DurationMinutes
+            };
+            _enrollments[enrollmentIndex] = completedEnrollment;
+
+            Certificate? certificate = null;
+            if (passed)
+            {
+                certificate = new Certificate(
+                    Guid.NewGuid(),
+                    CreateCertificateNumber(course.Code),
+                    enrollment.WorkerId,
+                    enrollment.CourseId,
+                    DateTimeOffset.UtcNow,
+                    DateTimeOffset.UtcNow.AddMonths(course.ValidityMonths),
+                    CertificateStatus.Active);
                 _certificates.Add(certificate);
             }
 
@@ -359,6 +430,11 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
     private static string CreateCertificateNumber(string courseCode)
     {
         return $"SS-{courseCode.ToUpperInvariant()}-{DateTimeOffset.UtcNow:yyyyMMddHHmmss}";
+    }
+
+    private static string CreateExamId()
+    {
+        return $"EX-{Guid.NewGuid():N}";
     }
 }
 

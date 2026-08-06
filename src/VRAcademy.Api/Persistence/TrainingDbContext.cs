@@ -51,6 +51,7 @@ public sealed class TrainingDbContext : DbContext
             entity.ToTable("Companies");
             entity.HasKey(company => company.Id);
             entity.Property(company => company.Name).HasMaxLength(200).IsRequired();
+            entity.Property(company => company.SubscriptionLevel).HasConversion<string>().HasMaxLength(40).IsRequired();
             entity.HasIndex(company => company.Name).IsUnique();
         });
     }
@@ -162,6 +163,7 @@ public sealed class TrainingDbContext : DbContext
         {
             entity.ToTable("Enrollments");
             entity.HasKey(enrollment => enrollment.Id);
+            entity.Property(enrollment => enrollment.ExamId).HasMaxLength(80);
             entity.Property(enrollment => enrollment.Status).HasConversion<string>().HasMaxLength(40).IsRequired();
             entity.Property(enrollment => enrollment.DueAt);
             entity.HasOne(enrollment => enrollment.Worker)

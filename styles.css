@@ -1278,7 +1278,8 @@ h1 {
 
 .worker-tools,
 .assignment-form,
-.completion-form {
+.completion-form,
+.admin-form {
   display: grid;
   gap: 12px;
   margin-bottom: 16px;
@@ -1294,7 +1295,8 @@ h1 {
 
 .worker-tools label,
 .assignment-form label,
-.completion-form label {
+.completion-form label,
+.admin-form label {
   display: grid;
   gap: 7px;
   color: #31414f;
@@ -1306,7 +1308,9 @@ h1 {
 .assignment-form select,
 .assignment-form input,
 .completion-form select,
-.completion-form input {
+.completion-form input,
+.admin-form input,
+.admin-form select {
   width: 100%;
   min-height: 42px;
   border: 1px solid var(--line);
@@ -1325,9 +1329,75 @@ h1 {
 .assignment-form select:focus,
 .assignment-form input:focus,
 .completion-form select:focus,
-.completion-form input:focus {
+.completion-form input:focus,
+.admin-form input:focus,
+.admin-form select:focus {
   border-color: rgba(15, 118, 110, 0.6);
   outline: 3px solid rgba(15, 118, 110, 0.12);
+}
+
+.compact-heading {
+  margin-bottom: 4px;
+}
+
+.compact-heading h3 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.company-admin-list {
+  display: grid;
+  gap: 12px;
+}
+
+.company-admin-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, auto);
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fbfdfe;
+}
+
+.company-admin-item h3 {
+  margin-bottom: 4px;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.company-admin-item p,
+.invite-result {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.company-admin-item form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.company-admin-item select {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 0 10px;
+}
+
+.inline-admin-form {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
 }
 
 .worker-form {
@@ -1452,7 +1522,7 @@ h1 {
 
 .enrollment-head,
 .enrollment-row {
-  grid-template-columns: 1fr 1.15fr 0.65fr 0.65fr 0.45fr;
+  grid-template-columns: 1fr 1.05fr 0.9fr 0.6fr 0.6fr 0.45fr;
 }
 
 .included-list h3 {
@@ -1712,6 +1782,17 @@ h1 {
 
   .worker-complete-form button {
     grid-column: 1 / -1;
+  }
+
+  .company-admin-item,
+  .company-admin-item form,
+  .inline-admin-form {
+    grid-template-columns: 1fr;
+  }
+
+  .company-admin-item form {
+    display: grid;
+    justify-content: stretch;
   }
 
   .records-head {

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VR Academy system admin</title>
+    <meta
+      name="description"
+      content="System administrator portal za upravljanje kompanijama i nivoima preplate."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="systemAdmin">
+    <header class="site-header" data-header>
+      <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
+        <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
+        <span class="brand-text">VR Academy</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
+        <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
+        <a href="system-admin.html" aria-current="page" data-i18n="nav.systemAdmin">Admin</a>
+        <a href="platform.html" data-i18n="nav.platform">Platforma</a>
+        <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
+        <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
+        <a href="verify.html" data-i18n="nav.verify">Provera</a>
+        <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
+      </nav>
+
+      <a class="header-action" href="login.html" data-i18n="nav.login">Prijava</a>
+
+      <div class="language-switch" aria-label="Izbor jezika" data-i18n-aria-label="language.label">
+        <button type="button" data-language-option="sr" aria-pressed="true">SR</button>
+        <button type="button" data-language-option="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-label="Otvori navigaciju" data-i18n-aria-label="nav.open" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="platform-shell" aria-labelledby="system-admin-title">
+        <div class="platform-topbar">
+          <div>
+            <p class="eyebrow" data-i18n="systemAdmin.eyebrow">System admin</p>
+            <h1 id="system-admin-title" data-i18n="systemAdmin.title">Kompanije i preplate</h1>
+            <p data-i18n="systemAdmin.copy">
+              Upravljanje kompanijama, nivoima preplate i administratorskim nalozima.
+            </p>
+            <p class="platform-session" data-system-admin-message></p>
+          </div>
+          <div class="platform-actions">
+            <button class="button secondary" type="button" data-system-admin-logout data-i18n="platform.logout">Odjava</button>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="dashboard-panel large-panel" aria-labelledby="companies-title">
+            <div class="panel-heading">
+              <div>
+                <span class="scenario-kicker" data-i18n="systemAdmin.companiesLabel">Kompanije</span>
+                <h2 id="companies-title" data-i18n="systemAdmin.companiesTitle">Aktivne kompanije</h2>
+              </div>
+            </div>
+            <div class="company-admin-list" data-system-company-list></div>
+          </section>
+
+          <aside class="dashboard-panel" aria-labelledby="new-company-title">
+            <div class="panel-heading">
+              <div>
+                <span class="scenario-kicker" data-i18n="systemAdmin.newCompanyLabel">Nova kompanija</span>
+                <h2 id="new-company-title" data-i18n="systemAdmin.newCompanyTitle">Dodaj kompaniju</h2>
+              </div>
+            </div>
+            <form class="admin-form" data-system-company-form>
+              <label>
+                <span data-i18n="systemAdmin.companyName">Naziv kompanije</span>
+                <input type="text" name="name" required />
+              </label>
+              <label>
+                <span data-i18n="systemAdmin.subscriptionLevel">Nivo preplate</span>
+                <select name="subscriptionLevel" required>
+                  <option value="SmallBusiness" data-i18n="systemAdmin.subscriptionSmall">Mala preduzeca</option>
+                  <option value="MediumBusiness" data-i18n="systemAdmin.subscriptionMedium">Srednja preduzeca</option>
+                  <option value="Enterprise" data-i18n="systemAdmin.subscriptionEnterprise">Velika preduzeca</option>
+                </select>
+              </label>
+              <div class="form-grid">
+                <label>
+                  <span data-i18n="systemAdmin.adminFirstName">Ime admina</span>
+                  <input type="text" name="administratorFirstName" />
+                </label>
+                <label>
+                  <span data-i18n="systemAdmin.adminLastName">Prezime admina</span>
+                  <input type="text" name="administratorLastName" />
+                </label>
+              </div>
+              <label>
+                <span data-i18n="systemAdmin.adminEmail">Email admina</span>
+                <input type="email" name="administratorEmail" />
+              </label>
+              <label>
+                <span data-i18n="systemAdmin.adminPassword">Lozinka admina</span>
+                <input type="password" name="administratorPassword" minlength="5" autocomplete="new-password" />
+              </label>
+              <button class="button primary" type="submit" data-i18n="systemAdmin.createCompany">Kreiraj kompaniju</button>
+              <p class="auth-message" data-system-company-message></p>
+            </form>
+          </aside>
+        </div>
+
+        <section class="dashboard-panel" aria-labelledby="system-reset-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="systemAdmin.resetLabel">Nalozi</span>
+              <h2 id="system-reset-title" data-i18n="systemAdmin.resetTitle">Reset lozinke korisnika</h2>
+            </div>
+          </div>
+          <form class="admin-form inline-admin-form" data-reset-password-form>
+            <label>
+              <span data-i18n="systemAdmin.resetEmail">Email korisnika</span>
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              <span data-i18n="systemAdmin.newPassword">Nova lozinka</span>
+              <input type="password" name="newPassword" minlength="5" required autocomplete="new-password" />
+            </label>
+            <button class="button primary" type="submit" data-i18n="systemAdmin.resetPassword">Resetuj lozinku</button>
+          </form>
+          <p class="auth-message" data-reset-password-message></p>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>VR Academy</span>
+      <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -46,6 +46,7 @@ public sealed class EfAuthService : IAuthService
             {
                 Id = Guid.NewGuid(),
                 Name = normalizedCompanyName,
+                SubscriptionLevel = SubscriptionLevel.SmallBusiness,
                 CreatedAt = DateTimeOffset.UtcNow
             };
 
@@ -166,12 +167,78 @@ public sealed class EfAuthService : IAuthService
         return Result<UserProfileResponse>.Success(ToProfile(user, company));
     }
 
+    public Result<InvitationResponse> InviteCompanyUser(Guid companyId, InviteUserRequest request, string baseUrl)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.FirstName) ||
+            string.IsNullOrWhiteSpace(request.LastName))
+        {
+            return Result<InvitationResponse>.Failure("Email, ime i prezime su obavezni za pozivnicu.");
+        }
+
+        var temporaryPassword = string.IsNullOrWhiteSpace(request.TemporaryPassword)
+            ? CreateTemporaryPassword()
+            : request.TemporaryPassword.Trim();
+        var createUserRequest = new CreateCompanyUserRequest(
+            request.Email,
+            temporaryPassword,
+            request.FirstName,
+            request.LastName,
+            UserRole.User);
+        var userResult = CreateCompanyUser(companyId, createUserRequest);
+        if (!userResult.IsSuccess || userResult.Value is null)
+        {
+            return Result<InvitationResponse>.Failure(userResult.Error ?? "Korisnik nije kreiran.");
+        }
+
+        var invitationUrl = $"{baseUrl.TrimEnd('/')}/login.html?email={Uri.EscapeDataString(userResult.Value.Email)}";
+        return Result<InvitationResponse>.Success(new InvitationResponse(
+            userResult.Value,
+            temporaryPassword,
+            invitationUrl,
+            DateTimeOffset.UtcNow.AddDays(7)));
+    }
+
+    public Result<UserProfileResponse> ResetPassword(Guid? companyId, ResetPasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            return Result<UserProfileResponse>.Failure("Email i nova lozinka su obavezni.");
+        }
+
+        if (request.NewPassword.Length < 5)
+        {
+            return Result<UserProfileResponse>.Failure("Lozinka mora imati najmanje 5 karaktera.");
+        }
+
+        var normalizedEmail = NormalizeEmail(request.Email);
+        var query = _dbContext.Users.Include(user => user.Company).Where(user => user.Email == normalizedEmail);
+        if (companyId.HasValue)
+        {
+            query = query.Where(user => user.CompanyId == companyId.Value);
+        }
+
+        var user = query.SingleOrDefault();
+        if (user?.Company is null)
+        {
+            return Result<UserProfileResponse>.Failure("Korisnik nije pronadjen.");
+        }
+
+        var password = HashPassword(request.NewPassword);
+        user.PasswordHash = password.Hash;
+        user.PasswordSalt = password.Salt;
+        _dbContext.AuthSessions.RemoveRange(_dbContext.AuthSessions.Where(session => session.UserId == user.Id));
+        _dbContext.SaveChanges();
+
+        return Result<UserProfileResponse>.Success(ToProfile(user, user.Company));
+    }
+
     public IReadOnlyCollection<CompanyResponse> GetCompanies()
     {
         return _dbContext.Companies
             .AsNoTracking()
             .OrderBy(company => company.Name)
-            .Select(company => new CompanyResponse(company.Id, company.Name, company.CreatedAt))
+            .Select(company => ToCompanyResponse(company))
             .ToList();
     }
 
@@ -183,7 +250,76 @@ public sealed class EfAuthService : IAuthService
 
         return company is null
             ? Result<CompanyResponse>.Failure("Kompanija nije pronadjena.")
-            : Result<CompanyResponse>.Success(new CompanyResponse(company.Id, company.Name, company.CreatedAt));
+            : Result<CompanyResponse>.Success(ToCompanyResponse(company));
+    }
+
+    public Result<CompanyResponse> CreateCompany(CreateCompanyRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            return Result<CompanyResponse>.Failure("Naziv kompanije je obavezan.");
+        }
+
+        var normalizedName = request.Name.Trim();
+        if (_dbContext.Companies.Any(company => company.Name == normalizedName))
+        {
+            return Result<CompanyResponse>.Failure("Kompanija sa ovim nazivom vec postoji.");
+        }
+
+        var company = new CompanyEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = normalizedName,
+            SubscriptionLevel = request.SubscriptionLevel,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+        _dbContext.Companies.Add(company);
+
+        if (!string.IsNullOrWhiteSpace(request.AdministratorEmail))
+        {
+            if (string.IsNullOrWhiteSpace(request.AdministratorPassword) ||
+                string.IsNullOrWhiteSpace(request.AdministratorFirstName) ||
+                string.IsNullOrWhiteSpace(request.AdministratorLastName))
+            {
+                return Result<CompanyResponse>.Failure("Za administratora kompanije su obavezni email, lozinka, ime i prezime.");
+            }
+
+            var normalizedEmail = NormalizeEmail(request.AdministratorEmail);
+            if (_dbContext.Users.Any(user => user.Email == normalizedEmail))
+            {
+                return Result<CompanyResponse>.Failure("Korisnik sa email adresom administratora vec postoji.");
+            }
+
+            var password = HashPassword(request.AdministratorPassword);
+            _dbContext.Users.Add(new UserEntity
+            {
+                Id = Guid.NewGuid(),
+                CompanyId = company.Id,
+                Email = normalizedEmail,
+                FirstName = request.AdministratorFirstName.Trim(),
+                LastName = request.AdministratorLastName.Trim(),
+                Role = UserRole.CompanyAdministrator,
+                CreatedAt = DateTimeOffset.UtcNow,
+                PasswordHash = password.Hash,
+                PasswordSalt = password.Salt
+            });
+        }
+
+        _dbContext.SaveChanges();
+        return Result<CompanyResponse>.Success(ToCompanyResponse(company));
+    }
+
+    public Result<CompanyResponse> UpdateCompanySubscription(Guid companyId, UpdateCompanySubscriptionRequest request)
+    {
+        var company = _dbContext.Companies.SingleOrDefault(existingCompany => existingCompany.Id == companyId);
+        if (company is null)
+        {
+            return Result<CompanyResponse>.Failure("Kompanija nije pronadjena.");
+        }
+
+        company.SubscriptionLevel = request.SubscriptionLevel;
+        _dbContext.SaveChanges();
+        return Result<CompanyResponse>.Success(ToCompanyResponse(company));
     }
 
     private AuthResponse CreateAuthResponse(UserEntity user, CompanyEntity company)
@@ -217,6 +353,15 @@ public sealed class EfAuthService : IAuthService
             user.LastName,
             user.Role,
             user.CreatedAt);
+    }
+
+    private static CompanyResponse ToCompanyResponse(CompanyEntity company)
+    {
+        return new CompanyResponse(
+            company.Id,
+            company.Name,
+            company.SubscriptionLevel,
+            company.CreatedAt);
     }
 
     private static string? ValidateRegistration(RegisterUserRequest request)
@@ -299,6 +444,14 @@ public sealed class EfAuthService : IAuthService
     private static string CreateAccessToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
+    }
+
+    private static string CreateTemporaryPassword()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(9))
+            .Replace("+", "A", StringComparison.Ordinal)
+            .Replace("/", "b", StringComparison.Ordinal)
+            .TrimEnd('=');
     }
 
     private void RemoveExpiredSessions()

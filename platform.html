@@ -26,6 +26,7 @@
 
       <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
         <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
+        <a href="system-admin.html" data-i18n="nav.systemAdmin">Admin</a>
         <a href="platform.html" aria-current="page" data-i18n="nav.platform">Platforma</a>
         <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
         <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
@@ -192,6 +193,60 @@
               <button class="button primary" type="submit" data-i18n="platform.addWorker">Dodaj radnika</button>
               <p class="auth-message" data-worker-message></p>
             </form>
+
+            <form class="worker-form admin-form" data-invite-form>
+              <div class="panel-heading compact-heading">
+                <div>
+                  <span class="scenario-kicker" data-i18n="platform.inviteLabel">Pozivnica</span>
+                  <h3 data-i18n="platform.inviteTitle">Pozovi zaposlenog</h3>
+                </div>
+              </div>
+              <label>
+                <span data-i18n="platform.workerFirstName">Ime</span>
+                <input type="text" name="firstName" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerLastName">Prezime</span>
+                <input type="text" name="lastName" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerEmail">Email</span>
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerEmployeeNumber">Broj zaposlenog</span>
+                <input type="text" name="employeeNumber" />
+              </label>
+              <label>
+                <span data-i18n="platform.workerDepartment">Odeljenje</span>
+                <input type="text" name="department" />
+              </label>
+              <label>
+                <span data-i18n="platform.inviteTemporaryPassword">Privremena lozinka</span>
+                <input type="password" name="temporaryPassword" minlength="5" autocomplete="new-password" />
+              </label>
+              <button class="button primary" type="submit" data-i18n="platform.inviteButton">Posalji pozivnicu</button>
+              <p class="auth-message" data-invite-message></p>
+            </form>
+
+            <form class="worker-form admin-form" data-reset-password-form>
+              <div class="panel-heading compact-heading">
+                <div>
+                  <span class="scenario-kicker" data-i18n="platform.resetLabel">Nalozi</span>
+                  <h3 data-i18n="platform.resetTitle">Reset lozinke</h3>
+                </div>
+              </div>
+              <label>
+                <span data-i18n="platform.resetEmail">Email korisnika</span>
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                <span data-i18n="platform.resetNewPassword">Nova lozinka</span>
+                <input type="password" name="newPassword" minlength="5" required autocomplete="new-password" />
+              </label>
+              <button class="button secondary" type="submit" data-i18n="platform.resetButton">Resetuj lozinku</button>
+              <p class="auth-message" data-reset-password-message></p>
+            </form>
           </aside>
         </div>
 
@@ -206,30 +261,13 @@
             <div role="row" class="records-head enrollment-head">
               <span role="columnheader" data-i18n="platform.recordWorker">Radnik</span>
               <span role="columnheader" data-i18n="platform.recordCourse">Kurs</span>
+              <span role="columnheader" data-i18n="platform.enrollmentExamId">ExamId</span>
               <span role="columnheader" data-i18n="platform.enrollmentDueAt">Rok</span>
               <span role="columnheader" data-i18n="platform.enrollmentStatus">Status</span>
               <span role="columnheader" data-i18n="platform.enrollmentScore">Rezultat</span>
             </div>
             <div data-enrollment-records></div>
           </div>
-          <form class="completion-form" data-completion-form>
-            <div class="form-grid">
-              <label>
-                <span data-i18n="platform.completeEnrollment">Obuka</span>
-                <select name="enrollmentId" required data-completion-enrollment></select>
-              </label>
-              <label>
-                <span data-i18n="platform.completeScore">Rezultat</span>
-                <input type="number" name="score" min="0" max="100" value="85" required />
-              </label>
-            </div>
-            <label>
-              <span data-i18n="platform.completeDuration">Trajanje u minutima</span>
-              <input type="number" name="durationMinutes" min="1" value="35" required />
-            </label>
-            <button class="button primary" type="submit" data-i18n="platform.completeTraining">Zavrsi obuku</button>
-            <p class="auth-message" data-completion-message></p>
-          </form>
         </section>
 
         <section class="dashboard-panel certificate-log" aria-labelledby="certificate-log-title">

@@ -10,6 +10,8 @@ public sealed class EnrollmentEntity
 
     public Guid CourseId { get; set; }
 
+    public string ExamId { get; set; } = string.Empty;
+
     public EnrollmentStatus Status { get; set; }
 
     public DateTimeOffset EnrolledAt { get; set; }

@@ -125,7 +125,7 @@ if (!useInMemoryServices && autoCreateDatabase)
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<TrainingDbContext>();
         dbContext.Database.EnsureCreated();
-        EnsureEnrollmentDueAtColumn(dbContext, databaseProvider);
+        EnsureCompatibilityColumns(dbContext, databaseProvider);
     }
     catch (Exception exception)
     {
@@ -168,8 +168,13 @@ app.MapGet("/api", () => Results.Ok(new
         "POST /api/auth/register",
         "POST /api/auth/login",
         "GET /api/auth/me",
+        "GET /api/system/companies",
+        "POST /api/system/companies",
+        "PATCH /api/system/companies/{companyId}/subscription",
         "GET /api/users",
         "POST /api/users",
+        "POST /api/users/reset-password",
+        "POST /api/invitations",
         "GET /api/companies",
         "GET /api/dashboard/summary",
         "GET /api/scenarios",
@@ -186,7 +191,8 @@ app.MapGet("/api", () => Results.Ok(new
         "POST /api/notifications/reminders",
         "GET /api/worker-portal/me",
         "POST /api/worker-portal/enrollments/{enrollmentId}/start",
-        "POST /api/worker-portal/enrollments/{enrollmentId}/complete"
+        "POST /api/worker-portal/enrollments/{enrollmentId}/complete",
+        "POST /api/exams/{examId}/result"
     }
 }));
 
@@ -267,6 +273,58 @@ app.MapGet("/api/auth/me", (HttpRequest request, IAuthService authService) =>
         _ => Results.Unauthorized());
 });
 
+app.MapGet("/api/system/companies", (HttpRequest request, IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(request, authService);
+    return currentUser.Match(
+        user => IsSystemAdministrator(user)
+            ? Results.Ok(authService.GetCompanies())
+            : Results.Forbid(),
+        _ => Results.Unauthorized());
+});
+
+app.MapPost("/api/system/companies", (CreateCompanyRequest request, HttpRequest httpRequest, IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsSystemAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            var result = authService.CreateCompany(request);
+            return result.Match(
+                company => Results.Created($"/api/system/companies/{company.Id}", company),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapPatch("/api/system/companies/{companyId:guid}/subscription", (
+    Guid companyId,
+    UpdateCompanySubscriptionRequest request,
+    HttpRequest httpRequest,
+    IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsSystemAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            var result = authService.UpdateCompanySubscription(companyId, request);
+            return result.Match(
+                company => Results.Ok(company),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
 app.MapGet("/api/users", (HttpRequest request, IAuthService authService) =>
 {
     var currentUser = ResolveCurrentUser(request, authService);
@@ -291,6 +349,65 @@ app.MapPost("/api/users", (CreateCompanyUserRequest request, HttpRequest httpReq
             var result = authService.CreateCompanyUser(user.CompanyId, request);
             return result.Match(
                 createdUser => Results.Created($"/api/users/{createdUser.Id}", createdUser),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapPost("/api/users/reset-password", (ResetPasswordRequest request, HttpRequest httpRequest, IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            Guid? companyScope = IsSystemAdministrator(user) ? null : user.CompanyId;
+            var result = authService.ResetPassword(companyScope, request);
+            return result.Match(
+                updatedUser => Results.Ok(updatedUser),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapPost("/api/invitations", (
+    InviteUserRequest request,
+    HttpRequest httpRequest,
+    IAuthService authService,
+    ITrainingRepository repository) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            if (repository.GetWorkerByEmail(user.CompanyId, request.Email) is null &&
+                !string.IsNullOrWhiteSpace(request.EmployeeNumber))
+            {
+                var workerResult = repository.CreateWorker(user.CompanyId, new CreateWorkerRequest(
+                    request.FirstName,
+                    request.LastName,
+                    request.Email,
+                    request.EmployeeNumber,
+                    string.IsNullOrWhiteSpace(request.Department) ? "-" : request.Department));
+
+                if (!workerResult.IsSuccess)
+                {
+                    return Results.BadRequest(new ProblemResponse(workerResult.Error ?? "Radnik nije kreiran."));
+                }
+            }
+
+            var result = authService.InviteCompanyUser(user.CompanyId, request, GetApplicationBaseUrl(httpRequest));
+            return result.Match(
+                invitation => Results.Created($"/api/users/{invitation.User.Id}", invitation),
                 error => Results.BadRequest(new ProblemResponse(error)));
         },
         _ => Results.Unauthorized());
@@ -612,6 +729,17 @@ app.MapPost("/api/worker-portal/enrollments/{enrollmentId:guid}/complete", (
         _ => Results.Unauthorized());
 });
 
+app.MapPost("/api/exams/{examId}/result", (
+    string examId,
+    ExternalExamResultRequest request,
+    ITrainingRepository repository) =>
+{
+    var result = repository.CompleteExternalExam(examId, request);
+    return result.Match(
+        completion => Results.Ok(completion),
+        error => Results.BadRequest(new ProblemResponse(error)));
+});
+
 app.Run();
 
 static string? GetBearerToken(HttpRequest request)
@@ -640,20 +768,38 @@ static bool IsCompanyAdministrator(UserProfileResponse user)
     return user.Role is UserRole.SystemAdministrator or UserRole.CompanyAdministrator;
 }
 
+static bool IsSystemAdministrator(UserProfileResponse user)
+{
+    return user.Role == UserRole.SystemAdministrator;
+}
+
 static bool IsWorkerUser(UserProfileResponse user)
 {
     return user.Role == UserRole.User;
 }
 
-static void EnsureEnrollmentDueAtColumn(TrainingDbContext dbContext, string provider)
+static void EnsureCompatibilityColumns(TrainingDbContext dbContext, string provider)
 {
     if (IsPostgreSqlProvider(provider))
     {
         dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Enrollments\" ADD COLUMN IF NOT EXISTS \"DueAt\" timestamp with time zone NULL;");
+        dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Enrollments\" ADD COLUMN IF NOT EXISTS \"ExamId\" character varying(80) NULL;");
+        dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Companies\" ADD COLUMN IF NOT EXISTS \"SubscriptionLevel\" character varying(40) NOT NULL DEFAULT 'SmallBusiness';");
         return;
     }
 
     dbContext.Database.ExecuteSqlRaw("IF COL_LENGTH('Enrollments', 'DueAt') IS NULL ALTER TABLE [Enrollments] ADD [DueAt] datetimeoffset NULL;");
+    dbContext.Database.ExecuteSqlRaw("IF COL_LENGTH('Enrollments', 'ExamId') IS NULL ALTER TABLE [Enrollments] ADD [ExamId] nvarchar(80) NULL;");
+    dbContext.Database.ExecuteSqlRaw("IF COL_LENGTH('Companies', 'SubscriptionLevel') IS NULL ALTER TABLE [Companies] ADD [SubscriptionLevel] nvarchar(40) NOT NULL CONSTRAINT DF_Companies_SubscriptionLevel DEFAULT 'SmallBusiness';");
+}
+
+static string GetApplicationBaseUrl(HttpRequest request)
+{
+    var forwardedProto = request.Headers["X-Forwarded-Proto"].FirstOrDefault();
+    var scheme = string.IsNullOrWhiteSpace(forwardedProto) ? request.Scheme : forwardedProto;
+    var forwardedHost = request.Headers["X-Forwarded-Host"].FirstOrDefault();
+    var host = string.IsNullOrWhiteSpace(forwardedHost) ? request.Host.Value : forwardedHost;
+    return $"{scheme}://{host}";
 }
 
 static string? NormalizeConnectionString(string? value, string provider)

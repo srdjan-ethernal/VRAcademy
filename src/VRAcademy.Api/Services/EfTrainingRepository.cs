@@ -142,6 +142,7 @@ public sealed class EfTrainingRepository : ITrainingRepository
             Id = Guid.NewGuid(),
             WorkerId = request.WorkerId,
             CourseId = request.CourseId,
+            ExamId = CreateExamId(),
             Status = EnrollmentStatus.Enrolled,
             EnrolledAt = DateTimeOffset.UtcNow,
             DueAt = request.DueAt
@@ -225,6 +226,71 @@ public sealed class EfTrainingRepository : ITrainingRepository
 
         _dbContext.SaveChanges();
 
+        return Result<EnrollmentCompletionResponse>.Success(new EnrollmentCompletionResponse(
+            ToDomain(enrollment),
+            certificate is null ? null : ToDomain(certificate)));
+    }
+
+    public Result<EnrollmentCompletionResponse> CompleteExternalExam(string examId, ExternalExamResultRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(examId))
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("ExamId je obavezan.");
+        }
+
+        if (request.Score < 0 || request.Score > 100)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Rezultat mora biti izmedju 0 i 100.");
+        }
+
+        if (request.DurationMinutes <= 0)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Trajanje obuke mora biti vece od 0.");
+        }
+
+        var normalizedStatus = request.Status.Trim().ToLowerInvariant();
+        var passed = normalizedStatus is "passed" or "pass" or "polozeno" or "prosao";
+        var failed = normalizedStatus is "failed" or "fail" or "pao" or "nije polozeno";
+        if (!passed && !failed)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Status mora biti Passed ili Failed.");
+        }
+
+        var enrollment = _dbContext.Enrollments
+            .SingleOrDefault(existingEnrollment => existingEnrollment.ExamId == examId.Trim());
+        if (enrollment is null)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("ExamId nije pronadjen.");
+        }
+
+        if (enrollment.Status is EnrollmentStatus.Passed or EnrollmentStatus.Failed)
+        {
+            return Result<EnrollmentCompletionResponse>.Failure("Obuka je vec zavrsena.");
+        }
+
+        var course = _dbContext.Courses.Single(course => course.Id == enrollment.CourseId);
+        enrollment.Status = passed ? EnrollmentStatus.Passed : EnrollmentStatus.Failed;
+        enrollment.CompletedAt = DateTimeOffset.UtcNow;
+        enrollment.Score = request.Score;
+        enrollment.DurationMinutes = request.DurationMinutes;
+
+        CertificateEntity? certificate = null;
+        if (passed)
+        {
+            certificate = new CertificateEntity
+            {
+                Id = Guid.NewGuid(),
+                CertificateNumber = CreateCertificateNumber(course.Code),
+                WorkerId = enrollment.WorkerId,
+                CourseId = enrollment.CourseId,
+                IssuedAt = DateTimeOffset.UtcNow,
+                ValidUntil = DateTimeOffset.UtcNow.AddMonths(course.ValidityMonths),
+                Status = CertificateStatus.Active
+            };
+            _dbContext.Certificates.Add(certificate);
+        }
+
+        _dbContext.SaveChanges();
         return Result<EnrollmentCompletionResponse>.Success(new EnrollmentCompletionResponse(
             ToDomain(enrollment),
             certificate is null ? null : ToDomain(certificate)));
@@ -416,6 +482,7 @@ public sealed class EfTrainingRepository : ITrainingRepository
             enrollment.Id,
             enrollment.WorkerId,
             enrollment.CourseId,
+            enrollment.ExamId,
             enrollment.Status,
             enrollment.EnrolledAt,
             enrollment.DueAt,
@@ -439,5 +506,10 @@ public sealed class EfTrainingRepository : ITrainingRepository
     private static string CreateCertificateNumber(string courseCode)
     {
         return $"SS-{courseCode.ToUpperInvariant()}-{DateTimeOffset.UtcNow:yyyyMMddHHmmss}";
+    }
+
+    private static string CreateExamId()
+    {
+        return $"EX-{Guid.NewGuid():N}";
     }
 }

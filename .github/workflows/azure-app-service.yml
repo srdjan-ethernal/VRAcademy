@@ -36,7 +36,7 @@ jobs:
       - name: Add frontend files
         run: |
           mkdir -p ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/wwwroot
-          cp index.html pricing.html certificates.html login.html platform.html verify.html worker.html ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/wwwroot/
+          cp index.html pricing.html certificates.html login.html platform.html system-admin.html verify.html worker.html ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/wwwroot/
           cp styles.css script.js ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/wwwroot/
           cp -R assets ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/wwwroot/assets
 

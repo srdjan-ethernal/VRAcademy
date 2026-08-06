@@ -94,17 +94,13 @@ Port moze biti drugaciji ako ga Visual Studio ili `launchSettings.json` dodele a
 
 ## Prvi API tok
 
-1. `POST /api/auth/register`
-2. `POST /api/auth/login`
-3. `GET /api/auth/me`
-4. `GET /api/users`
-5. `POST /api/users`
-6. `GET /api/dashboard/summary`
-7. `GET /api/courses`
-8. `POST /api/workers`
-9. `POST /api/enrollments`
-10. `POST /api/enrollments/{enrollmentId}/complete`
-11. `GET /api/certificates`
+1. `POST /api/auth/login`
+2. System admin: `GET /api/system/companies`, `POST /api/system/companies`, `PATCH /api/system/companies/{companyId}/subscription`
+3. Company admin: `POST /api/invitations`, `POST /api/users/reset-password`, `GET /api/dashboard/summary`
+4. Company admin: `GET /api/courses`, `POST /api/workers`, `POST /api/enrollments`
+5. Worker portal: `GET /api/worker-portal/me`, `POST /api/worker-portal/enrollments/{enrollmentId}/start`
+6. External exam program: `POST /api/exams/{examId}/result`
+7. Certificates: `GET /api/certificates`, `GET /api/certificates/verify/{certificateNumber}`
 
 Ako je rezultat kursa najmanje 80, backend automatski izdaje sertifikat koji vazi 12 meseci.
 
@@ -179,6 +175,22 @@ Body:
 
 Samo `CompanyAdministrator` ili `SystemAdministrator` moze dodati korisnika za kompaniju. Kroz ovu rutu se dodaje obican `User`; administratorske uloge se kreiraju posebnim administrativnim tokom.
 
+### System admin
+
+`SystemAdministrator` koristi posebne rute za upravljanje tenant-ima:
+
+- `GET /api/system/companies`
+- `POST /api/system/companies`
+- `PATCH /api/system/companies/{companyId}/subscription`
+
+Podrzani nivoi preplate su `SmallBusiness`, `MediumBusiness` i `Enterprise`.
+
+### Pozivnice i reset lozinke
+
+`POST /api/invitations` kreira `User` nalog za zaposlenog i vraca `invitationUrl` i privremenu lozinku. Ako zahtev sadrzi `employeeNumber`, backend ce po potrebi kreirati i worker zapis sa istom email adresom.
+
+`POST /api/users/reset-password` resetuje lozinku. `CompanyAdministrator` moze resetovati samo korisnike svoje kompanije, a `SystemAdministrator` moze resetovati globalno.
+
 ### Kreiranje radnika u tenant-u
 
 `POST /api/workers`
@@ -223,3 +235,19 @@ Body:
 ```
 
 `dueAt` je opcioni rok do kada zaposleni treba da polozi kurs. Dodelu kurseva i pregled svih statusa vidi samo `CompanyAdministrator` ili `SystemAdministrator`. Obican `User` vidi samo svoje kurseve kroz `GET /api/worker-portal/me`.
+
+Odgovor za dodeljenu obuku sadrzi `examId`. Poseban program za polaganje dobija taj identifikator, a rezultat vraca ovako:
+
+```json
+{
+  "status": "passed",
+  "score": 92,
+  "durationMinutes": 34
+}
+```
+
+Ruta:
+
+```text
+POST /api/exams/{examId}/result
+```

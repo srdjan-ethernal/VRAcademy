@@ -25,11 +25,6 @@ public static class DemoAccountSeeder
         dbContext.Database.Migrate();
 
         var email = NormalizeEmail(configuration["DemoAccount:Email"] ?? DefaultEmail);
-        if (dbContext.Users.AsNoTracking().Any(user => user.Email == email))
-        {
-            return;
-        }
-
         var companyName = (configuration["DemoAccount:CompanyName"] ?? DefaultCompanyName).Trim();
         var company = dbContext.Companies.SingleOrDefault(existingCompany => existingCompany.Name == companyName);
         if (company is null)
@@ -38,13 +33,32 @@ public static class DemoAccountSeeder
             {
                 Id = Guid.NewGuid(),
                 Name = companyName,
+                SubscriptionLevel = SubscriptionLevel.Enterprise,
                 CreatedAt = DateTimeOffset.UtcNow
             };
 
             dbContext.Companies.Add(company);
         }
+        else
+        {
+            company.SubscriptionLevel = SubscriptionLevel.Enterprise;
+        }
 
         var password = HashPassword(configuration["DemoAccount:Password"] ?? DefaultPassword);
+        var existingUser = dbContext.Users.SingleOrDefault(user => user.Email == email);
+        if (existingUser is not null)
+        {
+            existingUser.CompanyId = company.Id;
+            existingUser.FirstName = configuration["DemoAccount:FirstName"]?.Trim() ?? existingUser.FirstName;
+            existingUser.LastName = configuration["DemoAccount:LastName"]?.Trim() ?? existingUser.LastName;
+            existingUser.Role = UserRole.SystemAdministrator;
+            existingUser.PasswordHash = password.Hash;
+            existingUser.PasswordSalt = password.Salt;
+            dbContext.AuthSessions.RemoveRange(dbContext.AuthSessions.Where(session => session.UserId == existingUser.Id));
+            dbContext.SaveChanges();
+            return;
+        }
+
         dbContext.Users.Add(new UserEntity
         {
             Id = Guid.NewGuid(),
@@ -52,7 +66,7 @@ public static class DemoAccountSeeder
             Email = email,
             FirstName = configuration["DemoAccount:FirstName"]?.Trim() ?? "Srdjan",
             LastName = configuration["DemoAccount:LastName"]?.Trim() ?? "Vukmirovic",
-            Role = UserRole.CompanyAdministrator,
+            Role = UserRole.SystemAdministrator,
             CreatedAt = DateTimeOffset.UtcNow,
             PasswordHash = password.Hash,
             PasswordSalt = password.Salt

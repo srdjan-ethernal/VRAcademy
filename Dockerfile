@@ -18,12 +18,12 @@ ENV Database__FallbackToInMemory=false
 ENV Cors__AllowAnyOrigin=true
 
 COPY --from=build /app/publish ./
-COPY index.html pricing.html certificates.html login.html platform.html verify.html worker.html ./
+COPY index.html pricing.html certificates.html login.html platform.html system-admin.html verify.html worker.html ./
 COPY styles.css script.js ./
 COPY assets ./assets
 
 RUN mkdir -p wwwroot \
-    && cp index.html pricing.html certificates.html login.html platform.html verify.html worker.html styles.css script.js wwwroot/ \
+    && cp index.html pricing.html certificates.html login.html platform.html system-admin.html verify.html worker.html styles.css script.js wwwroot/ \
     && cp -r assets wwwroot/assets
 
 EXPOSE 7860

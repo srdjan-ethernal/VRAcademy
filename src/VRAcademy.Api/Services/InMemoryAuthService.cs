@@ -42,6 +42,7 @@ public sealed class InMemoryAuthService : IAuthService
                 company = new Company(
                     Guid.NewGuid(),
                     normalizedCompanyName,
+                    SubscriptionLevel.SmallBusiness,
                     DateTimeOffset.UtcNow);
 
                 _companies.Add(company);
@@ -177,12 +178,81 @@ public sealed class InMemoryAuthService : IAuthService
         }
     }
 
+    public Result<InvitationResponse> InviteCompanyUser(Guid companyId, InviteUserRequest request, string baseUrl)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.FirstName) ||
+            string.IsNullOrWhiteSpace(request.LastName))
+        {
+            return Result<InvitationResponse>.Failure("Email, ime i prezime su obavezni za pozivnicu.");
+        }
+
+        var temporaryPassword = string.IsNullOrWhiteSpace(request.TemporaryPassword)
+            ? CreateTemporaryPassword()
+            : request.TemporaryPassword.Trim();
+        var userResult = CreateCompanyUser(companyId, new CreateCompanyUserRequest(
+            request.Email,
+            temporaryPassword,
+            request.FirstName,
+            request.LastName,
+            UserRole.User));
+        if (!userResult.IsSuccess || userResult.Value is null)
+        {
+            return Result<InvitationResponse>.Failure(userResult.Error ?? "Korisnik nije kreiran.");
+        }
+
+        var invitationUrl = $"{baseUrl.TrimEnd('/')}/login.html?email={Uri.EscapeDataString(userResult.Value.Email)}";
+        return Result<InvitationResponse>.Success(new InvitationResponse(
+            userResult.Value,
+            temporaryPassword,
+            invitationUrl,
+            DateTimeOffset.UtcNow.AddDays(7)));
+    }
+
+    public Result<UserProfileResponse> ResetPassword(Guid? companyId, ResetPasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            return Result<UserProfileResponse>.Failure("Email i nova lozinka su obavezni.");
+        }
+
+        if (request.NewPassword.Length < 5)
+        {
+            return Result<UserProfileResponse>.Failure("Lozinka mora imati najmanje 5 karaktera.");
+        }
+
+        var normalizedEmail = NormalizeEmail(request.Email);
+        lock (_lock)
+        {
+            var userIndex = _users.FindIndex(user =>
+                user.Email.Equals(normalizedEmail, StringComparison.OrdinalIgnoreCase) &&
+                (!companyId.HasValue || user.CompanyId == companyId.Value));
+            if (userIndex < 0)
+            {
+                return Result<UserProfileResponse>.Failure("Korisnik nije pronadjen.");
+            }
+
+            var storedUser = _users[userIndex];
+            var password = HashPassword(request.NewPassword);
+            var updatedUser = storedUser with
+            {
+                PasswordHash = password.Hash,
+                PasswordSalt = password.Salt
+            };
+            _users[userIndex] = updatedUser;
+            _sessions.RemoveAll(session => session.UserId == updatedUser.Id);
+
+            var company = _companies.Single(existingCompany => existingCompany.Id == updatedUser.CompanyId);
+            return Result<UserProfileResponse>.Success(ToProfile(updatedUser, company));
+        }
+    }
+
     public IReadOnlyCollection<CompanyResponse> GetCompanies()
     {
         lock (_lock)
         {
             return _companies
-                .Select(company => new CompanyResponse(company.Id, company.Name, company.CreatedAt))
+                .Select(ToCompanyResponse)
                 .ToList();
         }
     }
@@ -194,7 +264,76 @@ public sealed class InMemoryAuthService : IAuthService
             var company = _companies.SingleOrDefault(existingCompany => existingCompany.Id == companyId);
             return company is null
                 ? Result<CompanyResponse>.Failure("Kompanija nije pronadjena.")
-                : Result<CompanyResponse>.Success(new CompanyResponse(company.Id, company.Name, company.CreatedAt));
+                : Result<CompanyResponse>.Success(ToCompanyResponse(company));
+        }
+    }
+
+    public Result<CompanyResponse> CreateCompany(CreateCompanyRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            return Result<CompanyResponse>.Failure("Naziv kompanije je obavezan.");
+        }
+
+        lock (_lock)
+        {
+            var normalizedName = request.Name.Trim();
+            if (_companies.Any(company => company.Name.Equals(normalizedName, StringComparison.OrdinalIgnoreCase)))
+            {
+                return Result<CompanyResponse>.Failure("Kompanija sa ovim nazivom vec postoji.");
+            }
+
+            var company = new Company(
+                Guid.NewGuid(),
+                normalizedName,
+                request.SubscriptionLevel,
+                DateTimeOffset.UtcNow);
+            _companies.Add(company);
+
+            if (!string.IsNullOrWhiteSpace(request.AdministratorEmail))
+            {
+                if (string.IsNullOrWhiteSpace(request.AdministratorPassword) ||
+                    string.IsNullOrWhiteSpace(request.AdministratorFirstName) ||
+                    string.IsNullOrWhiteSpace(request.AdministratorLastName))
+                {
+                    return Result<CompanyResponse>.Failure("Za administratora kompanije su obavezni email, lozinka, ime i prezime.");
+                }
+
+                var normalizedEmail = NormalizeEmail(request.AdministratorEmail);
+                if (_users.Any(user => user.Email.Equals(normalizedEmail, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return Result<CompanyResponse>.Failure("Korisnik sa email adresom administratora vec postoji.");
+                }
+
+                var password = HashPassword(request.AdministratorPassword);
+                var account = new UserAccount(
+                    Guid.NewGuid(),
+                    company.Id,
+                    normalizedEmail,
+                    request.AdministratorFirstName.Trim(),
+                    request.AdministratorLastName.Trim(),
+                    UserRole.CompanyAdministrator,
+                    DateTimeOffset.UtcNow);
+                _users.Add(new StoredUser(account, password.Hash, password.Salt));
+            }
+
+            return Result<CompanyResponse>.Success(ToCompanyResponse(company));
+        }
+    }
+
+    public Result<CompanyResponse> UpdateCompanySubscription(Guid companyId, UpdateCompanySubscriptionRequest request)
+    {
+        lock (_lock)
+        {
+            var companyIndex = _companies.FindIndex(company => company.Id == companyId);
+            if (companyIndex < 0)
+            {
+                return Result<CompanyResponse>.Failure("Kompanija nije pronadjena.");
+            }
+
+            var updatedCompany = _companies[companyIndex] with { SubscriptionLevel = request.SubscriptionLevel };
+            _companies[companyIndex] = updatedCompany;
+            return Result<CompanyResponse>.Success(ToCompanyResponse(updatedCompany));
         }
     }
 
@@ -226,6 +365,15 @@ public sealed class InMemoryAuthService : IAuthService
             storedUser.LastName,
             storedUser.Role,
             storedUser.CreatedAt);
+    }
+
+    private static CompanyResponse ToCompanyResponse(Company company)
+    {
+        return new CompanyResponse(
+            company.Id,
+            company.Name,
+            company.SubscriptionLevel,
+            company.CreatedAt);
     }
 
     private static string? ValidateRegistration(RegisterUserRequest request)
@@ -308,6 +456,14 @@ public sealed class InMemoryAuthService : IAuthService
     private static string CreateAccessToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
+    }
+
+    private static string CreateTemporaryPassword()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(9))
+            .Replace("+", "A", StringComparison.Ordinal)
+            .Replace("/", "b", StringComparison.Ordinal)
+            .TrimEnd('=');
     }
 
     private void RemoveExpiredSessions()
