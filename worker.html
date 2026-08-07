@@ -79,6 +79,27 @@
           </article>
         </section>
 
+        <section class="dashboard-panel" aria-labelledby="worker-password-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="auth.changePasswordLabel">Moj nalog</span>
+              <h2 id="worker-password-title" data-i18n="auth.changePasswordTitle">Promena lozinke</h2>
+            </div>
+          </div>
+          <form class="admin-form inline-admin-form" data-change-password-form>
+            <label>
+              <span data-i18n="auth.currentPassword">Trenutna lozinka</span>
+              <input type="password" name="currentPassword" minlength="5" required autocomplete="current-password" />
+            </label>
+            <label>
+              <span data-i18n="auth.newPassword">Nova lozinka</span>
+              <input type="password" name="newPassword" minlength="5" required autocomplete="new-password" />
+            </label>
+            <button class="button secondary" type="submit" data-i18n="auth.changePasswordButton">Promeni lozinku</button>
+          </form>
+          <p class="auth-message" data-change-password-message></p>
+        </section>
+
         <div class="worker-portal-grid">
           <section class="dashboard-panel" aria-labelledby="my-training-title">
             <div class="panel-heading">

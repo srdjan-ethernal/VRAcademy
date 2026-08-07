@@ -166,6 +166,45 @@ public sealed class EfAuthService : IAuthService
         return Result<UserProfileResponse>.Success(ToProfile(session.User, session.User.Company));
     }
 
+    public Result<AuthResponse> ChangePassword(string accessToken, ChangePasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.CurrentPassword) || string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            return Result<AuthResponse>.Failure("Trenutna i nova lozinka su obavezne.");
+        }
+
+        if (request.NewPassword.Length < 5)
+        {
+            return Result<AuthResponse>.Failure("Lozinka mora imati najmanje 5 karaktera.");
+        }
+
+        RemoveExpiredSessions();
+
+        var session = _dbContext.AuthSessions
+            .Include(existingSession => existingSession.User)
+            .ThenInclude(user => user!.Company)
+            .SingleOrDefault(existingSession => existingSession.AccessToken == accessToken);
+
+        if (session?.User?.Company is null)
+        {
+            return Result<AuthResponse>.Failure("Sesija nije pronadjena.");
+        }
+
+        var user = session.User;
+        if (!VerifyPassword(request.CurrentPassword, user.PasswordHash, user.PasswordSalt))
+        {
+            return Result<AuthResponse>.Failure("Trenutna lozinka nije ispravna.");
+        }
+
+        var password = HashPassword(request.NewPassword);
+        user.PasswordHash = password.Hash;
+        user.PasswordSalt = password.Salt;
+        _dbContext.AuthSessions.RemoveRange(_dbContext.AuthSessions.Where(existingSession => existingSession.UserId == user.Id));
+        _dbContext.SaveChanges();
+
+        return Result<AuthResponse>.Success(CreateAuthResponse(user, user.Company));
+    }
+
     public IReadOnlyCollection<UserProfileResponse> GetUsersForCompany(Guid companyId)
     {
         return _dbContext.Users

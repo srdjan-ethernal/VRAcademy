@@ -243,6 +243,16 @@ const translations = {
       googleRegisterButton: "Registracija preko Google naloga",
       googleCompanyRequired: "Unesite naziv kompanije pre Google registracije.",
       googleWorking: "Preusmeravanje na Google...",
+      changePasswordLabel: "Moj nalog",
+      changePasswordTitle: "Promena lozinke",
+      currentPassword: "Trenutna lozinka",
+      newPassword: "Nova lozinka",
+      changePasswordButton: "Promeni lozinku",
+      changePasswordWorking: "Promena lozinke...",
+      changePasswordSuccess: "Lozinka je promenjena.",
+      changePasswordLoginRequired: "Prijavite se da biste promenili lozinku.",
+      resetHelpTitle: "Zaboravljena lozinka?",
+      resetHelpCopy: "Administrator kompanije moze resetovati lozinku zaposlenom iz Platforme.",
       working: "Povezivanje sa platformom...",
       loginSuccess: "Uspesno ste prijavljeni.",
       registerSuccess: "Nalog je kreiran i prijavljeni ste.",
@@ -689,6 +699,16 @@ const translations = {
       googleRegisterButton: "Register with Google",
       googleCompanyRequired: "Enter the company name before Google registration.",
       googleWorking: "Redirecting to Google...",
+      changePasswordLabel: "My account",
+      changePasswordTitle: "Change password",
+      currentPassword: "Current password",
+      newPassword: "New password",
+      changePasswordButton: "Change password",
+      changePasswordWorking: "Changing password...",
+      changePasswordSuccess: "Password has been changed.",
+      changePasswordLoginRequired: "Sign in to change your password.",
+      resetHelpTitle: "Forgot password?",
+      resetHelpCopy: "The company administrator can reset an employee password from the Platform page.",
       working: "Connecting to the platform...",
       loginSuccess: "You are signed in.",
       registerSuccess: "The account has been created and you are signed in.",
@@ -1137,6 +1157,7 @@ const systemCompanyList = document.querySelector("[data-system-company-list]");
 const systemCompanyForm = document.querySelector("[data-system-company-form]");
 const systemCompanyMessage = document.querySelector("[data-system-company-message]");
 const resetPasswordForms = document.querySelectorAll("[data-reset-password-form]");
+const changePasswordForms = document.querySelectorAll("[data-change-password-form]");
 const inviteForm = document.querySelector("[data-invite-form]");
 const inviteMessage = document.querySelector("[data-invite-message]");
 let currentLanguage = "sr";
@@ -1452,6 +1473,17 @@ function setInviteMessage(message, tone = "") {
 
 function setResetPasswordMessage(form, message, tone = "") {
   const messageElement = form?.parentElement?.querySelector("[data-reset-password-message]");
+  if (!messageElement) {
+    return;
+  }
+
+  messageElement.textContent = message;
+  messageElement.classList.toggle("is-error", tone === "error");
+  messageElement.classList.toggle("is-success", tone === "success");
+}
+
+function setChangePasswordMessage(form, message, tone = "") {
+  const messageElement = form?.parentElement?.querySelector("[data-change-password-message]");
   if (!messageElement) {
     return;
   }
@@ -3175,6 +3207,46 @@ resetPasswordForms.forEach((form) => {
 
     form.reset();
     setResetPasswordMessage(form, dictionary.resetSuccess.replace("{email}", email || "-"), "success");
+  });
+});
+
+changePasswordForms.forEach((form) => {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const dictionary = translations[currentLanguage].auth;
+    if (!getAccessToken()) {
+      setChangePasswordMessage(form, dictionary.changePasswordLoginRequired, "error");
+      return;
+    }
+
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    const request = {
+      currentPassword: formData.get("currentPassword")?.toString(),
+      newPassword: formData.get("newPassword")?.toString(),
+    };
+
+    setChangePasswordMessage(form, dictionary.changePasswordWorking);
+    submitButton.disabled = true;
+
+    const result = await apiRequest("/api/auth/change-password", {
+      method: "POST",
+      auth: true,
+      body: request,
+    });
+
+    submitButton.disabled = false;
+
+    if (!result.ok) {
+      setChangePasswordMessage(form, result.error, "error");
+      return;
+    }
+
+    saveAuth(result.data);
+    form.reset();
+    setChangePasswordMessage(form, dictionary.changePasswordSuccess, "success");
+    updateNavigationVisibility();
   });
 });
 

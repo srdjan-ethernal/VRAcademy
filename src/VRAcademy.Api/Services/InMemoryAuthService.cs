@@ -167,6 +167,54 @@ public sealed class InMemoryAuthService : IAuthService
         }
     }
 
+    public Result<AuthResponse> ChangePassword(string accessToken, ChangePasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.CurrentPassword) || string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            return Result<AuthResponse>.Failure("Trenutna i nova lozinka su obavezne.");
+        }
+
+        if (request.NewPassword.Length < 5)
+        {
+            return Result<AuthResponse>.Failure("Lozinka mora imati najmanje 5 karaktera.");
+        }
+
+        lock (_lock)
+        {
+            RemoveExpiredSessions();
+
+            var session = _sessions.SingleOrDefault(existingSession => existingSession.AccessToken == accessToken);
+            if (session is null)
+            {
+                return Result<AuthResponse>.Failure("Sesija nije pronadjena.");
+            }
+
+            var userIndex = _users.FindIndex(user => user.Id == session.UserId);
+            if (userIndex < 0)
+            {
+                return Result<AuthResponse>.Failure("Sesija nije pronadjena.");
+            }
+
+            var storedUser = _users[userIndex];
+            if (!VerifyPassword(request.CurrentPassword, storedUser.PasswordHash, storedUser.PasswordSalt))
+            {
+                return Result<AuthResponse>.Failure("Trenutna lozinka nije ispravna.");
+            }
+
+            var password = HashPassword(request.NewPassword);
+            var updatedUser = storedUser with
+            {
+                PasswordHash = password.Hash,
+                PasswordSalt = password.Salt
+            };
+            _users[userIndex] = updatedUser;
+            _sessions.RemoveAll(existingSession => existingSession.UserId == updatedUser.Id);
+
+            var company = _companies.Single(existingCompany => existingCompany.Id == updatedUser.CompanyId);
+            return Result<AuthResponse>.Success(CreateAuthResponse(updatedUser, company));
+        }
+    }
+
     public IReadOnlyCollection<UserProfileResponse> GetUsersForCompany(Guid companyId)
     {
         lock (_lock)

@@ -182,6 +182,7 @@ app.MapGet("/api", () => Results.Ok(new
         "GET /api/auth/google/start",
         "GET /api/auth/google/callback",
         "GET /api/auth/me",
+        "POST /api/auth/change-password",
         "GET /api/system/companies",
         "POST /api/system/companies",
         "PATCH /api/system/companies/{companyId}/subscription",
@@ -421,6 +422,20 @@ app.MapGet("/api/auth/me", (HttpRequest request, IAuthService authService) =>
     return result.Match(
         user => Results.Ok(user),
         _ => Results.Unauthorized());
+});
+
+app.MapPost("/api/auth/change-password", (ChangePasswordRequest request, HttpRequest httpRequest, IAuthService authService) =>
+{
+    var token = GetBearerToken(httpRequest);
+    if (string.IsNullOrWhiteSpace(token))
+    {
+        return Results.Unauthorized();
+    }
+
+    var result = authService.ChangePassword(token, request);
+    return result.Match(
+        auth => Results.Ok(auth),
+        error => Results.BadRequest(new ProblemResponse(error)));
 });
 
 app.MapGet("/api/system/companies", (HttpRequest request, IAuthService authService) =>

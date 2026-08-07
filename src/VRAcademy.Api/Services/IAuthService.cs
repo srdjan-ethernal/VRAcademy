@@ -12,6 +12,8 @@ public interface IAuthService
 
     Result<UserProfileResponse> GetCurrentUser(string accessToken);
 
+    Result<AuthResponse> ChangePassword(string accessToken, ChangePasswordRequest request);
+
     IReadOnlyCollection<UserProfileResponse> GetUsersForCompany(Guid companyId);
 
     Result<UserProfileResponse> CreateCompanyUser(Guid companyId, CreateCompanyUserRequest request);
