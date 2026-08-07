@@ -11,7 +11,13 @@ public sealed class TrainingDbContextFactory : IDesignTimeDbContextFactory<Train
             ?? "Server=(local);Database=Design;Trusted_Connection=True;";
 
         var optionsBuilder = new DbContextOptionsBuilder<TrainingDbContext>();
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer(connectionString, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(15),
+                errorNumbersToAdd: null);
+        });
 
         return new TrainingDbContext(optionsBuilder.Options);
     }

@@ -48,6 +48,15 @@ jobs:
       - name: Run EF Core migrations
         run: |
           dotnet tool install --global dotnet-ef --version 10.0.10
+          for attempt in 1 2 3 4 5; do
+            if dotnet ef database update --project src/VRAcademy.Api/VRAcademy.Api.csproj --startup-project src/VRAcademy.Api/VRAcademy.Api.csproj --connection "${{ secrets.SQL_CONNECTION_STRING }}"; then
+              exit 0
+            fi
+
+            echo "EF migration attempt $attempt failed. Waiting before retry..."
+            sleep 30
+          done
+
           dotnet ef database update --project src/VRAcademy.Api/VRAcademy.Api.csproj --startup-project src/VRAcademy.Api/VRAcademy.Api.csproj --connection "${{ secrets.SQL_CONNECTION_STRING }}"
 
       - run: dotnet publish src/VRAcademy.Api/VRAcademy.Api.csproj -c Release -o publish_output --no-build

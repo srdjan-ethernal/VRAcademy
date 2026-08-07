@@ -83,7 +83,13 @@ if (!useInMemoryServices)
             throw new InvalidOperationException("SQL Server connection string must include a 'Server=' segment. Check the AZURE_SQL_CONNECTION_STRING or ConnectionStrings__TrainingDatabase secret value.");
         }
 
-        options.UseSqlServer(sqlServerConnectionString);
+        options.UseSqlServer(sqlServerConnectionString, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(15),
+                errorNumbersToAdd: null);
+        });
     });
 }
 builder.Services.AddCors(options =>
