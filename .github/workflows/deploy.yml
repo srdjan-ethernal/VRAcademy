@@ -3,6 +3,7 @@ name: Deploy to App Service
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -18,15 +19,45 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Check deployment settings
+        run: |
+          if [ -z "${{ vars.AZURE_WEBAPP_NAME }}" ]; then
+            echo "Missing GitHub Actions variable: AZURE_WEBAPP_NAME"
+            exit 1
+          fi
+          if [ -z "${{ secrets.AZURE_CLIENT_ID }}" ]; then
+            echo "Missing GitHub Actions secret: AZURE_CLIENT_ID"
+            exit 1
+          fi
+          if [ -z "${{ secrets.AZURE_TENANT_ID }}" ]; then
+            echo "Missing GitHub Actions secret: AZURE_TENANT_ID"
+            exit 1
+          fi
+          if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then
+            echo "Missing GitHub Actions secret: AZURE_SUBSCRIPTION_ID"
+            exit 1
+          fi
+          if [ -z "${{ secrets.SQL_CONNECTION_STRING }}" ]; then
+            echo "Missing GitHub Actions secret: SQL_CONNECTION_STRING"
+            exit 1
+          fi
+
       - run: dotnet restore src/VRAcademy.Api/VRAcademy.Api.csproj
       - run: dotnet build src/VRAcademy.Api/VRAcademy.Api.csproj --configuration Release --no-restore
 
       - name: Run EF Core migrations
         run: |
-          dotnet tool install --global dotnet-ef
+          dotnet tool install --global dotnet-ef --version 10.0.10
           dotnet ef database update --project src/VRAcademy.Api/VRAcademy.Api.csproj --startup-project src/VRAcademy.Api/VRAcademy.Api.csproj --connection "${{ secrets.SQL_CONNECTION_STRING }}"
 
       - run: dotnet publish src/VRAcademy.Api/VRAcademy.Api.csproj -c Release -o publish_output --no-build
+
+      - name: Add frontend files
+        run: |
+          mkdir -p publish_output/wwwroot
+          cp index.html pricing.html certificates.html login.html platform.html system-admin.html verify.html worker.html publish_output/wwwroot/
+          cp styles.css script.js publish_output/wwwroot/
+          cp -R assets publish_output/wwwroot/assets
 
       - uses: azure/login@v2
         with:
