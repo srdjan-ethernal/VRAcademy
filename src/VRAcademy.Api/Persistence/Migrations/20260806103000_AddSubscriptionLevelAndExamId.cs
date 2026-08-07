@@ -1,9 +1,12 @@
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace VRAcademy.Api.Persistence.Migrations;
 
+[DbContext(typeof(TrainingDbContext))]
+[Migration("20260806103000_AddSubscriptionLevelAndExamId")]
 public partial class AddSubscriptionLevelAndExamId : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
