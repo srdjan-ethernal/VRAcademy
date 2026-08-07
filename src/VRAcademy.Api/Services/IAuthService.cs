@@ -29,4 +29,6 @@ public interface IAuthService
     Result<CompanyResponse> CreateCompany(CreateCompanyRequest request);
 
     Result<CompanyResponse> UpdateCompanySubscription(Guid companyId, UpdateCompanySubscriptionRequest request);
+
+    Result<CompanyResponse> DeleteCompany(Guid companyId);
 }

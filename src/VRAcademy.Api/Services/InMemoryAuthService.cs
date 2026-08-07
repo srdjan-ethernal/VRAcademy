@@ -438,6 +438,27 @@ public sealed class InMemoryAuthService : IAuthService
         }
     }
 
+    public Result<CompanyResponse> DeleteCompany(Guid companyId)
+    {
+        lock (_lock)
+        {
+            var company = _companies.SingleOrDefault(existingCompany => existingCompany.Id == companyId);
+            if (company is null)
+            {
+                return Result<CompanyResponse>.Failure("Kompanija nije pronadjena.");
+            }
+
+            var response = ToCompanyResponse(company);
+            var userIds = _users.Where(user => user.CompanyId == companyId).Select(user => user.Id).ToHashSet();
+
+            _sessions.RemoveAll(session => userIds.Contains(session.UserId));
+            _users.RemoveAll(user => user.CompanyId == companyId);
+            _companies.RemoveAll(existingCompany => existingCompany.Id == companyId);
+
+            return Result<CompanyResponse>.Success(response);
+        }
+    }
+
     private AuthResponse CreateAuthResponse(StoredUser storedUser, Company company)
     {
         RemoveExpiredSessions();

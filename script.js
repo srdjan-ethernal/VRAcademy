@@ -273,9 +273,9 @@ const translations = {
       copy: "Centralno mesto za upravljanje VR kursevima, radnicima, statusima polaganja i vazecim sertifikatima.",
       primaryAction: "Otvori nalog",
       logout: "Odjava",
-      demoSession: "Prikazan je demo pregled dok se ne prijavite.",
+      demoSession: "Prijavite se da biste videli podatke iz baze.",
       liveSession: "Prijavljeni ste kao {name} iz kompanije {company}.",
-      apiFallback: "API nije dostupan, prikazan je demo pregled.",
+      apiFallback: "API nije dostupan. Podaci iz baze trenutno ne mogu da se ucitaju.",
       metricsLabel: "Pregled statusa",
       metricCoursesLabel: "Aktivni kursevi",
       metricWorkersLabel: "Radnici u obuci",
@@ -309,10 +309,12 @@ const translations = {
       certificatesLink: "Sertifikati",
       workersLabel: "Radnici",
       workersTitle: "Status obuke",
+      emptyWorkers: "Nema radnika za prikaz.",
       workerAssignedSummary: "{passed}/{total} polozeno",
       workerNoAssignedTraining: "Nema dodeljenih kurseva",
       recordsLabel: "Evidencija",
       recordsTitle: "Poslednji sertifikati",
+      emptyCertificates: "Nema sertifikata za prikaz.",
       recordWorker: "Radnik",
       recordCourse: "Kurs",
       recordDate: "Datum",
@@ -400,7 +402,7 @@ const translations = {
       noCertificates: "Trenutno nemate izdatih sertifikata.",
       linkedWorker: "Prijavljeni ste kao {name}.",
       missingWorker: "Nije pronadjen worker zapis sa email adresom prijavljenog korisnika.",
-      apiFallback: "API nije dostupan, prikazan je demo radnicki portal.",
+      apiFallback: "API nije dostupan. Podaci iz baze trenutno ne mogu da se ucitaju.",
       dueDateLabel: "Rok",
       startTraining: "Pokreni obuku",
       openExternalExam: "Otvori polaganje",
@@ -440,6 +442,10 @@ const translations = {
       updateSubscription: "Sacuvaj",
       updateWorking: "Cuvanje...",
       updateSuccess: "Preplata je promenjena.",
+      deleteCompany: "Obrisi",
+      deleteConfirm: "Obrisati kompaniju {name} i sve njene korisnike, radnike, obuke i sertifikate?",
+      deleteWorking: "Brisanje kompanije...",
+      deleteSuccess: "Kompanija je obrisana.",
       emptyCompanies: "Nema kompanija za prikaz.",
       adminFirstName: "Ime admina",
       adminLastName: "Prezime admina",
@@ -728,9 +734,9 @@ const translations = {
       copy: "A central place to manage VR courses, workers, completion statuses, and valid certificates.",
       primaryAction: "Open account",
       logout: "Sign out",
-      demoSession: "A demo overview is shown until you sign in.",
+      demoSession: "Sign in to view database records.",
       liveSession: "Signed in as {name} from {company}.",
-      apiFallback: "The API is unavailable, so a demo overview is shown.",
+      apiFallback: "The API is unavailable. Database records cannot be loaded right now.",
       metricsLabel: "Status overview",
       metricCoursesLabel: "Active courses",
       metricWorkersLabel: "Workers in training",
@@ -764,10 +770,12 @@ const translations = {
       certificatesLink: "Certificates",
       workersLabel: "Workers",
       workersTitle: "Training status",
+      emptyWorkers: "No workers to show.",
       workerAssignedSummary: "{passed}/{total} passed",
       workerNoAssignedTraining: "No assigned courses",
       recordsLabel: "Records",
       recordsTitle: "Latest certificates",
+      emptyCertificates: "No certificates to show.",
       recordWorker: "Worker",
       recordCourse: "Course",
       recordDate: "Date",
@@ -855,7 +863,7 @@ const translations = {
       noCertificates: "You do not currently have issued certificates.",
       linkedWorker: "Signed in as {name}.",
       missingWorker: "No worker record was found for the signed-in email address.",
-      apiFallback: "The API is unavailable, so a demo worker portal is shown.",
+      apiFallback: "The API is unavailable. Database records cannot be loaded right now.",
       dueDateLabel: "Due",
       startTraining: "Start training",
       openExternalExam: "Open exam",
@@ -895,6 +903,10 @@ const translations = {
       updateSubscription: "Save",
       updateWorking: "Saving...",
       updateSuccess: "Subscription has been changed.",
+      deleteCompany: "Delete",
+      deleteConfirm: "Delete company {name} and all of its users, workers, trainings, and certificates?",
+      deleteWorking: "Deleting company...",
+      deleteSuccess: "The company has been deleted.",
       emptyCompanies: "No companies to show.",
       adminFirstName: "Admin first name",
       adminLastName: "Admin last name",
@@ -1190,45 +1202,6 @@ if (pageName === "login") {
     window.setTimeout(() => setAuthMessage(authError, "error"), 0);
   }
 }
-
-const demoWorkers = [
-  {
-    name: "Pera Peric",
-    progress: 100,
-    courseCode: "fire-protection",
-  },
-  {
-    name: "Ana Jovanovic",
-    progress: 68,
-    courseCode: "chemical-waste",
-  },
-  {
-    name: "Milan Nikolic",
-    progress: 44,
-    courseCode: "biomedical-waste",
-  },
-];
-
-const demoCertificates = [
-  {
-    worker: "Pera Peric",
-    courseCode: "fire-protection",
-    issued: "12.06.2026.",
-    validUntil: "12.06.2027.",
-  },
-  {
-    worker: "Jelena Markovic",
-    courseCode: "electronic-waste",
-    issued: "05.06.2026.",
-    validUntil: "05.06.2027.",
-  },
-  {
-    worker: "Nikola Ilic",
-    courseCode: "construction-waste",
-    issued: "29.05.2026.",
-    validUntil: "29.05.2027.",
-  },
-];
 
 function getNestedValue(source, path) {
   return path.split(".").reduce((value, key) => value?.[key], source);
@@ -1691,7 +1664,6 @@ function buildNotifications({ workers, courses, certificates, enrollments, langu
   });
 
   workers
-    .filter((worker) => !("progress" in worker))
     .filter((worker) => !assignedWorkerIds.has(String(getField(worker, "id"))))
     .slice(0, 3)
     .forEach((worker) => {
@@ -1754,9 +1726,9 @@ function downloadCsv(fileName, rows) {
 
 function getReportData() {
   const data = currentPlatformData || {
-    courses: scenarios,
-    workers: demoWorkers,
-    certificates: demoCertificates,
+    courses: [],
+    workers: [],
+    certificates: [],
     enrollments: [],
   };
   const courseMap = new Map((data.courses || []).map((course) => [String(getField(course, "id")), course]));
@@ -1773,18 +1745,13 @@ function exportWorkersReport() {
   const data = getReportData();
   const rows = [
     ["First name", "Last name", "Email", "Employee number", "Department"],
-    ...(data.workers || []).map((worker) => {
-      const isDemoWorker = "name" in worker;
-      const [firstName, ...lastNameParts] = isDemoWorker ? worker.name.split(" ") : [];
-
-      return [
-        isDemoWorker ? firstName : getField(worker, "firstName"),
-        isDemoWorker ? lastNameParts.join(" ") : getField(worker, "lastName"),
-        getField(worker, "email") || "",
-        getField(worker, "employeeNumber") || "",
-        getField(worker, "department") || "",
-      ];
-    }),
+    ...(data.workers || []).map((worker) => [
+      getField(worker, "firstName"),
+      getField(worker, "lastName"),
+      getField(worker, "email") || "",
+      getField(worker, "employeeNumber") || "",
+      getField(worker, "department") || "",
+    ]),
   ];
 
   downloadCsv("vr-academy-workers.csv", rows);
@@ -1820,18 +1787,15 @@ function exportCertificatesReport() {
   const rows = [
     ["Certificate number", "Worker", "Course", "Issued at", "Valid until", "Status"],
     ...(data.certificates || []).map((certificate) => {
-      const isDemoCertificate = "courseCode" in certificate;
       const worker = data.workerMap.get(String(getField(certificate, "workerId")));
       const course = data.courseMap.get(String(getField(certificate, "courseId")));
 
       return [
         getField(certificate, "certificateNumber") || "",
-        isDemoCertificate ? certificate.worker : getWorkerName(worker),
-        isDemoCertificate
-          ? getScenarioContentByCode(certificate.courseCode, currentLanguage)?.title
-          : getCourseTitle(course, currentLanguage),
-        isDemoCertificate ? certificate.issued : formatShortDate(getField(certificate, "issuedAt"), currentLanguage),
-        isDemoCertificate ? certificate.validUntil : formatShortDate(getField(certificate, "validUntil"), currentLanguage),
+        getWorkerName(worker),
+        getCourseTitle(course, currentLanguage),
+        formatShortDate(getField(certificate, "issuedAt"), currentLanguage),
+        formatShortDate(getField(certificate, "validUntil"), currentLanguage),
         getField(certificate, "status") || "Active",
       ];
     }),
@@ -1884,18 +1848,10 @@ function getWorkerName(worker) {
     return "-";
   }
 
-  if ("name" in worker) {
-    return worker.name;
-  }
-
   return `${getField(worker, "firstName") || ""} ${getField(worker, "lastName") || ""}`.trim() || "-";
 }
 
 function getWorkerDetail(worker, language) {
-  if ("progress" in worker) {
-    const content = getScenarioContentByCode(worker.courseCode, language);
-    return `${content?.title || ""} · ${worker.progress}% ${translations[language].platform.score}`;
-  }
 
   const email = getField(worker, "email");
   return `${getField(worker, "department") || "-"} · ${getField(worker, "employeeNumber") || ""}${email ? ` · ${email}` : ""}`;
@@ -1926,12 +1882,10 @@ function renderEnrollmentSelectors(workers, courses, language) {
   }
 
   enrollmentWorkerSelect.innerHTML = workers
-    .filter((worker) => !("progress" in worker))
     .map((worker) => `<option value="${getField(worker, "id")}">${getWorkerName(worker)}</option>`)
     .join("");
 
   enrollmentCourseSelect.innerHTML = courses
-    .filter((course) => !course.content)
     .map((course) => `<option value="${getField(course, "id")}">${getCourseTitle(course, language)}</option>`)
     .join("");
 }
@@ -1961,9 +1915,9 @@ function renderPlatform(language, apiData = null) {
   }
 
   const dictionary = translations[language].platform;
-  const courses = apiData?.courses?.length ? apiData.courses : scenarios;
-  const workers = apiData?.workers?.length ? apiData.workers : demoWorkers;
-  const certificates = apiData?.certificates?.length ? apiData.certificates : demoCertificates;
+  const courses = apiData?.courses || [];
+  const workers = apiData?.workers || [];
+  const certificates = apiData?.certificates || [];
   const enrollments = apiData?.enrollments || [];
   const courseMap = new Map((apiData?.courses || []).map((course) => [String(getField(course, "id")), course]));
   const workerMap = new Map((apiData?.workers || []).map((worker) => [String(getField(worker, "id")), worker]));
@@ -2016,21 +1970,16 @@ function renderPlatform(language, apiData = null) {
 
   workerList.innerHTML = filteredWorkers
     .map((worker) => {
-      const isDemoWorker = "progress" in worker;
       const workerId = String(getField(worker, "id"));
-      const workerEnrollments = isDemoWorker
-        ? []
-        : enrollments.filter((enrollment) => String(getField(enrollment, "workerId")) === workerId);
+      const workerEnrollments = enrollments.filter((enrollment) => String(getField(enrollment, "workerId")) === workerId);
       const passedCount = workerEnrollments.filter((enrollment) => String(getField(enrollment, "status")).toLowerCase() === "passed")
         .length;
-      const progress = isDemoWorker
-        ? worker.progress
-        : workerEnrollments.length
-          ? Math.round((passedCount / workerEnrollments.length) * 100)
-          : 0;
+      const progress = workerEnrollments.length
+        ? Math.round((passedCount / workerEnrollments.length) * 100)
+        : 0;
       const status = progress === 100 && workerEnrollments.length
         ? dictionary.statusCompleted
-        : isDemoWorker || workerEnrollments.some((enrollment) => String(getField(enrollment, "status")).toLowerCase() === "inprogress")
+        : workerEnrollments.some((enrollment) => String(getField(enrollment, "status")).toLowerCase() === "inprogress")
           ? dictionary.statusActive
           : dictionary.statusReady;
       const assignedSummary = workerEnrollments.length
@@ -2062,21 +2011,16 @@ function renderPlatform(language, apiData = null) {
         </article>
       `;
     })
-    .join("");
+    .join("") || `<article class="worker-item"><h3>${dictionary.emptyWorkers}</h3><p>-</p></article>`;
 
   certificateRecords.innerHTML = certificates
     .map((record) => {
-      const isDemoCertificate = "courseCode" in record;
       const worker = workerMap.get(String(getField(record, "workerId")));
       const course = courseMap.get(String(getField(record, "courseId")));
-      const workerName = isDemoCertificate
-        ? record.worker
-        : `${getField(worker, "firstName") || ""} ${getField(worker, "lastName") || ""}`.trim() || "-";
-      const courseTitle = isDemoCertificate
-        ? getScenarioContentByCode(record.courseCode, language)?.title
-        : getCourseTitle(course, language) || "-";
-      const issued = isDemoCertificate ? record.issued : formatShortDate(getField(record, "issuedAt"), language);
-      const validUntil = isDemoCertificate ? record.validUntil : formatShortDate(getField(record, "validUntil"), language);
+      const workerName = `${getField(worker, "firstName") || ""} ${getField(worker, "lastName") || ""}`.trim() || "-";
+      const courseTitle = getCourseTitle(course, language) || "-";
+      const issued = formatShortDate(getField(record, "issuedAt"), language);
+      const validUntil = formatShortDate(getField(record, "validUntil"), language);
 
       return `
         <div role="row" class="record-row">
@@ -2087,7 +2031,7 @@ function renderPlatform(language, apiData = null) {
         </div>
       `;
     })
-    .join("");
+    .join("") || `<div role="row" class="record-row"><span role="cell">${dictionary.emptyCertificates}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
 
   if (enrollmentRecords) {
     enrollmentRecords.innerHTML = enrollments.length
@@ -2168,12 +2112,13 @@ function renderSystemAdmin(language, companies = currentSystemCompanies) {
                   ${renderSubscriptionOptions(subscriptionLevel, language)}
                 </select>
                 <button class="button secondary" type="submit">${dictionary.updateSubscription}</button>
+                <button class="button secondary" type="button" data-delete-company="${escapeAttribute(companyId)}" data-company-name="${escapeAttribute(getField(company, "name") || "-")}">${dictionary.deleteCompany}</button>
               </form>
             </article>
           `;
         })
         .join("")
-    : `<article class="worker-item"><h3>${dictionary.emptyCompanies}</h3><p>${dictionary.apiFallback}</p></article>`;
+    : `<article class="worker-item"><h3>${dictionary.emptyCompanies}</h3><p>-</p></article>`;
 }
 
 async function loadSystemAdminData(language) {
@@ -2222,71 +2167,6 @@ function setWorkerPortalMetric(metricName, value) {
   }
 }
 
-function getDemoWorkerPortalData() {
-  const demoWorker = {
-    firstName: "Pera",
-    lastName: "Peric",
-    email: "pera.peric@example.com",
-    employeeNumber: "EMP-001",
-    department: "Bezbednost",
-  };
-  const demoCourses = scenarios.slice(0, 3).map((scenario, index) => ({
-    id: scenario.content.en.title.toLowerCase().replaceAll(" ", "-"),
-    code: scenario.image.replace("assets/", "").replace("-vr.png", ""),
-    content: scenario.content,
-    image: scenario.image,
-    validityMonths: 12,
-    passScore: 75,
-    demoDuration: index === 0 ? 35 : 40,
-  }));
-
-  return {
-    worker: demoWorker,
-    courses: demoCourses,
-    enrollments: [
-      {
-        id: "demo-enrollment-fire",
-        courseId: demoCourses[0].id,
-        examId: "EX-DEMO-FIRE-001",
-        status: "Passed",
-        score: 92,
-        durationMinutes: 34,
-        dueAt: "2026-07-15T00:00:00Z",
-        completedAt: "2026-06-27T00:00:00Z",
-      },
-      {
-        id: "demo-enrollment-chemical",
-        courseId: demoCourses[1].id,
-        examId: "EX-DEMO-CHEM-002",
-        status: "InProgress",
-        score: null,
-        durationMinutes: 0,
-        dueAt: "2026-08-20T00:00:00Z",
-        completedAt: null,
-      },
-      {
-        id: "demo-enrollment-radioactive",
-        courseId: demoCourses[2].id,
-        examId: "EX-DEMO-RAD-003",
-        status: "Enrolled",
-        score: null,
-        durationMinutes: 0,
-        dueAt: "2026-09-05T00:00:00Z",
-        completedAt: null,
-      },
-    ],
-    certificates: [
-      {
-        courseId: demoCourses[0].id,
-        certificateNumber: "SS-DEMO-2026-001",
-        issuedAt: "2026-06-27T00:00:00Z",
-        validUntil: "2027-06-27T00:00:00Z",
-        status: "Active",
-      },
-    ],
-  };
-}
-
 function findCourseForRecord(courses, courseId) {
   return courses.find((course) => String(getField(course, "id")) === String(courseId));
 }
@@ -2303,7 +2183,12 @@ function renderWorkerPortal(language, apiData = null, message = "") {
   }
 
   const dictionary = translations[language].workerPortal;
-  const data = apiData || getDemoWorkerPortalData();
+  const data = apiData || {
+    worker: null,
+    courses: [],
+    enrollments: [],
+    certificates: [],
+  };
   const isLive = Boolean(apiData);
   const worker = data.worker;
   const courses = data.courses || [];
@@ -2315,7 +2200,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
   setWorkerPortalMetric("enrollments", enrollments.length);
   setWorkerPortalMetric("passed", passedCount);
   setWorkerPortalMetric("certificates", certificates.length);
-  setWorkerPortalMessage(message || dictionary.linkedWorker.replace("{name}", getWorkerName(worker)));
+  setWorkerPortalMessage(message || (worker ? dictionary.linkedWorker.replace("{name}", getWorkerName(worker)) : dictionary.noTraining));
 
   workerPortalEnrollments.innerHTML = enrollments.length
     ? enrollments
@@ -3023,6 +2908,39 @@ document.addEventListener("submit", async (event) => {
   }
 
   setSystemAdminMessage(translations[currentLanguage].systemAdmin.updateSuccess, "success");
+  loadSystemAdminData(currentLanguage);
+});
+
+document.addEventListener("click", async (event) => {
+  const deleteButton = event.target.closest("[data-delete-company]");
+  if (!deleteButton) {
+    return;
+  }
+
+  const companyId = deleteButton.dataset.deleteCompany;
+  const companyName = deleteButton.dataset.companyName || "-";
+  const dictionary = translations[currentLanguage].systemAdmin;
+  const confirmed = window.confirm(dictionary.deleteConfirm.replace("{name}", companyName));
+  if (!confirmed || !companyId || !getAccessToken()) {
+    return;
+  }
+
+  setSystemAdminMessage(dictionary.deleteWorking);
+  deleteButton.disabled = true;
+
+  const result = await apiRequest(`/api/system/companies/${encodeURIComponent(companyId)}`, {
+    method: "DELETE",
+    auth: true,
+  });
+
+  deleteButton.disabled = false;
+
+  if (!result.ok) {
+    setSystemAdminMessage(result.error, "error");
+    return;
+  }
+
+  setSystemAdminMessage(dictionary.deleteSuccess, "success");
   loadSystemAdminData(currentLanguage);
 });
 

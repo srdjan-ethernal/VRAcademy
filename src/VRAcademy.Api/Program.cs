@@ -186,6 +186,7 @@ app.MapGet("/api", () => Results.Ok(new
         "GET /api/system/companies",
         "POST /api/system/companies",
         "PATCH /api/system/companies/{companyId}/subscription",
+        "DELETE /api/system/companies/{companyId}",
         "GET /api/users",
         "POST /api/users",
         "POST /api/users/reset-password",
@@ -485,6 +486,33 @@ app.MapPatch("/api/system/companies/{companyId:guid}/subscription", (
             var result = authService.UpdateCompanySubscription(companyId, request);
             return result.Match(
                 company => Results.Ok(company),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapDelete("/api/system/companies/{companyId:guid}", (
+    Guid companyId,
+    HttpRequest httpRequest,
+    IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsSystemAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            if (user.CompanyId == companyId)
+            {
+                return Results.BadRequest(new ProblemResponse("Ne mozete obrisati kompaniju u kojoj je vas administratorski nalog."));
+            }
+
+            var result = authService.DeleteCompany(companyId);
+            return result.Match(
+                _ => Results.NoContent(),
                 error => Results.BadRequest(new ProblemResponse(error)));
         },
         _ => Results.Unauthorized());

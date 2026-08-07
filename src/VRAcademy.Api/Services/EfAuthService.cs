@@ -417,6 +417,35 @@ public sealed class EfAuthService : IAuthService
         return Result<CompanyResponse>.Success(ToCompanyResponse(company));
     }
 
+    public Result<CompanyResponse> DeleteCompany(Guid companyId)
+    {
+        var company = _dbContext.Companies.SingleOrDefault(existingCompany => existingCompany.Id == companyId);
+        if (company is null)
+        {
+            return Result<CompanyResponse>.Failure("Kompanija nije pronadjena.");
+        }
+
+        var response = ToCompanyResponse(company);
+        var userIds = _dbContext.Users
+            .Where(user => user.CompanyId == companyId)
+            .Select(user => user.Id)
+            .ToArray();
+        var workerIds = _dbContext.Workers
+            .Where(worker => worker.CompanyId == companyId)
+            .Select(worker => worker.Id)
+            .ToArray();
+
+        _dbContext.AuthSessions.RemoveRange(_dbContext.AuthSessions.Where(session => userIds.Contains(session.UserId)));
+        _dbContext.Certificates.RemoveRange(_dbContext.Certificates.Where(certificate => workerIds.Contains(certificate.WorkerId)));
+        _dbContext.Enrollments.RemoveRange(_dbContext.Enrollments.Where(enrollment => workerIds.Contains(enrollment.WorkerId)));
+        _dbContext.Workers.RemoveRange(_dbContext.Workers.Where(worker => worker.CompanyId == companyId));
+        _dbContext.Users.RemoveRange(_dbContext.Users.Where(user => user.CompanyId == companyId));
+        _dbContext.Companies.Remove(company);
+        _dbContext.SaveChanges();
+
+        return Result<CompanyResponse>.Success(response);
+    }
+
     private AuthResponse CreateAuthResponse(UserEntity user, CompanyEntity company)
     {
         RemoveExpiredSessions();
