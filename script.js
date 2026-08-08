@@ -480,7 +480,7 @@ const translations = {
       deleteConfirm: "Obrisati kompaniju {name} i sve njene korisnike, radnike, obuke i sertifikate?",
       deleteWorking: "Brisanje kompanije...",
       deleteSuccess: "Kompanija je obrisana.",
-      openCompany: "Otvori",
+      openCompany: "Otvori kompaniju",
       companyDetailsTitle: "Korisnici kompanije",
       companyDetailsCopy: "Pregled svih korisnika u izabranoj kompaniji i njihovog statusa.",
       companyUsersBack: "Nazad na kompanije",
@@ -979,7 +979,7 @@ const translations = {
       deleteConfirm: "Delete company {name} and all of its users, workers, trainings, and certificates?",
       deleteWorking: "Deleting company...",
       deleteSuccess: "The company has been deleted.",
-      openCompany: "Open",
+      openCompany: "Open company",
       companyDetailsTitle: "Company users",
       companyDetailsCopy: "Overview of all users in the selected company and their status.",
       companyUsersBack: "Back to companies",
@@ -2251,12 +2251,12 @@ function renderSystemAdmin(language, companies = currentSystemCompanies) {
               <div>
                 <h3><a href="system-company.html?companyId=${encodeURIComponent(companyId)}">${getField(company, "name") || "-"}</a></h3>
                 <p>${dictionary.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)} &middot; ${dictionary.createdAt}: ${createdAt}</p>
+                <a class="company-open-link" href="system-company.html?companyId=${encodeURIComponent(companyId)}">${dictionary.openCompany}</a>
               </div>
               <form data-company-subscription-form data-company-id="${escapeAttribute(companyId)}">
                 <select name="subscriptionLevel" aria-label="${dictionary.subscriptionLevel}">
                   ${renderSubscriptionOptions(subscriptionLevel, language)}
                 </select>
-                <a class="button secondary" href="system-company.html?companyId=${encodeURIComponent(companyId)}">${dictionary.openCompany}</a>
                 <button class="button secondary" type="submit">${dictionary.updateSubscription}</button>
                 <button class="button secondary" type="button" data-delete-company="${escapeAttribute(companyId)}" data-company-name="${escapeAttribute(getField(company, "name") || "-")}">${dictionary.deleteCompany}</button>
               </form>

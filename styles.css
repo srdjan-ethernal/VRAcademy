@@ -1462,6 +1462,16 @@ h1 {
   color: var(--ink);
 }
 
+.company-open-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  margin-top: 10px;
+  color: var(--teal-dark);
+  font-size: 13px;
+  font-weight: 900;
+}
+
 .company-admin-item p,
 .invite-result {
   margin: 0;
