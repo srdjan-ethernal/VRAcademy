@@ -1306,6 +1306,10 @@ function isWorkerRole(role) {
   return role === "user";
 }
 
+function isCompanyPlatformRole(role) {
+  return role === "companyAdministrator" || role === "systemAdministrator";
+}
+
 function isCompanyPlatformPage() {
   return companyPlatformPages.has(pageName);
 }
@@ -1327,7 +1331,7 @@ function updateNavigationVisibility() {
       'a[href="platform.html"], a[href="platform-workers.html"], a[href="platform-training.html"], a[href="platform-certificates.html"], a[href="platform-account.html"]',
     )
     .forEach((link) => {
-      link.hidden = !isLoggedIn || role !== "companyAdministrator";
+      link.hidden = !isLoggedIn || !isCompanyPlatformRole(role);
     });
 
   document.querySelectorAll('a[href="worker.html"]').forEach((link) => {
@@ -1368,7 +1372,7 @@ function enforcePageAccess() {
     return false;
   }
 
-  if (isCompanyPlatformPage() && (!isLoggedIn || role !== "companyAdministrator")) {
+  if (isCompanyPlatformPage() && (!isLoggedIn || !isCompanyPlatformRole(role))) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
@@ -1932,13 +1936,13 @@ function renderEnrollmentSelectors(workers, courses, language) {
     return;
   }
 
-  enrollmentWorkerSelect.innerHTML = workers
-    .map((worker) => `<option value="${getField(worker, "id")}">${getWorkerName(worker)}</option>`)
-    .join("");
+  enrollmentWorkerSelect.innerHTML = workers.length
+    ? workers.map((worker) => `<option value="${getField(worker, "id")}">${getWorkerName(worker)}</option>`).join("")
+    : `<option value="" disabled selected>${translations[language].platform.emptyWorkers}</option>`;
 
-  enrollmentCourseSelect.innerHTML = courses
-    .map((course) => `<option value="${getField(course, "id")}">${getCourseTitle(course, language)}</option>`)
-    .join("");
+  enrollmentCourseSelect.innerHTML = courses.length
+    ? courses.map((course) => `<option value="${getField(course, "id")}">${getCourseTitle(course, language)}</option>`).join("")
+    : `<option value="" disabled selected>-</option>`;
 }
 
 function renderCompletionSelector(enrollments, workerMap, courseMap, language) {
@@ -1967,7 +1971,9 @@ function renderPlatform(language, apiData = null) {
     platformCourses ||
     workerList ||
     certificateRecords ||
-    enrollmentRecords;
+    enrollmentRecords ||
+    enrollmentWorkerSelect ||
+    enrollmentCourseSelect;
 
   if (!hasPlatformWidgets) {
     return;
@@ -2430,7 +2436,7 @@ async function loadPlatformData(language) {
     return;
   }
 
-  if (getStoredUserRole() !== "companyAdministrator") {
+  if (!isCompanyPlatformRole(getStoredUserRole())) {
     window.location.href = getDefaultPageForRole(getStoredUserRole());
     return;
   }
@@ -2454,7 +2460,7 @@ async function loadPlatformData(language) {
 
   const user = profileResult.data;
   const role = normalizeUserRole(getField(user, "role"));
-  if (role !== "companyAdministrator") {
+  if (!isCompanyPlatformRole(role)) {
     window.location.href = getDefaultPageForRole(role);
     return;
   }
