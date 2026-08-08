@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VR Academy radnici</title>
+    <meta name="description" content="Upravljanje zaposlenima i pozivnicama za VR Academy obuke." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="platformWorkers">
+    <header class="site-header" data-header>
+      <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
+        <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
+        <span class="brand-text">VR Academy</span>
+      </a>
+      <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
+        <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
+        <a href="system-admin.html" data-i18n="nav.systemAdmin">Admin</a>
+        <a href="platform.html" data-i18n="nav.platform">Platforma</a>
+        <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
+        <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
+        <a href="verify.html" data-i18n="nav.verify">Provera</a>
+        <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
+      </nav>
+      <a class="header-action" href="login.html" data-i18n="nav.login">Prijava</a>
+      <div class="language-switch" aria-label="Izbor jezika" data-i18n-aria-label="language.label">
+        <button type="button" data-language-option="sr" aria-pressed="true">SR</button>
+        <button type="button" data-language-option="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-label="Otvori navigaciju" data-i18n-aria-label="nav.open" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="platform-shell" aria-labelledby="workers-title">
+        <div class="platform-topbar">
+          <div>
+            <p class="eyebrow" data-i18n="platform.eyebrow">Kompanijski portal</p>
+            <h1 id="workers-title" data-i18n="platform.workersTitle">Status obuke</h1>
+            <p data-i18n="platform.copy">
+              Centralno mesto za upravljanje VR kursevima, radnicima, statusima polaganja i vazecim sertifikatima.
+            </p>
+            <p class="platform-session" data-platform-session data-i18n="platform.demoSession">
+              Prijavite se da biste videli podatke iz baze.
+            </p>
+          </div>
+          <div class="platform-actions">
+            <a class="button primary" href="login.html" data-platform-login-link data-i18n="platform.primaryAction">Otvori nalog</a>
+            <button class="button secondary" type="button" hidden data-platform-logout data-i18n="platform.logout">Odjava</button>
+          </div>
+        </div>
+
+        <nav class="platform-subnav" aria-label="Platforma">
+          <a href="platform.html" data-i18n="platform.navOverview">Pregled</a>
+          <a href="platform-workers.html" aria-current="page" data-i18n="platform.navWorkers">Radnici</a>
+          <a href="platform-training.html" data-i18n="platform.navTraining">Obuke</a>
+          <a href="platform-certificates.html" data-i18n="platform.navCertificates">Sertifikati i izvestaji</a>
+          <a href="platform-account.html" data-i18n="platform.navAccount">Nalozi</a>
+        </nav>
+
+        <div class="dashboard-grid">
+          <section class="dashboard-panel large-panel" aria-labelledby="workers-list-title">
+            <div class="panel-heading">
+              <div>
+                <span class="scenario-kicker" data-i18n="platform.workersLabel">Radnici</span>
+                <h2 id="workers-list-title" data-i18n="platform.workersTitle">Status obuke</h2>
+              </div>
+            </div>
+            <div class="worker-tools">
+              <label>
+                <span data-i18n="platform.workerSearch">Pretraga radnika</span>
+                <input type="search" data-worker-search />
+              </label>
+              <label>
+                <span data-i18n="platform.importWorkers">Import CSV</span>
+                <input type="file" accept=".csv,text/csv" data-worker-import />
+              </label>
+            </div>
+            <div class="worker-list" data-worker-list></div>
+          </section>
+
+          <aside class="dashboard-panel" aria-labelledby="worker-create-title">
+            <div class="panel-heading">
+              <div>
+                <span class="scenario-kicker" data-i18n="platform.workersLabel">Radnici</span>
+                <h2 id="worker-create-title" data-i18n="platform.addWorker">Dodaj radnika</h2>
+              </div>
+            </div>
+            <form class="worker-form" data-worker-form>
+              <label>
+                <span data-i18n="platform.workerFirstName">Ime</span>
+                <input type="text" name="firstName" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerLastName">Prezime</span>
+                <input type="text" name="lastName" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerEmail">Email</span>
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerEmployeeNumber">Broj zaposlenog</span>
+                <input type="text" name="employeeNumber" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerDepartment">Odeljenje</span>
+                <input type="text" name="department" />
+              </label>
+              <label>
+                <span data-i18n="platform.workerPortalPassword">Lozinka za portal</span>
+                <input type="password" name="portalPassword" minlength="5" autocomplete="new-password" />
+              </label>
+              <button class="button primary" type="submit" data-i18n="platform.addWorker">Dodaj radnika</button>
+              <p class="auth-message" data-worker-message></p>
+            </form>
+
+            <form class="worker-form admin-form" data-invite-form>
+              <div class="panel-heading compact-heading">
+                <div>
+                  <span class="scenario-kicker" data-i18n="platform.inviteLabel">Pozivnica</span>
+                  <h3 data-i18n="platform.inviteTitle">Pozovi zaposlenog</h3>
+                </div>
+              </div>
+              <label>
+                <span data-i18n="platform.workerFirstName">Ime</span>
+                <input type="text" name="firstName" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerLastName">Prezime</span>
+                <input type="text" name="lastName" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerEmail">Email</span>
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                <span data-i18n="platform.workerEmployeeNumber">Broj zaposlenog</span>
+                <input type="text" name="employeeNumber" />
+              </label>
+              <label>
+                <span data-i18n="platform.workerDepartment">Odeljenje</span>
+                <input type="text" name="department" />
+              </label>
+              <label>
+                <span data-i18n="platform.inviteTemporaryPassword">Privremena lozinka</span>
+                <input type="password" name="temporaryPassword" minlength="5" autocomplete="new-password" />
+              </label>
+              <button class="button primary" type="submit" data-i18n="platform.inviteButton">Posalji pozivnicu</button>
+              <p class="auth-message" data-invite-message></p>
+            </form>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>VR Academy</span>
+      <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

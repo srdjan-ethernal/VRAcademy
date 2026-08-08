@@ -64,7 +64,7 @@ jobs:
       - name: Add frontend files
         run: |
           mkdir -p publish_output/wwwroot
-          cp index.html pricing.html certificates.html login.html platform.html system-admin.html verify.html worker.html publish_output/wwwroot/
+          cp index.html pricing.html certificates.html login.html platform.html platform-workers.html platform-training.html platform-certificates.html platform-account.html system-admin.html verify.html worker.html publish_output/wwwroot/
           cp styles.css script.js publish_output/wwwroot/
           cp -R assets publish_output/wwwroot/assets
 

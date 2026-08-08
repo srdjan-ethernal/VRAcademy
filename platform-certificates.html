@@ -3,45 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VR Academy platforma za obuke</title>
-    <meta
-      name="description"
-      content="Pregled kompanijskih VR obuka, radnika, kurseva i sertifikata na VR Academy platformi."
-    />
+    <title>VR Academy evidencija</title>
+    <meta name="description" content="Pregled sertifikata i export evidencije obuka." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body data-page="platform">
+  <body data-page="platformCertificates">
     <header class="site-header" data-header>
       <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
         <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
         <span class="brand-text">VR Academy</span>
       </a>
-
       <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
         <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
         <a href="system-admin.html" data-i18n="nav.systemAdmin">Admin</a>
-        <a href="platform.html" aria-current="page" data-i18n="nav.platform">Platforma</a>
+        <a href="platform.html" data-i18n="nav.platform">Platforma</a>
         <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
         <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
         <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
         <a href="verify.html" data-i18n="nav.verify">Provera</a>
         <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
       </nav>
-
       <a class="header-action" href="login.html" data-i18n="nav.login">Prijava</a>
-
       <div class="language-switch" aria-label="Izbor jezika" data-i18n-aria-label="language.label">
         <button type="button" data-language-option="sr" aria-pressed="true">SR</button>
         <button type="button" data-language-option="en" aria-pressed="false">EN</button>
       </div>
-
       <button class="nav-toggle" type="button" aria-label="Otvori navigaciju" data-i18n-aria-label="nav.open" data-nav-toggle>
         <span></span>
         <span></span>
@@ -49,11 +39,11 @@
     </header>
 
     <main id="top">
-      <section class="platform-shell" aria-labelledby="platform-title">
+      <section class="platform-shell" aria-labelledby="records-title">
         <div class="platform-topbar">
           <div>
             <p class="eyebrow" data-i18n="platform.eyebrow">Kompanijski portal</p>
-            <h1 id="platform-title" data-i18n="platform.title">Pregled obuka i sertifikata</h1>
+            <h1 id="records-title" data-i18n="platform.recordsTitle">Poslednji sertifikati</h1>
             <p data-i18n="platform.copy">
               Centralno mesto za upravljanje VR kursevima, radnicima, statusima polaganja i vazecim sertifikatima.
             </p>
@@ -68,40 +58,50 @@
         </div>
 
         <nav class="platform-subnav" aria-label="Platforma">
-          <a href="platform.html" aria-current="page" data-i18n="platform.navOverview">Pregled</a>
+          <a href="platform.html" data-i18n="platform.navOverview">Pregled</a>
           <a href="platform-workers.html" data-i18n="platform.navWorkers">Radnici</a>
           <a href="platform-training.html" data-i18n="platform.navTraining">Obuke</a>
-          <a href="platform-certificates.html" data-i18n="platform.navCertificates">Sertifikati i izvestaji</a>
+          <a href="platform-certificates.html" aria-current="page" data-i18n="platform.navCertificates">Sertifikati i izvestaji</a>
           <a href="platform-account.html" data-i18n="platform.navAccount">Nalozi</a>
         </nav>
 
-        <section class="dashboard-metrics" aria-label="Pregled statusa" data-i18n-aria-label="platform.metricsLabel">
-          <article>
-            <span data-i18n="platform.metricCoursesLabel">Aktivni kursevi</span>
-            <strong data-platform-metric="courses">0</strong>
-          </article>
-          <article>
-            <span data-i18n="platform.metricWorkersLabel">Radnici u obuci</span>
-            <strong data-platform-metric="workers">0</strong>
-          </article>
-          <article>
-            <span data-i18n="platform.metricCertificatesLabel">Vazeci sertifikati</span>
-            <strong data-platform-metric="certificates">0</strong>
-          </article>
-          <article>
-            <span data-i18n="platform.metricScoreLabel">Prosecan rezultat</span>
-            <strong data-platform-metric="score">0%</strong>
-          </article>
-        </section>
-
-        <section class="dashboard-panel notification-panel" aria-labelledby="notifications-title">
+        <section class="dashboard-panel reports-panel" aria-labelledby="reports-title">
           <div class="panel-heading">
             <div>
-              <span class="scenario-kicker" data-i18n="platform.notificationsLabel">Obavestenja</span>
-              <h2 id="notifications-title" data-i18n="platform.notificationsTitle">Sta zahteva paznju</h2>
+              <span class="scenario-kicker" data-i18n="platform.reportsLabel">Izvestaji</span>
+              <h2 id="reports-title" data-i18n="platform.reportsTitle">Export evidencije</h2>
             </div>
           </div>
-          <div class="notification-list" data-notification-list></div>
+          <div class="report-actions">
+            <button class="button secondary" type="button" data-report-export="workers" data-i18n="platform.exportWorkers">
+              Radnici CSV
+            </button>
+            <button class="button secondary" type="button" data-report-export="enrollments" data-i18n="platform.exportEnrollments">
+              Obuke CSV
+            </button>
+            <button class="button secondary" type="button" data-report-export="certificates" data-i18n="platform.exportCertificates">
+              Sertifikati CSV
+            </button>
+          </div>
+          <p class="auth-message" data-report-message></p>
+        </section>
+
+        <section class="dashboard-panel certificate-log" aria-labelledby="certificate-log-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="platform.recordsLabel">Evidencija</span>
+              <h2 id="certificate-log-title" data-i18n="platform.recordsTitle">Poslednji sertifikati</h2>
+            </div>
+          </div>
+          <div class="records-table" role="table" aria-label="Poslednji sertifikati" data-i18n-aria-label="platform.recordsTitle">
+            <div role="row" class="records-head">
+              <span role="columnheader" data-i18n="platform.recordWorker">Radnik</span>
+              <span role="columnheader" data-i18n="platform.recordCourse">Kurs</span>
+              <span role="columnheader" data-i18n="platform.recordDate">Datum</span>
+              <span role="columnheader" data-i18n="platform.recordValid">Vazi do</span>
+            </div>
+            <div data-certificate-records></div>
+          </div>
         </section>
       </section>
     </main>

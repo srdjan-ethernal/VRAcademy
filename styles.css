@@ -893,6 +893,33 @@ h1 {
   font-size: 17px;
 }
 
+.platform-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -8px 0 22px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fbfdfe;
+}
+
+.platform-subnav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.platform-subnav a[aria-current="page"] {
+  background: var(--surface-soft);
+  color: var(--teal-dark);
+}
+
 .auth-panel,
 .dashboard-panel {
   border: 1px solid var(--line);

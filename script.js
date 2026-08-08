@@ -103,6 +103,22 @@ const translations = {
         metaDescription:
           "Pregled kompanijskih VR obuka, radnika, kurseva i sertifikata na VR Academy platformi.",
       },
+      platformWorkers: {
+        metaTitle: "VR Academy radnici",
+        metaDescription: "Upravljanje zaposlenima i pozivnicama za VR Academy obuke.",
+      },
+      platformTraining: {
+        metaTitle: "VR Academy obuke",
+        metaDescription: "Dodela VR obuka zaposlenima i pregled statusa polaganja.",
+      },
+      platformCertificates: {
+        metaTitle: "VR Academy evidencija",
+        metaDescription: "Pregled sertifikata i export evidencije obuka.",
+      },
+      platformAccount: {
+        metaTitle: "VR Academy nalog",
+        metaDescription: "Podesavanja naloga i reset lozinki korisnika.",
+      },
       systemAdmin: {
         metaTitle: "VR Academy system admin",
         metaDescription: "System administrator portal za upravljanje kompanijama i nivoima preplate.",
@@ -273,6 +289,11 @@ const translations = {
       copy: "Centralno mesto za upravljanje VR kursevima, radnicima, statusima polaganja i vazecim sertifikatima.",
       primaryAction: "Otvori nalog",
       logout: "Odjava",
+      navOverview: "Pregled",
+      navWorkers: "Radnici",
+      navTraining: "Obuke",
+      navCertificates: "Sertifikati i izvestaji",
+      navAccount: "Nalozi",
       demoSession: "Prijavite se da biste videli podatke iz baze.",
       liveSession: "Prijavljeni ste kao {name} iz kompanije {company}.",
       apiFallback: "API nije dostupan. Podaci iz baze trenutno ne mogu da se ucitaju.",
@@ -565,6 +586,22 @@ const translations = {
         metaDescription:
           "Overview of company VR training, workers, courses, and certificates on the VR Academy platform.",
       },
+      platformWorkers: {
+        metaTitle: "VR Academy workers",
+        metaDescription: "Manage employees and invitations for VR Academy training.",
+      },
+      platformTraining: {
+        metaTitle: "VR Academy training",
+        metaDescription: "Assign VR courses to employees and review completion status.",
+      },
+      platformCertificates: {
+        metaTitle: "VR Academy records",
+        metaDescription: "Review certificates and export training records.",
+      },
+      platformAccount: {
+        metaTitle: "VR Academy account",
+        metaDescription: "Account settings and user password reset.",
+      },
       systemAdmin: {
         metaTitle: "VR Academy system admin",
         metaDescription: "System administrator portal for company and subscription management.",
@@ -734,6 +771,11 @@ const translations = {
       copy: "A central place to manage VR courses, workers, completion statuses, and valid certificates.",
       primaryAction: "Open account",
       logout: "Sign out",
+      navOverview: "Overview",
+      navWorkers: "Workers",
+      navTraining: "Training",
+      navCertificates: "Certificates and reports",
+      navAccount: "Accounts",
       demoSession: "Sign in to view database records.",
       liveSession: "Signed in as {name} from {company}.",
       apiFallback: "The API is unavailable. Database records cannot be loaded right now.",
@@ -1118,6 +1160,7 @@ const languageButtons = document.querySelectorAll("[data-language-option]");
 const metaDescription = document.querySelector('meta[name="description"]');
 const scenarioCount = document.querySelector("[data-scenario-count]");
 const pageName = document.body.dataset.page || "home";
+const companyPlatformPages = new Set(["platform", "platformWorkers", "platformTraining", "platformCertificates", "platformAccount"]);
 const authTabs = document.querySelectorAll("[data-auth-tab]");
 const authPanels = document.querySelectorAll("[data-auth-panel]");
 const googleAuthButtons = document.querySelectorAll("[data-google-auth]");
@@ -1263,6 +1306,10 @@ function isWorkerRole(role) {
   return role === "user";
 }
 
+function isCompanyPlatformPage() {
+  return companyPlatformPages.has(pageName);
+}
+
 function getDefaultPageForRole(role) {
   if (isSystemAdministratorRole(role)) {
     return "system-admin.html";
@@ -1275,9 +1322,13 @@ function updateNavigationVisibility() {
   const role = getStoredUserRole();
   const isLoggedIn = Boolean(getAccessToken());
 
-  document.querySelectorAll('a[href="platform.html"]').forEach((link) => {
-    link.hidden = !isLoggedIn || role !== "companyAdministrator";
-  });
+  document
+    .querySelectorAll(
+      'a[href="platform.html"], a[href="platform-workers.html"], a[href="platform-training.html"], a[href="platform-certificates.html"], a[href="platform-account.html"]',
+    )
+    .forEach((link) => {
+      link.hidden = !isLoggedIn || role !== "companyAdministrator";
+    });
 
   document.querySelectorAll('a[href="worker.html"]').forEach((link) => {
     link.hidden = !isLoggedIn || !isWorkerRole(role);
@@ -1317,7 +1368,7 @@ function enforcePageAccess() {
     return false;
   }
 
-  if (pageName === "platform" && (!isLoggedIn || role !== "companyAdministrator")) {
+  if (isCompanyPlatformPage() && (!isLoggedIn || role !== "companyAdministrator")) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
@@ -1910,7 +1961,15 @@ function renderCompletionSelector(enrollments, workerMap, courseMap, language) {
 }
 
 function renderPlatform(language, apiData = null) {
-  if (!platformCourses || !workerList || !certificateRecords) {
+  const hasPlatformWidgets =
+    platformMetrics.length ||
+    notificationList ||
+    platformCourses ||
+    workerList ||
+    certificateRecords ||
+    enrollmentRecords;
+
+  if (!hasPlatformWidgets) {
     return;
   }
 
@@ -1949,7 +2008,8 @@ function renderPlatform(language, apiData = null) {
     language,
   );
 
-  platformCourses.innerHTML = courses
+  if (platformCourses) {
+    platformCourses.innerHTML = courses
     .map((course, index) => {
       const status = index < 2 ? dictionary.statusActive : dictionary.statusReady;
       const duration = getField(course, "validityMonths") ? getField(course, "validityMonths") : index % 2 === 0 ? 35 : 40;
@@ -1967,8 +2027,10 @@ function renderPlatform(language, apiData = null) {
       `;
     })
     .join("");
+  }
 
-  workerList.innerHTML = filteredWorkers
+  if (workerList) {
+    workerList.innerHTML = filteredWorkers
     .map((worker) => {
       const workerId = String(getField(worker, "id"));
       const workerEnrollments = enrollments.filter((enrollment) => String(getField(enrollment, "workerId")) === workerId);
@@ -2012,8 +2074,10 @@ function renderPlatform(language, apiData = null) {
       `;
     })
     .join("") || `<article class="worker-item"><h3>${dictionary.emptyWorkers}</h3><p>-</p></article>`;
+  }
 
-  certificateRecords.innerHTML = certificates
+  if (certificateRecords) {
+    certificateRecords.innerHTML = certificates
     .map((record) => {
       const worker = workerMap.get(String(getField(record, "workerId")));
       const course = courseMap.get(String(getField(record, "courseId")));
@@ -2032,6 +2096,7 @@ function renderPlatform(language, apiData = null) {
       `;
     })
     .join("") || `<div role="row" class="record-row"><span role="cell">${dictionary.emptyCertificates}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
+  }
 
   if (enrollmentRecords) {
     enrollmentRecords.innerHTML = enrollments.length
@@ -2353,7 +2418,7 @@ async function completeWorkerPortalEnrollment(enrollmentId, score, durationMinut
 }
 
 async function loadPlatformData(language) {
-  if (!platformCourses || !workerList || !certificateRecords) {
+  if (!isCompanyPlatformPage()) {
     return;
   }
 
