@@ -338,14 +338,14 @@ const translations = {
       workerAssignedSummary: "{passed}/{total} polozeno",
       workerNoAssignedTraining: "Nema dodeljenih kurseva",
       organizationUsersLabel: "Organizacija",
-      organizationUsersTitle: "Radnici i uloge",
-      organizationUsersCopy: "Pregled svih korisnika u organizaciji i njihovog statusa.",
+      organizationUsersTitle: "Zaposleni",
+      organizationUsersCopy: "Pregled zaposlenih u organizaciji i njihovog statusa pristupa.",
       organizationAdminRole: "Organisation admin",
       userRole: "User",
-      userName: "Ime i prezime",
+      userName: "Zaposleni",
       userEmail: "Email",
       userStatus: "Status",
-      emptyOrganizationUsers: "Nema korisnika za prikaz.",
+      emptyOrganizationUsers: "Nema zaposlenih za prikaz.",
       recordsLabel: "Evidencija",
       recordsTitle: "Poslednji sertifikati",
       emptyCertificates: "Nema sertifikata za prikaz.",
@@ -481,11 +481,11 @@ const translations = {
       deleteWorking: "Brisanje kompanije...",
       deleteSuccess: "Kompanija je obrisana.",
       openCompany: "Otvori kompaniju",
-      companyDetailsTitle: "Korisnici kompanije",
-      companyDetailsCopy: "Pregled svih korisnika u izabranoj kompaniji i njihovog statusa.",
+      companyDetailsTitle: "Zaposleni u kompaniji",
+      companyDetailsCopy: "Pregled zaposlenih u izabranoj kompaniji i njihovog statusa pristupa.",
       companyUsersBack: "Nazad na kompanije",
       loadingCompany: "Ucitavanje kompanije...",
-      companyPeopleSummary: "{subscription} | Korisnickih naloga: {users} | Radnika: {workers}",
+      companyPeopleSummary: "{subscription} | Zaposlenih: {people}",
       emptyCompanies: "Nema kompanija za prikaz.",
       adminFirstName: "Ime admina",
       adminLastName: "Prezime admina",
@@ -839,14 +839,14 @@ const translations = {
       workerAssignedSummary: "{passed}/{total} passed",
       workerNoAssignedTraining: "No assigned courses",
       organizationUsersLabel: "Organization",
-      organizationUsersTitle: "Workers and roles",
-      organizationUsersCopy: "Overview of all users in the organization and their status.",
+      organizationUsersTitle: "Employees",
+      organizationUsersCopy: "Overview of employees in the organization and their access status.",
       organizationAdminRole: "Organisation admin",
       userRole: "User",
-      userName: "Full name",
+      userName: "Employee",
       userEmail: "Email",
       userStatus: "Status",
-      emptyOrganizationUsers: "No users to show.",
+      emptyOrganizationUsers: "No employees to show.",
       recordsLabel: "Records",
       recordsTitle: "Latest certificates",
       emptyCertificates: "No certificates to show.",
@@ -982,11 +982,11 @@ const translations = {
       deleteWorking: "Deleting company...",
       deleteSuccess: "The company has been deleted.",
       openCompany: "Open company",
-      companyDetailsTitle: "Company users",
-      companyDetailsCopy: "Overview of all users in the selected company and their status.",
+      companyDetailsTitle: "Company employees",
+      companyDetailsCopy: "Overview of employees in the selected company and their access status.",
       companyUsersBack: "Back to companies",
       loadingCompany: "Loading company...",
-      companyPeopleSummary: "{subscription} | User accounts: {users} | Workers: {workers}",
+      companyPeopleSummary: "{subscription} | Employees: {people}",
       emptyCompanies: "No companies to show.",
       adminFirstName: "Admin first name",
       adminLastName: "Admin last name",
@@ -2449,11 +2449,11 @@ async function loadSystemCompanyData(language) {
 
   if (systemCompanySubscription) {
     const subscriptionLevel = getField(company, "subscriptionLevel") || "SmallBusiness";
+    const peopleCount = buildOrganizationPeople(currentSystemCompanyUsers, currentSystemCompanyWorkers).length;
     systemCompanySubscription.textContent = company
       ? translations[language].systemAdmin.companyPeopleSummary
           .replace("{subscription}", `${translations[language].systemAdmin.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)}`)
-          .replace("{users}", String(currentSystemCompanyUsers.length))
-          .replace("{workers}", String(currentSystemCompanyWorkers.length))
+          .replace("{people}", String(peopleCount))
       : "";
   }
 
