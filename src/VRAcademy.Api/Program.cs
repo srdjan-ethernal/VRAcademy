@@ -191,6 +191,8 @@ app.MapGet("/api", () => Results.Ok(new
         "DELETE /api/system/companies/{companyId}",
         "GET /api/users",
         "POST /api/users",
+        "PATCH /api/users/{userId}/role",
+        "PATCH /api/system/users/{userId}/role",
         "POST /api/users/reset-password",
         "POST /api/invitations",
         "GET /api/companies",
@@ -587,6 +589,62 @@ app.MapPost("/api/users", (CreateCompanyUserRequest request, HttpRequest httpReq
             var result = authService.CreateCompanyUser(user.CompanyId, request);
             return result.Match(
                 createdUser => Results.Created($"/api/users/{createdUser.Id}", createdUser),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapPatch("/api/users/{userId:guid}/role", (
+    Guid userId,
+    UpdateUserRoleRequest request,
+    HttpRequest httpRequest,
+    IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            if (user.Id == userId)
+            {
+                return Results.BadRequest(new ProblemResponse("Ne mozete promeniti sopstveni status."));
+            }
+
+            var result = authService.UpdateUserRole(user.CompanyId, userId, request);
+            return result.Match(
+                updatedUser => Results.Ok(updatedUser),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapPatch("/api/system/users/{userId:guid}/role", (
+    Guid userId,
+    UpdateUserRoleRequest request,
+    HttpRequest httpRequest,
+    IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsSystemAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            if (user.Id == userId)
+            {
+                return Results.BadRequest(new ProblemResponse("Ne mozete promeniti sopstveni status."));
+            }
+
+            var result = authService.UpdateUserRole(null, userId, request);
+            return result.Match(
+                updatedUser => Results.Ok(updatedUser),
                 error => Results.BadRequest(new ProblemResponse(error)));
         },
         _ => Results.Unauthorized());

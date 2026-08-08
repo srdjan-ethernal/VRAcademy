@@ -1638,6 +1638,19 @@ h1 {
   grid-template-columns: minmax(0, 1fr) minmax(220px, 1.2fr) minmax(160px, 0.55fr);
 }
 
+.role-form select {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: #31414f;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0 10px;
+}
+
 .included-list h3 {
   margin: 0;
   font-size: 18px;

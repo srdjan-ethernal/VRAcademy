@@ -262,6 +262,37 @@ public sealed class EfAuthService : IAuthService
         return Result<UserProfileResponse>.Success(ToProfile(user, company));
     }
 
+    public Result<UserProfileResponse> UpdateUserRole(Guid? companyId, Guid userId, UpdateUserRoleRequest request)
+    {
+        if (request.Role is UserRole.SystemAdministrator)
+        {
+            return Result<UserProfileResponse>.Failure("Status zaposlenog moze biti samo Organisation admin ili User.");
+        }
+
+        var query = _dbContext.Users.Include(user => user.Company).Where(user => user.Id == userId);
+        if (companyId.HasValue)
+        {
+            query = query.Where(user => user.CompanyId == companyId.Value);
+        }
+
+        var user = query.SingleOrDefault();
+        if (user?.Company is null)
+        {
+            return Result<UserProfileResponse>.Failure("Korisnik nije pronadjen.");
+        }
+
+        if (user.Role == UserRole.SystemAdministrator)
+        {
+            return Result<UserProfileResponse>.Failure("System administrator status se ne menja kroz ovaj ekran.");
+        }
+
+        user.Role = request.Role;
+        _dbContext.AuthSessions.RemoveRange(_dbContext.AuthSessions.Where(session => session.UserId == user.Id));
+        _dbContext.SaveChanges();
+
+        return Result<UserProfileResponse>.Success(ToProfile(user, user.Company));
+    }
+
     public Result<InvitationResponse> InviteCompanyUser(Guid companyId, InviteUserRequest request, string baseUrl)
     {
         if (string.IsNullOrWhiteSpace(request.Email) ||

@@ -18,6 +18,8 @@ public interface IAuthService
 
     Result<UserProfileResponse> CreateCompanyUser(Guid companyId, CreateCompanyUserRequest request);
 
+    Result<UserProfileResponse> UpdateUserRole(Guid? companyId, Guid userId, UpdateUserRoleRequest request);
+
     Result<InvitationResponse> InviteCompanyUser(Guid companyId, InviteUserRequest request, string baseUrl);
 
     Result<UserProfileResponse> ResetPassword(Guid? companyId, ResetPasswordRequest request);

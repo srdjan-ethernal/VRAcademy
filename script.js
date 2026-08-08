@@ -346,6 +346,9 @@ const translations = {
       userEmail: "Email",
       userStatus: "Status",
       emptyOrganizationUsers: "Nema zaposlenih za prikaz.",
+      roleChangeWorking: "Cuvanje statusa...",
+      roleChangeSuccess: "Status zaposlenog je promenjen.",
+      roleChangeUnavailable: "Status se moze promeniti samo za zaposlene koji imaju login nalog.",
       recordsLabel: "Evidencija",
       recordsTitle: "Poslednji sertifikati",
       emptyCertificates: "Nema sertifikata za prikaz.",
@@ -847,6 +850,9 @@ const translations = {
       userEmail: "Email",
       userStatus: "Status",
       emptyOrganizationUsers: "No employees to show.",
+      roleChangeWorking: "Saving status...",
+      roleChangeSuccess: "Employee status has been changed.",
+      roleChangeUnavailable: "Status can be changed only for employees with a login account.",
       recordsLabel: "Records",
       recordsTitle: "Latest certificates",
       emptyCertificates: "No certificates to show.",
@@ -1255,6 +1261,7 @@ const systemCompanyPeopleList = document.querySelector("[data-system-company-peo
 const systemCompanyTitle = document.querySelector("[data-system-company-title]");
 const systemCompanySubscription = document.querySelector("[data-system-company-subscription]");
 const organizationUserList = document.querySelector("[data-organization-user-list]");
+const organizationUserMessages = document.querySelectorAll("[data-organization-user-message]");
 const resetPasswordForms = document.querySelectorAll("[data-reset-password-form]");
 const changePasswordForms = document.querySelectorAll("[data-change-password-form]");
 const inviteForm = document.querySelector("[data-invite-form]");
@@ -1338,6 +1345,10 @@ function normalizeUserRole(role) {
 
 function getStoredUserRole() {
   return normalizeUserRole(getField(getField(getStoredAuth(), "user"), "role"));
+}
+
+function getStoredUserId() {
+  return String(getField(getField(getStoredAuth(), "user"), "id") || "");
 }
 
 function isAdministratorRole(role) {
@@ -1562,6 +1573,14 @@ function setSystemCompanyMessage(message, tone = "") {
   systemCompanyMessage.textContent = message;
   systemCompanyMessage.classList.toggle("is-error", tone === "error");
   systemCompanyMessage.classList.toggle("is-success", tone === "success");
+}
+
+function setOrganizationUserMessage(message, tone = "") {
+  organizationUserMessages.forEach((messageElement) => {
+    messageElement.textContent = message;
+    messageElement.classList.toggle("is-error", tone === "error");
+    messageElement.classList.toggle("is-success", tone === "success");
+  });
 }
 
 function setInviteMessage(message, tone = "") {
@@ -2292,6 +2311,11 @@ function getOrganizationRoleLabel(role, language) {
     : dictionary.userRole;
 }
 
+function getOrganizationRoleValue(role) {
+  const normalizedRole = normalizeUserRole(role);
+  return normalizedRole === "companyAdministrator" || normalizedRole === "systemAdministrator" ? "CompanyAdministrator" : "User";
+}
+
 function getUserFullName(user) {
   return `${getField(user, "firstName") || ""} ${getField(user, "lastName") || ""}`.trim() || "-";
 }
@@ -2307,6 +2331,7 @@ function buildOrganizationPeople(users = [], workers = []) {
       lastName: getField(worker, "lastName") || "",
       email: getField(worker, "email") || "",
       role: "User",
+      userId: "",
     });
   });
 
@@ -2320,6 +2345,7 @@ function buildOrganizationPeople(users = [], workers = []) {
       lastName: getField(user, "lastName") || existing?.lastName || "",
       email: getField(user, "email") || existing?.email || "",
       role: getField(user, "role") || existing?.role || "User",
+      userId: getField(user, "id") || existing?.userId || "",
     });
   });
 
@@ -2335,17 +2361,36 @@ function renderOrganizationUsers(language, users = [], workers = []) {
   }
 
   const dictionary = translations[language].platform;
+  const currentUserId = getStoredUserId();
   const people = buildOrganizationPeople(users, workers);
   const rows = people.length
     ? people
         .map(
-          (user) => `
+          (user) => {
+            const userId = String(getField(user, "userId") || "");
+            const role = getField(user, "role");
+            const roleValue = getOrganizationRoleValue(role);
+            const normalizedRole = normalizeUserRole(role);
+            const canChangeRole = userId && normalizedRole !== "systemAdministrator" && userId !== currentUserId;
+            const statusMarkup = canChangeRole
+              ? `
+                <form class="role-form" data-user-role-form data-user-id="${escapeAttribute(userId)}">
+                  <select name="role" aria-label="${dictionary.userStatus}">
+                    <option value="CompanyAdministrator" ${roleValue === "CompanyAdministrator" ? "selected" : ""}>${dictionary.organizationAdminRole}</option>
+                    <option value="User" ${roleValue === "User" ? "selected" : ""}>${dictionary.userRole}</option>
+                  </select>
+                </form>
+              `
+              : `<span class="status-pill" title="${userId ? "" : dictionary.roleChangeUnavailable}">${getOrganizationRoleLabel(role, language)}</span>`;
+
+            return `
             <div role="row" class="record-row organization-user-row">
               <span role="cell">${getUserFullName(user)}</span>
               <span role="cell">${getField(user, "email") || "-"}</span>
-              <span role="cell"><span class="status-pill">${getOrganizationRoleLabel(getField(user, "role"), language)}</span></span>
+              <span role="cell">${statusMarkup}</span>
             </div>
-          `,
+          `;
+          },
         )
         .join("")
     : `<div role="row" class="record-row organization-user-row"><span role="cell">${dictionary.emptyOrganizationUsers}</span><span role="cell">-</span><span role="cell">-</span></div>`;
@@ -2459,6 +2504,54 @@ async function loadSystemCompanyData(language) {
 
   setSystemAdminMessage(translations[language].systemAdmin.companyDetailsCopy);
   renderOrganizationUsers(language, currentSystemCompanyUsers, currentSystemCompanyWorkers);
+}
+
+async function updateOrganizationUserRole(form) {
+  if (!getAccessToken()) {
+    setOrganizationUserMessage(translations[currentLanguage].platform.roleChangeUnavailable, "error");
+    return;
+  }
+
+  const userId = form.dataset.userId;
+  const select = form.querySelector('select[name="role"]');
+  const role = select?.value;
+  if (!userId || !role) {
+    setOrganizationUserMessage(translations[currentLanguage].platform.roleChangeUnavailable, "error");
+    return;
+  }
+
+  const endpoint = pageName === "systemCompany"
+    ? `/api/system/users/${encodeURIComponent(userId)}/role`
+    : `/api/users/${encodeURIComponent(userId)}/role`;
+
+  select.disabled = true;
+  setOrganizationUserMessage(translations[currentLanguage].platform.roleChangeWorking);
+
+  const result = await apiRequest(endpoint, {
+    method: "PATCH",
+    auth: true,
+    body: { role },
+  });
+
+  select.disabled = false;
+
+  if (!result.ok) {
+    setOrganizationUserMessage(result.error || translations[currentLanguage].platform.roleChangeUnavailable, "error");
+    if (pageName === "systemCompany") {
+      loadSystemCompanyData(currentLanguage);
+    } else {
+      loadPlatformData(currentLanguage);
+    }
+    return;
+  }
+
+  setOrganizationUserMessage(translations[currentLanguage].platform.roleChangeSuccess, "success");
+  if (pageName === "systemCompany") {
+    loadSystemCompanyData(currentLanguage);
+    return;
+  }
+
+  loadPlatformData(currentLanguage);
 }
 
 function setWorkerPortalMetric(metricName, value) {
@@ -3736,4 +3829,11 @@ languageButtons.forEach((button) => {
 
 document.querySelectorAll(".main-nav a").forEach((link) => {
   link.addEventListener("click", () => header.classList.remove("is-open"));
+});
+
+document.addEventListener("change", (event) => {
+  const form = event.target.closest?.("[data-user-role-form]");
+  if (form) {
+    updateOrganizationUserRole(form);
+  }
 });

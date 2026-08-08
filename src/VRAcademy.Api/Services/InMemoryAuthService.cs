@@ -279,6 +279,46 @@ public sealed class InMemoryAuthService : IAuthService
         }
     }
 
+    public Result<UserProfileResponse> UpdateUserRole(Guid? companyId, Guid userId, UpdateUserRoleRequest request)
+    {
+        if (request.Role is UserRole.SystemAdministrator)
+        {
+            return Result<UserProfileResponse>.Failure("Status zaposlenog moze biti samo Organisation admin ili User.");
+        }
+
+        lock (_lock)
+        {
+            var userIndex = _users.FindIndex(user =>
+                user.Id == userId &&
+                (!companyId.HasValue || user.CompanyId == companyId.Value));
+            if (userIndex < 0)
+            {
+                return Result<UserProfileResponse>.Failure("Korisnik nije pronadjen.");
+            }
+
+            var storedUser = _users[userIndex];
+            if (storedUser.Role == UserRole.SystemAdministrator)
+            {
+                return Result<UserProfileResponse>.Failure("System administrator status se ne menja kroz ovaj ekran.");
+            }
+
+            var account = new UserAccount(
+                storedUser.Id,
+                storedUser.CompanyId,
+                storedUser.Email,
+                storedUser.FirstName,
+                storedUser.LastName,
+                request.Role,
+                storedUser.CreatedAt);
+            var updatedUser = new StoredUser(account, storedUser.PasswordHash, storedUser.PasswordSalt);
+            _users[userIndex] = updatedUser;
+            _sessions.RemoveAll(session => session.UserId == updatedUser.Id);
+
+            var company = _companies.Single(existingCompany => existingCompany.Id == updatedUser.CompanyId);
+            return Result<UserProfileResponse>.Success(ToProfile(updatedUser, company));
+        }
+    }
+
     public Result<InvitationResponse> InviteCompanyUser(Guid companyId, InviteUserRequest request, string baseUrl)
     {
         if (string.IsNullOrWhiteSpace(request.Email) ||
