@@ -418,7 +418,7 @@ const translations = {
       trainingTitle: "Moje dodeljene obuke",
       certificatesLabel: "Sertifikati",
       certificatesTitle: "Moji sertifikati",
-      verify: "Provera",
+      verify: "Broj sertifikata",
       noTraining: "Trenutno nemate dodeljene obuke.",
       noCertificates: "Trenutno nemate izdatih sertifikata.",
       linkedWorker: "Prijavljeni ste kao {name}.",
@@ -437,7 +437,7 @@ const translations = {
       completeFailed: "Obuka je zavrsena bez kreiranja sertifikata.",
       loginRequired: "Prijavite se da biste koristili radnicki portal.",
       actionUnavailable: "Akcija je dostupna kada je portal povezan sa backendom.",
-      downloadCertificate: "Proveri",
+      downloadCertificate: "Broj sertifikata",
       examIdLabel: "ExamId",
       externalExamReady: "Za spoljni program koristite ExamId: {examId}.",
     },
@@ -900,7 +900,7 @@ const translations = {
       trainingTitle: "My assigned training",
       certificatesLabel: "Certificates",
       certificatesTitle: "My certificates",
-      verify: "Verify",
+      verify: "Certificate number",
       noTraining: "You do not currently have assigned training.",
       noCertificates: "You do not currently have issued certificates.",
       linkedWorker: "Signed in as {name}.",
@@ -919,7 +919,7 @@ const translations = {
       completeFailed: "Training has been completed without creating a certificate.",
       loginRequired: "Sign in to use the worker portal.",
       actionUnavailable: "This action is available when the portal is connected to the backend.",
-      downloadCertificate: "Verify",
+      downloadCertificate: "Certificate number",
       examIdLabel: "ExamId",
       externalExamReady: "Use this ExamId in the external exam program: {examId}.",
     },
@@ -1155,6 +1155,7 @@ const supportedLanguages = ["sr", "en"];
 const scenarioGrid = document.querySelector("[data-scenario-grid]");
 const header = document.querySelector("[data-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
+const brandLink = document.querySelector(".brand");
 const headerActionLink = document.querySelector(".header-action");
 const languageButtons = document.querySelectorAll("[data-language-option]");
 const metaDescription = document.querySelector('meta[name="description"]');
@@ -1203,6 +1204,7 @@ const verifyCourse = document.querySelector("[data-verify-course]");
 const verifyIssued = document.querySelector("[data-verify-issued]");
 const verifyValid = document.querySelector("[data-verify-valid]");
 const workerPortalMessage = document.querySelector("[data-worker-portal-message]");
+const workerPortalLoginLinks = document.querySelectorAll("[data-worker-login-link]");
 const workerPortalMetrics = document.querySelectorAll("[data-worker-metric]");
 const workerPortalEnrollments = document.querySelector("[data-worker-enrollments]");
 const workerPortalCertificates = document.querySelector("[data-worker-certificates]");
@@ -1325,6 +1327,11 @@ function getDefaultPageForRole(role) {
 function updateNavigationVisibility() {
   const role = getStoredUserRole();
   const isLoggedIn = Boolean(getAccessToken());
+  const isWorker = isWorkerRole(role);
+
+  document.querySelectorAll(".main-nav a").forEach((link) => {
+    link.hidden = false;
+  });
 
   document
     .querySelectorAll(
@@ -1335,11 +1342,25 @@ function updateNavigationVisibility() {
     });
 
   document.querySelectorAll('a[href="worker.html"]').forEach((link) => {
-    link.hidden = !isLoggedIn || !isWorkerRole(role);
+    link.hidden = !isLoggedIn || !isWorker;
   });
 
   document.querySelectorAll('a[href="system-admin.html"]').forEach((link) => {
     link.hidden = !isLoggedIn || !isSystemAdministratorRole(role);
+  });
+
+  if (isLoggedIn && isWorker) {
+    document.querySelectorAll(".main-nav a").forEach((link) => {
+      link.hidden = link.getAttribute("href") !== "worker.html";
+    });
+  }
+
+  if (brandLink) {
+    brandLink.href = isLoggedIn && isWorker ? "worker.html" : "index.html#top";
+  }
+
+  workerPortalLoginLinks.forEach((link) => {
+    link.hidden = isLoggedIn && isWorker;
   });
 
   if (!headerActionLink) {
@@ -1366,6 +1387,11 @@ function updateNavigationVisibility() {
 function enforcePageAccess() {
   const isLoggedIn = Boolean(getAccessToken());
   const role = getStoredUserRole();
+
+  if (isLoggedIn && isWorkerRole(role) && pageName !== "worker") {
+    window.location.href = "worker.html";
+    return false;
+  }
 
   if (pageName === "systemAdmin" && (!isLoggedIn || !isSystemAdministratorRole(role))) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
@@ -2322,16 +2348,13 @@ function renderWorkerPortal(language, apiData = null, message = "") {
         .map((certificate) => {
           const course = findCourseForRecord(courses, getField(certificate, "courseId"));
           const certificateNumber = getField(certificate, "certificateNumber");
-          const verificationHref = certificateNumber
-            ? `verify.html?certificate=${encodeURIComponent(certificateNumber)}`
-            : "verify.html";
 
           return `
             <div role="row" class="record-row">
               <span role="cell">${getCourseTitle(course, language) || "-"}</span>
               <span role="cell">${formatShortDate(getField(certificate, "issuedAt"), language)}</span>
               <span role="cell">${formatShortDate(getField(certificate, "validUntil"), language)}</span>
-              <span role="cell"><a href="${verificationHref}">${dictionary.downloadCertificate}</a></span>
+              <span role="cell">${certificateNumber || "-"}</span>
             </div>
           `;
         })
