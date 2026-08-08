@@ -123,6 +123,10 @@ const translations = {
         metaTitle: "VR Academy system admin",
         metaDescription: "System administrator portal za upravljanje kompanijama i nivoima preplate.",
       },
+      systemCompany: {
+        metaTitle: "VR Academy kompanija",
+        metaDescription: "Pregled korisnika i uloga u izabranoj kompaniji.",
+      },
       worker: {
         metaTitle: "Moj VR Academy portal",
         metaDescription: "Radnicki portal za pregled dodeljenih VR obuka, rezultata i sertifikata.",
@@ -333,6 +337,15 @@ const translations = {
       emptyWorkers: "Nema radnika za prikaz.",
       workerAssignedSummary: "{passed}/{total} polozeno",
       workerNoAssignedTraining: "Nema dodeljenih kurseva",
+      organizationUsersLabel: "Organizacija",
+      organizationUsersTitle: "Radnici i uloge",
+      organizationUsersCopy: "Pregled svih korisnika u organizaciji i njihovog statusa.",
+      organizationAdminRole: "Organisation admin",
+      userRole: "User",
+      userName: "Ime i prezime",
+      userEmail: "Email",
+      userStatus: "Status",
+      emptyOrganizationUsers: "Nema korisnika za prikaz.",
       recordsLabel: "Evidencija",
       recordsTitle: "Poslednji sertifikati",
       emptyCertificates: "Nema sertifikata za prikaz.",
@@ -467,6 +480,10 @@ const translations = {
       deleteConfirm: "Obrisati kompaniju {name} i sve njene korisnike, radnike, obuke i sertifikate?",
       deleteWorking: "Brisanje kompanije...",
       deleteSuccess: "Kompanija je obrisana.",
+      openCompany: "Otvori",
+      companyDetailsTitle: "Korisnici kompanije",
+      companyDetailsCopy: "Pregled svih korisnika u izabranoj kompaniji i njihovog statusa.",
+      companyUsersBack: "Nazad na kompanije",
       emptyCompanies: "Nema kompanija za prikaz.",
       adminFirstName: "Ime admina",
       adminLastName: "Prezime admina",
@@ -605,6 +622,10 @@ const translations = {
       systemAdmin: {
         metaTitle: "VR Academy system admin",
         metaDescription: "System administrator portal for company and subscription management.",
+      },
+      systemCompany: {
+        metaTitle: "VR Academy company",
+        metaDescription: "Overview of users and roles in the selected company.",
       },
       worker: {
         metaTitle: "My VR Academy portal",
@@ -815,6 +836,15 @@ const translations = {
       emptyWorkers: "No workers to show.",
       workerAssignedSummary: "{passed}/{total} passed",
       workerNoAssignedTraining: "No assigned courses",
+      organizationUsersLabel: "Organization",
+      organizationUsersTitle: "Workers and roles",
+      organizationUsersCopy: "Overview of all users in the organization and their status.",
+      organizationAdminRole: "Organisation admin",
+      userRole: "User",
+      userName: "Full name",
+      userEmail: "Email",
+      userStatus: "Status",
+      emptyOrganizationUsers: "No users to show.",
       recordsLabel: "Records",
       recordsTitle: "Latest certificates",
       emptyCertificates: "No certificates to show.",
@@ -949,6 +979,10 @@ const translations = {
       deleteConfirm: "Delete company {name} and all of its users, workers, trainings, and certificates?",
       deleteWorking: "Deleting company...",
       deleteSuccess: "The company has been deleted.",
+      openCompany: "Open",
+      companyDetailsTitle: "Company users",
+      companyDetailsCopy: "Overview of all users in the selected company and their status.",
+      companyUsersBack: "Back to companies",
       emptyCompanies: "No companies to show.",
       adminFirstName: "Admin first name",
       adminLastName: "Admin last name",
@@ -1213,6 +1247,10 @@ const systemAdminLogoutButton = document.querySelector("[data-system-admin-logou
 const systemCompanyList = document.querySelector("[data-system-company-list]");
 const systemCompanyForm = document.querySelector("[data-system-company-form]");
 const systemCompanyMessage = document.querySelector("[data-system-company-message]");
+const systemCompanyPeopleList = document.querySelector("[data-system-company-people]");
+const systemCompanyTitle = document.querySelector("[data-system-company-title]");
+const systemCompanySubscription = document.querySelector("[data-system-company-subscription]");
+const organizationUserList = document.querySelector("[data-organization-user-list]");
 const resetPasswordForms = document.querySelectorAll("[data-reset-password-form]");
 const changePasswordForms = document.querySelectorAll("[data-change-password-form]");
 const inviteForm = document.querySelector("[data-invite-form]");
@@ -1222,6 +1260,8 @@ let platformDataLoadedFromApi = false;
 let systemAdminDataLoadedFromApi = false;
 let currentPlatformData = null;
 let currentSystemCompanies = [];
+let currentSystemCompanyUsers = [];
+let currentSystemCompanyWorkers = [];
 let workerSearchTerm = "";
 const defaultApiBaseUrl =
   window.location.protocol.startsWith("http") &&
@@ -1394,6 +1434,11 @@ function enforcePageAccess() {
   }
 
   if (pageName === "systemAdmin" && (!isLoggedIn || !isSystemAdministratorRole(role))) {
+    window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
+    return false;
+  }
+
+  if (pageName === "systemCompany" && (!isLoggedIn || !isSystemAdministratorRole(role))) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
@@ -1999,7 +2044,8 @@ function renderPlatform(language, apiData = null) {
     certificateRecords ||
     enrollmentRecords ||
     enrollmentWorkerSelect ||
-    enrollmentCourseSelect;
+    enrollmentCourseSelect ||
+    organizationUserList;
 
   if (!hasPlatformWidgets) {
     return;
@@ -2010,6 +2056,7 @@ function renderPlatform(language, apiData = null) {
   const workers = apiData?.workers || [];
   const certificates = apiData?.certificates || [];
   const enrollments = apiData?.enrollments || [];
+  const users = apiData?.users || [];
   const courseMap = new Map((apiData?.courses || []).map((course) => [String(getField(course, "id")), course]));
   const workerMap = new Map((apiData?.workers || []).map((worker) => [String(getField(worker, "id")), worker]));
   const filteredWorkers = workers.filter((worker) => {
@@ -2027,6 +2074,7 @@ function renderPlatform(language, apiData = null) {
   );
   renderEnrollmentSelectors(workers, courses, language);
   renderCompletionSelector(enrollments, workerMap, courseMap, language);
+  renderOrganizationUsers(language, users, workers);
   renderNotifications(
     buildNotifications({
       workers,
@@ -2201,13 +2249,14 @@ function renderSystemAdmin(language, companies = currentSystemCompanies) {
           return `
             <article class="company-admin-item">
               <div>
-                <h3>${getField(company, "name") || "-"}</h3>
+                <h3><a href="system-company.html?companyId=${encodeURIComponent(companyId)}">${getField(company, "name") || "-"}</a></h3>
                 <p>${dictionary.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)} &middot; ${dictionary.createdAt}: ${createdAt}</p>
               </div>
               <form data-company-subscription-form data-company-id="${escapeAttribute(companyId)}">
                 <select name="subscriptionLevel" aria-label="${dictionary.subscriptionLevel}">
                   ${renderSubscriptionOptions(subscriptionLevel, language)}
                 </select>
+                <a class="button secondary" href="system-company.html?companyId=${encodeURIComponent(companyId)}">${dictionary.openCompany}</a>
                 <button class="button secondary" type="submit">${dictionary.updateSubscription}</button>
                 <button class="button secondary" type="button" data-delete-company="${escapeAttribute(companyId)}" data-company-name="${escapeAttribute(getField(company, "name") || "-")}">${dictionary.deleteCompany}</button>
               </form>
@@ -2216,6 +2265,78 @@ function renderSystemAdmin(language, companies = currentSystemCompanies) {
         })
         .join("")
     : `<article class="worker-item"><h3>${dictionary.emptyCompanies}</h3><p>-</p></article>`;
+}
+
+function getOrganizationRoleLabel(role, language) {
+  const dictionary = translations[language].platform;
+  const normalizedRole = normalizeUserRole(role);
+
+  return normalizedRole === "companyAdministrator" || normalizedRole === "systemAdministrator"
+    ? dictionary.organizationAdminRole
+    : dictionary.userRole;
+}
+
+function getUserFullName(user) {
+  return `${getField(user, "firstName") || ""} ${getField(user, "lastName") || ""}`.trim() || "-";
+}
+
+function buildOrganizationPeople(users = [], workers = []) {
+  const peopleByKey = new Map();
+
+  workers.forEach((worker) => {
+    const email = String(getField(worker, "email") || "").trim().toLowerCase();
+    const key = email || `worker:${getField(worker, "id")}`;
+    peopleByKey.set(key, {
+      firstName: getField(worker, "firstName") || "",
+      lastName: getField(worker, "lastName") || "",
+      email: getField(worker, "email") || "",
+      role: "User",
+    });
+  });
+
+  users.forEach((user) => {
+    const email = String(getField(user, "email") || "").trim().toLowerCase();
+    const key = email || `user:${getField(user, "id")}`;
+    const existing = peopleByKey.get(key);
+    peopleByKey.set(key, {
+      ...existing,
+      firstName: getField(user, "firstName") || existing?.firstName || "",
+      lastName: getField(user, "lastName") || existing?.lastName || "",
+      email: getField(user, "email") || existing?.email || "",
+      role: getField(user, "role") || existing?.role || "User",
+    });
+  });
+
+  return Array.from(peopleByKey.values()).sort((left, right) =>
+    getUserFullName(left).localeCompare(getUserFullName(right), currentLanguage === "sr" ? "sr" : "en"),
+  );
+}
+
+function renderOrganizationUsers(language, users = [], workers = []) {
+  const targets = [organizationUserList, systemCompanyPeopleList].filter(Boolean);
+  if (!targets.length) {
+    return;
+  }
+
+  const dictionary = translations[language].platform;
+  const people = buildOrganizationPeople(users, workers);
+  const rows = people.length
+    ? people
+        .map(
+          (user) => `
+            <div role="row" class="record-row organization-user-row">
+              <span role="cell">${getUserFullName(user)}</span>
+              <span role="cell">${getField(user, "email") || "-"}</span>
+              <span role="cell"><span class="status-pill">${getOrganizationRoleLabel(getField(user, "role"), language)}</span></span>
+            </div>
+          `,
+        )
+        .join("")
+    : `<div role="row" class="record-row organization-user-row"><span role="cell">${dictionary.emptyOrganizationUsers}</span><span role="cell">-</span><span role="cell">-</span></div>`;
+
+  targets.forEach((target) => {
+    target.innerHTML = rows;
+  });
 }
 
 async function loadSystemAdminData(language) {
@@ -2255,6 +2376,61 @@ async function loadSystemAdminData(language) {
   systemAdminDataLoadedFromApi = true;
   currentSystemCompanies = companiesResult.data || [];
   renderSystemAdmin(language, currentSystemCompanies);
+}
+
+async function loadSystemCompanyData(language) {
+  if (!systemCompanyPeopleList) {
+    return;
+  }
+
+  const auth = getStoredAuth();
+  const role = getStoredUserRole();
+  if (!auth || !isSystemAdministratorRole(role)) {
+    window.location.href = auth ? getDefaultPageForRole(role) : "login.html";
+    return;
+  }
+
+  const companyId = new URLSearchParams(window.location.search).get("companyId");
+  if (!companyId) {
+    window.location.href = "system-admin.html";
+    return;
+  }
+
+  const [companiesResult, usersResult, workersResult] = await Promise.all([
+    apiRequest("/api/system/companies", { auth: true }),
+    apiRequest(`/api/system/companies/${encodeURIComponent(companyId)}/users`, { auth: true }),
+    apiRequest(`/api/system/companies/${encodeURIComponent(companyId)}/workers`, { auth: true }),
+  ]);
+
+  if (!companiesResult.ok || !usersResult.ok || !workersResult.ok) {
+    currentSystemCompanyUsers = [];
+    currentSystemCompanyWorkers = [];
+    setSystemAdminMessage(
+      usersResult.error || workersResult.error || companiesResult.error || translations[language].systemAdmin.apiFallback,
+      "error",
+    );
+    renderOrganizationUsers(language, [], []);
+    return;
+  }
+
+  const companies = companiesResult.data || [];
+  const company = companies.find((item) => String(getField(item, "id")) === String(companyId));
+  currentSystemCompanyUsers = usersResult.data || [];
+  currentSystemCompanyWorkers = workersResult.data || [];
+
+  if (systemCompanyTitle) {
+    systemCompanyTitle.textContent = company ? getField(company, "name") || "-" : translations[language].systemAdmin.companyDetailsTitle;
+  }
+
+  if (systemCompanySubscription) {
+    const subscriptionLevel = getField(company, "subscriptionLevel") || "SmallBusiness";
+    systemCompanySubscription.textContent = company
+      ? `${translations[language].systemAdmin.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)}`
+      : "";
+  }
+
+  setSystemAdminMessage(translations[language].systemAdmin.companyDetailsCopy);
+  renderOrganizationUsers(language, currentSystemCompanyUsers, currentSystemCompanyWorkers);
 }
 
 function setWorkerPortalMetric(metricName, value) {
@@ -2464,13 +2640,14 @@ async function loadPlatformData(language) {
     return;
   }
 
-  const [profileResult, coursesResult, workersResult, certificatesResult, enrollmentsResult, summaryResult] = await Promise.all([
+  const [profileResult, coursesResult, workersResult, certificatesResult, enrollmentsResult, summaryResult, usersResult] = await Promise.all([
     apiRequest("/api/auth/me", { auth: true }),
     apiRequest("/api/courses"),
     apiRequest("/api/workers", { auth: true }),
     apiRequest("/api/certificates", { auth: true }),
     apiRequest("/api/enrollments", { auth: true }),
     apiRequest("/api/dashboard/summary", { auth: true }),
+    apiRequest("/api/users", { auth: true }),
   ]);
 
   if (!profileResult.ok) {
@@ -2510,6 +2687,7 @@ async function loadPlatformData(language) {
     certificates: certificatesResult.data || [],
     enrollments: enrollmentsResult.data || [],
     summary: summaryResult.ok ? summaryResult.data : null,
+    users: usersResult.ok ? usersResult.data || [] : [],
   };
   renderPlatform(language, {
     ...currentPlatformData,
@@ -2820,6 +2998,7 @@ function applyTranslations(language) {
   loadPlatformData(language);
   loadWorkerPortalData(language);
   loadSystemAdminData(language);
+  loadSystemCompanyData(language);
   updateCertificate(language);
   if (verifyNumberInput?.value) {
     verifyCertificate(verifyNumberInput.value);

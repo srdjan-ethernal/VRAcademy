@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VR Academy kompanija</title>
+    <meta name="description" content="Pregled korisnika i uloga u izabranoj kompaniji." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="systemCompany">
+    <header class="site-header" data-header>
+      <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
+        <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
+        <span class="brand-text">VR Academy</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
+        <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
+        <a href="system-admin.html" aria-current="page" data-i18n="nav.systemAdmin">Admin</a>
+        <a href="platform.html" data-i18n="nav.platform">Platforma</a>
+        <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
+        <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
+        <a href="verify.html" data-i18n="nav.verify">Provera</a>
+        <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
+      </nav>
+
+      <a class="header-action" href="login.html" data-i18n="nav.login">Prijava</a>
+
+      <div class="language-switch" aria-label="Izbor jezika" data-i18n-aria-label="language.label">
+        <button type="button" data-language-option="sr" aria-pressed="true">SR</button>
+        <button type="button" data-language-option="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-label="Otvori navigaciju" data-i18n-aria-label="nav.open" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="platform-shell" aria-labelledby="system-company-title">
+        <div class="platform-topbar">
+          <div>
+            <p class="eyebrow" data-i18n="systemAdmin.eyebrow">System admin</p>
+            <h1 id="system-company-title" data-system-company-title data-i18n="systemAdmin.companyDetailsTitle">Korisnici kompanije</h1>
+            <p data-i18n="systemAdmin.companyDetailsCopy">
+              Pregled svih korisnika u izabranoj kompaniji i njihovog statusa.
+            </p>
+            <p class="platform-session" data-system-company-subscription></p>
+            <p class="platform-session" data-system-admin-message></p>
+          </div>
+          <div class="platform-actions">
+            <a class="button secondary" href="system-admin.html" data-i18n="systemAdmin.companyUsersBack">Nazad na kompanije</a>
+            <button class="button secondary" type="button" data-system-admin-logout data-i18n="platform.logout">Odjava</button>
+          </div>
+        </div>
+
+        <section class="dashboard-panel" aria-labelledby="company-users-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="platform.organizationUsersLabel">Organizacija</span>
+              <h2 id="company-users-title" data-i18n="platform.organizationUsersTitle">Radnici i uloge</h2>
+            </div>
+          </div>
+          <div class="records-table" role="table" aria-label="Radnici i uloge" data-i18n-aria-label="platform.organizationUsersTitle">
+            <div role="row" class="records-head organization-user-row">
+              <span role="columnheader" data-i18n="platform.userName">Ime i prezime</span>
+              <span role="columnheader" data-i18n="platform.userEmail">Email</span>
+              <span role="columnheader" data-i18n="platform.userStatus">Status</span>
+            </div>
+            <div data-system-company-people></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>VR Academy</span>
+      <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

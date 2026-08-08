@@ -1458,6 +1458,10 @@ h1 {
   line-height: 1.2;
 }
 
+.company-admin-item h3 a {
+  color: var(--ink);
+}
+
 .company-admin-item p,
 .invite-result {
   margin: 0;
@@ -1574,6 +1578,11 @@ h1 {
   box-shadow: none;
 }
 
+.organization-users-panel {
+  margin-bottom: 22px;
+  box-shadow: none;
+}
+
 .records-table {
   display: grid;
   gap: 1px;
@@ -1613,6 +1622,10 @@ h1 {
 .enrollment-head,
 .enrollment-row {
   grid-template-columns: 1fr 1.05fr 0.9fr 0.6fr 0.6fr 0.45fr;
+}
+
+.organization-user-row {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 1.2fr) minmax(160px, 0.55fr);
 }
 
 .included-list h3 {

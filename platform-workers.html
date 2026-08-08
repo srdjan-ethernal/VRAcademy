@@ -65,6 +65,26 @@
           <a href="platform-account.html" data-i18n="platform.navAccount">Nalozi</a>
         </nav>
 
+        <section class="dashboard-panel organization-users-panel" aria-labelledby="organization-users-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="platform.organizationUsersLabel">Organizacija</span>
+              <h2 id="organization-users-title" data-i18n="platform.organizationUsersTitle">Radnici i uloge</h2>
+              <p data-i18n="platform.organizationUsersCopy">
+                Pregled svih korisnika u organizaciji i njihovog statusa.
+              </p>
+            </div>
+          </div>
+          <div class="records-table" role="table" aria-label="Radnici i uloge" data-i18n-aria-label="platform.organizationUsersTitle">
+            <div role="row" class="records-head organization-user-row">
+              <span role="columnheader" data-i18n="platform.userName">Ime i prezime</span>
+              <span role="columnheader" data-i18n="platform.userEmail">Email</span>
+              <span role="columnheader" data-i18n="platform.userStatus">Status</span>
+            </div>
+            <div data-organization-user-list></div>
+          </div>
+        </section>
+
         <div class="dashboard-grid">
           <section class="dashboard-panel large-panel" aria-labelledby="workers-list-title">
             <div class="panel-heading">

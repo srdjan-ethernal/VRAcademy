@@ -185,6 +185,8 @@ app.MapGet("/api", () => Results.Ok(new
         "POST /api/auth/change-password",
         "GET /api/system/companies",
         "POST /api/system/companies",
+        "GET /api/system/companies/{companyId}/users",
+        "GET /api/system/companies/{companyId}/workers",
         "PATCH /api/system/companies/{companyId}/subscription",
         "DELETE /api/system/companies/{companyId}",
         "GET /api/users",
@@ -463,6 +465,49 @@ app.MapPost("/api/system/companies", (CreateCompanyRequest request, HttpRequest 
             var result = authService.CreateCompany(request);
             return result.Match(
                 company => Results.Created($"/api/system/companies/{company.Id}", company),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapGet("/api/system/companies/{companyId:guid}/users", (
+    Guid companyId,
+    HttpRequest httpRequest,
+    IAuthService authService) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsSystemAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            return authService.GetCompany(companyId).Match(
+                _ => Results.Ok(authService.GetUsersForCompany(companyId)),
+                error => Results.BadRequest(new ProblemResponse(error)));
+        },
+        _ => Results.Unauthorized());
+});
+
+app.MapGet("/api/system/companies/{companyId:guid}/workers", (
+    Guid companyId,
+    HttpRequest httpRequest,
+    IAuthService authService,
+    ITrainingRepository repository) =>
+{
+    var currentUser = ResolveCurrentUser(httpRequest, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsSystemAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            return authService.GetCompany(companyId).Match(
+                _ => Results.Ok(repository.GetWorkers(companyId)),
                 error => Results.BadRequest(new ProblemResponse(error)));
         },
         _ => Results.Unauthorized());
