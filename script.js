@@ -484,6 +484,8 @@ const translations = {
       companyDetailsTitle: "Korisnici kompanije",
       companyDetailsCopy: "Pregled svih korisnika u izabranoj kompaniji i njihovog statusa.",
       companyUsersBack: "Nazad na kompanije",
+      loadingCompany: "Ucitavanje kompanije...",
+      companyPeopleSummary: "{subscription} | Korisnickih naloga: {users} | Radnika: {workers}",
       emptyCompanies: "Nema kompanija za prikaz.",
       adminFirstName: "Ime admina",
       adminLastName: "Prezime admina",
@@ -983,6 +985,8 @@ const translations = {
       companyDetailsTitle: "Company users",
       companyDetailsCopy: "Overview of all users in the selected company and their status.",
       companyUsersBack: "Back to companies",
+      loadingCompany: "Loading company...",
+      companyPeopleSummary: "{subscription} | User accounts: {users} | Workers: {workers}",
       emptyCompanies: "No companies to show.",
       adminFirstName: "Admin first name",
       adminLastName: "Admin last name",
@@ -2233,6 +2237,17 @@ function renderSubscriptionOptions(selectedLevel, language) {
     .join("");
 }
 
+function getSystemCompanyUrl(company) {
+  const companyId = getField(company, "id");
+  const companyName = getField(company, "name") || "";
+  const params = new URLSearchParams({
+    companyId: String(companyId || ""),
+    companyName,
+  });
+
+  return `system-company.html?${params.toString()}`;
+}
+
 function renderSystemAdmin(language, companies = currentSystemCompanies) {
   if (!systemCompanyList) {
     return;
@@ -2243,15 +2258,16 @@ function renderSystemAdmin(language, companies = currentSystemCompanies) {
     ? companies
         .map((company) => {
           const companyId = getField(company, "id");
+          const companyUrl = getSystemCompanyUrl(company);
           const subscriptionLevel = getField(company, "subscriptionLevel") || "SmallBusiness";
           const createdAt = formatShortDate(getField(company, "createdAt"), language);
 
           return `
             <article class="company-admin-item">
               <div>
-                <h3><a href="system-company.html?companyId=${encodeURIComponent(companyId)}">${getField(company, "name") || "-"}</a></h3>
+                <h3><a href="${companyUrl}">${getField(company, "name") || "-"}</a></h3>
                 <p>${dictionary.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)} &middot; ${dictionary.createdAt}: ${createdAt}</p>
-                <a class="company-open-link" href="system-company.html?companyId=${encodeURIComponent(companyId)}">${dictionary.openCompany}</a>
+                <a class="company-open-link" href="${companyUrl}">${dictionary.openCompany}</a>
               </div>
               <form data-company-subscription-form data-company-id="${escapeAttribute(companyId)}">
                 <select name="subscriptionLevel" aria-label="${dictionary.subscriptionLevel}">
@@ -2391,9 +2407,18 @@ async function loadSystemCompanyData(language) {
   }
 
   const companyId = new URLSearchParams(window.location.search).get("companyId");
+  const companyNameFromUrl = new URLSearchParams(window.location.search).get("companyName");
   if (!companyId) {
     window.location.href = "system-admin.html";
     return;
+  }
+
+  if (systemCompanyTitle) {
+    systemCompanyTitle.textContent = companyNameFromUrl || translations[language].systemAdmin.loadingCompany;
+  }
+
+  if (systemCompanySubscription) {
+    systemCompanySubscription.textContent = translations[language].systemAdmin.loadingCompany;
   }
 
   const [companiesResult, usersResult, workersResult] = await Promise.all([
@@ -2425,7 +2450,10 @@ async function loadSystemCompanyData(language) {
   if (systemCompanySubscription) {
     const subscriptionLevel = getField(company, "subscriptionLevel") || "SmallBusiness";
     systemCompanySubscription.textContent = company
-      ? `${translations[language].systemAdmin.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)}`
+      ? translations[language].systemAdmin.companyPeopleSummary
+          .replace("{subscription}", `${translations[language].systemAdmin.subscriptionLevel}: ${getSubscriptionLabel(subscriptionLevel, language)}`)
+          .replace("{users}", String(currentSystemCompanyUsers.length))
+          .replace("{workers}", String(currentSystemCompanyWorkers.length))
       : "";
   }
 
