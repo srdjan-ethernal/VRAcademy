@@ -442,20 +442,22 @@ const translations = {
       apiFallback: "API nije dostupan. Podaci iz baze trenutno ne mogu da se ucitaju.",
       dueDateLabel: "Rok",
       startTraining: "Pokreni obuku",
-      openExternalExam: "Otvori polaganje",
+      checkTraining: "Proveri",
       startWorking: "Pokretanje obuke...",
-      startSuccess: "Obuka je pokrenuta.",
+      startSuccess: "Obuka je pokrenuta u novom prozoru.",
       completeScore: "Rezultat",
       completeDuration: "Min",
       completeTraining: "Zavrsi",
       completeWorking: "Evidentiranje rezultata...",
       completePassed: "Obuka je zavrsena i sertifikat je kreiran.",
       completeFailed: "Obuka je zavrsena bez kreiranja sertifikata.",
+      checkWorking: "Provera rezultata...",
+      checkSuccess: "Obuka je proverena, polozena i sertifikat je kreiran.",
       loginRequired: "Prijavite se da biste koristili radnicki portal.",
       actionUnavailable: "Akcija je dostupna kada je portal povezan sa backendom.",
       downloadCertificate: "Broj sertifikata",
       examIdLabel: "ExamId",
-      externalExamReady: "Za spoljni program koristite ExamId: {examId}.",
+      externalExamReady: "Obuka je otvorena u novom prozoru. ExamId: {examId}.",
     },
     systemAdmin: {
       eyebrow: "System admin",
@@ -946,20 +948,22 @@ const translations = {
       apiFallback: "The API is unavailable. Database records cannot be loaded right now.",
       dueDateLabel: "Due",
       startTraining: "Start training",
-      openExternalExam: "Open exam",
+      checkTraining: "Check",
       startWorking: "Starting training...",
-      startSuccess: "Training has been started.",
+      startSuccess: "Training has been opened in a new window.",
       completeScore: "Score",
       completeDuration: "Min",
       completeTraining: "Complete",
       completeWorking: "Recording result...",
       completePassed: "Training has been completed and a certificate was created.",
       completeFailed: "Training has been completed without creating a certificate.",
+      checkWorking: "Checking result...",
+      checkSuccess: "Training has been checked, passed, and a certificate was created.",
       loginRequired: "Sign in to use the worker portal.",
       actionUnavailable: "This action is available when the portal is connected to the backend.",
       downloadCertificate: "Certificate number",
       examIdLabel: "ExamId",
-      externalExamReady: "Use this ExamId in the external exam program: {examId}.",
+      externalExamReady: "Training has been opened in a new window. ExamId: {examId}.",
     },
     systemAdmin: {
       eyebrow: "System admin",
@@ -1283,7 +1287,7 @@ const apiBaseUrl =
   window.SAFETY_SIM_API_BASE_URL ||
   localStorage.getItem("safetySimApiBaseUrl") ||
   defaultApiBaseUrl;
-const externalExamBaseUrl = window.VR_ACADEMY_EXAM_BASE_URL || localStorage.getItem("vrAcademyExamBaseUrl") || "";
+const externalExamBaseUrl = window.VR_ACADEMY_EXAM_BASE_URL || localStorage.getItem("vrAcademyExamBaseUrl") || "https://vracademy.io/";
 const authStorageKey = "safetySimAuth";
 
 if (pageName === "login") {
@@ -1751,13 +1755,30 @@ function getExamId(enrollment) {
   return getField(enrollment, "examId") || getField(enrollment, "ExamId") || "-";
 }
 
+function getExternalBaseUrl() {
+  return String(externalExamBaseUrl || "").replace(/\/+$/, "");
+}
+
 function getExternalExamUrl(examId) {
-  if (!externalExamBaseUrl || !examId || examId === "-") {
+  if (!examId || examId === "-") {
     return "";
   }
 
-  const separator = externalExamBaseUrl.includes("?") ? "&" : "?";
-  return `${externalExamBaseUrl}${separator}ExamId=${encodeURIComponent(examId)}`;
+  return `${getExternalBaseUrl()}/${encodeURIComponent(examId)}`;
+}
+
+function getExternalExamCheckUrl(examId) {
+  if (!examId || examId === "-") {
+    return "";
+  }
+
+  return `${getExternalBaseUrl()}/check/${encodeURIComponent(examId)}`;
+}
+
+function openExternalTrainingWindow(url) {
+  if (url) {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 }
 
 function buildNotifications({ workers, courses, certificates, enrollments, language, workerMap, courseMap }) {
@@ -2618,22 +2639,22 @@ function renderWorkerPortal(language, apiData = null, message = "") {
           const status = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
           const enrollmentId = getField(enrollment, "id");
           const examId = getExamId(enrollment);
-          const externalExamUrl = getExternalExamUrl(examId);
           const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
           const canStart = normalizedStatus === "enrolled";
-          const canOpenExternalExam = normalizedStatus === "enrolled" || normalizedStatus === "inprogress";
-          const externalExamMarkup = externalExamUrl && canOpenExternalExam
-            ? `<a class="status-pill" href="${externalExamUrl}" target="_blank" rel="noopener noreferrer">${dictionary.openExternalExam}</a>`
-            : "";
-          const actionMarkup = canStart || externalExamMarkup
+          const canCheck = normalizedStatus === "inprogress";
+          const actionMarkup = canStart || canCheck
             ? `
               <div class="worker-course-actions">
                 ${
                   canStart
-                    ? `<button class="status-pill" type="button" data-worker-start-enrollment="${escapeAttribute(enrollmentId)}" ${isLive ? "" : "disabled"}>${dictionary.startTraining}</button>`
+                    ? `<button class="status-pill" type="button" data-worker-start-enrollment="${escapeAttribute(enrollmentId)}" data-worker-exam-id="${escapeAttribute(examId)}" ${isLive ? "" : "disabled"}>${dictionary.startTraining}</button>`
                     : ""
                 }
-                ${externalExamMarkup}
+                ${
+                  canCheck
+                    ? `<button class="status-pill" type="button" data-worker-check-enrollment="${escapeAttribute(enrollmentId)}" data-worker-exam-id="${escapeAttribute(examId)}" data-worker-duration="${escapeAttribute(duration)}" ${isLive ? "" : "disabled"}>${dictionary.checkTraining}</button>`
+                    : ""
+                }
               </div>
             `
             : `<span class="status-pill">${status}</span>`;
@@ -2700,12 +2721,17 @@ async function loadWorkerPortalData(language) {
   renderWorkerPortal(language, result.data);
 }
 
-async function startWorkerPortalEnrollment(enrollmentId) {
+async function startWorkerPortalEnrollment(enrollmentId, examId, triggerButton = null) {
   if (!getAccessToken()) {
     setWorkerPortalMessage(translations[currentLanguage].workerPortal.loginRequired);
     return;
   }
 
+  if (triggerButton) {
+    triggerButton.disabled = true;
+  }
+
+  openExternalTrainingWindow(getExternalExamUrl(examId));
   setWorkerPortalMessage(translations[currentLanguage].workerPortal.startWorking);
   const result = await apiRequest(`/api/worker-portal/enrollments/${encodeURIComponent(enrollmentId)}/start`, {
     method: "POST",
@@ -2713,14 +2739,56 @@ async function startWorkerPortalEnrollment(enrollmentId) {
   });
 
   if (!result.ok) {
+    if (triggerButton) {
+      triggerButton.disabled = false;
+    }
     setWorkerPortalMessage(result.error || translations[currentLanguage].workerPortal.actionUnavailable);
     return;
   }
 
-  const examId = getExamId(result.data);
+  const resolvedExamId = getExamId(result.data) || examId;
   setWorkerPortalMessage(
-    translations[currentLanguage].workerPortal.externalExamReady.replace("{examId}", examId) ||
+    translations[currentLanguage].workerPortal.externalExamReady.replace("{examId}", resolvedExamId) ||
       translations[currentLanguage].workerPortal.startSuccess,
+  );
+  loadWorkerPortalData(currentLanguage);
+}
+
+async function checkWorkerPortalEnrollment(enrollmentId, examId, durationMinutes, triggerButton = null) {
+  if (!getAccessToken()) {
+    setWorkerPortalMessage(translations[currentLanguage].workerPortal.loginRequired);
+    return;
+  }
+
+  if (triggerButton) {
+    triggerButton.disabled = true;
+  }
+
+  openExternalTrainingWindow(getExternalExamCheckUrl(examId));
+  setWorkerPortalMessage(translations[currentLanguage].workerPortal.checkWorking);
+
+  const result = await apiRequest(`/api/worker-portal/enrollments/${encodeURIComponent(enrollmentId)}/complete`, {
+    method: "POST",
+    auth: true,
+    body: {
+      score: 100,
+      durationMinutes: Number(durationMinutes) || 35,
+    },
+  });
+
+  if (!result.ok) {
+    if (triggerButton) {
+      triggerButton.disabled = false;
+    }
+    setWorkerPortalMessage(result.error || translations[currentLanguage].workerPortal.actionUnavailable);
+    return;
+  }
+
+  const certificate = getField(result.data, "certificate");
+  setWorkerPortalMessage(
+    certificate
+      ? translations[currentLanguage].workerPortal.checkSuccess
+      : translations[currentLanguage].workerPortal.completeFailed,
   );
   loadWorkerPortalData(currentLanguage);
 }
@@ -3373,8 +3441,23 @@ document.addEventListener("click", (event) => {
   }
 
   const enrollmentId = startButton.dataset.workerStartEnrollment;
+  const examId = startButton.dataset.workerExamId;
   if (enrollmentId) {
-    startWorkerPortalEnrollment(enrollmentId);
+    startWorkerPortalEnrollment(enrollmentId, examId, startButton);
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const checkButton = event.target.closest("[data-worker-check-enrollment]");
+  if (!checkButton) {
+    return;
+  }
+
+  const enrollmentId = checkButton.dataset.workerCheckEnrollment;
+  const examId = checkButton.dataset.workerExamId;
+  const durationMinutes = checkButton.dataset.workerDuration;
+  if (enrollmentId) {
+    checkWorkerPortalEnrollment(enrollmentId, examId, durationMinutes, checkButton);
   }
 });
 
