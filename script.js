@@ -3101,22 +3101,6 @@ function printCertificate() {
   printWindow.print();
 }
 
-function getDemoVerification(certificateNumber) {
-  const normalized = certificateNumber.trim().toUpperCase();
-  if (!normalized || !normalized.startsWith("SS-")) {
-    return null;
-  }
-
-  return {
-    certificateNumber: normalized,
-    courseTitleSr: "Protivpozarna zastita",
-    courseTitleEn: "Fire protection",
-    issuedAt: "2026-06-27T00:00:00Z",
-    validUntil: "2027-06-27T00:00:00Z",
-    status: "Active",
-  };
-}
-
 function renderVerificationResult(result, language) {
   const dictionary = translations[language].verify;
   const found = Boolean(result);
@@ -3162,7 +3146,7 @@ async function verifyCertificate(certificateNumber) {
   }
 
   const apiResult = await apiRequest(`/api/certificates/verify/${encodeURIComponent(number)}`);
-  renderVerificationResult(apiResult.ok ? apiResult.data : getDemoVerification(number), currentLanguage);
+  renderVerificationResult(apiResult.ok ? apiResult.data : null, currentLanguage);
 }
 
 function applyTranslations(language) {
