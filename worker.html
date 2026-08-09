@@ -29,8 +29,10 @@
         <a href="system-admin.html" data-i18n="nav.systemAdmin">Admin</a>
         <a href="platform.html" data-i18n="nav.platform">Platforma</a>
         <a href="worker.html" aria-current="page" data-i18n="nav.workerPortal">Moj portal</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
         <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
         <a href="verify.html" data-i18n="nav.verify">Provera</a>
+        <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
       </nav>
 
       <a class="header-action" href="login.html" data-i18n="nav.login">Prijava</a>
@@ -79,27 +81,6 @@
           </article>
         </section>
 
-        <section class="dashboard-panel" aria-labelledby="worker-password-title">
-          <div class="panel-heading">
-            <div>
-              <span class="scenario-kicker" data-i18n="auth.changePasswordLabel">Moj nalog</span>
-              <h2 id="worker-password-title" data-i18n="auth.changePasswordTitle">Promena lozinke</h2>
-            </div>
-          </div>
-          <form class="admin-form inline-admin-form" data-change-password-form>
-            <label>
-              <span data-i18n="auth.currentPassword">Trenutna lozinka</span>
-              <input type="password" name="currentPassword" minlength="5" required autocomplete="current-password" />
-            </label>
-            <label>
-              <span data-i18n="auth.newPassword">Nova lozinka</span>
-              <input type="password" name="newPassword" minlength="5" required autocomplete="new-password" />
-            </label>
-            <button class="button secondary" type="submit" data-i18n="auth.changePasswordButton">Promeni lozinku</button>
-          </form>
-          <p class="auth-message" data-change-password-message></p>
-        </section>
-
         <div class="worker-portal-grid">
           <section class="dashboard-panel" aria-labelledby="my-training-title">
             <div class="panel-heading">
@@ -129,6 +110,27 @@
             </div>
           </section>
         </div>
+
+        <section class="dashboard-panel" aria-labelledby="worker-password-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="auth.changePasswordLabel">Moj nalog</span>
+              <h2 id="worker-password-title" data-i18n="auth.changePasswordTitle">Promena lozinke</h2>
+            </div>
+          </div>
+          <form class="admin-form inline-admin-form" data-change-password-form>
+            <label>
+              <span data-i18n="auth.currentPassword">Trenutna lozinka</span>
+              <input type="password" name="currentPassword" minlength="5" required autocomplete="current-password" />
+            </label>
+            <label>
+              <span data-i18n="auth.newPassword">Nova lozinka</span>
+              <input type="password" name="newPassword" minlength="5" required autocomplete="new-password" />
+            </label>
+            <button class="button secondary" type="submit" data-i18n="auth.changePasswordButton">Promeni lozinku</button>
+          </form>
+          <p class="auth-message" data-change-password-message></p>
+        </section>
       </section>
     </main>
 
@@ -137,6 +139,6 @@
       <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=20260809-worker-nav"></script>
   </body>
 </html>

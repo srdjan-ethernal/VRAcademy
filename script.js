@@ -1404,18 +1404,24 @@ function updateNavigationVisibility() {
     link.hidden = !isLoggedIn || !isSystemAdministratorRole(role);
   });
 
-  if (isLoggedIn && isWorker) {
-    document.querySelectorAll(".main-nav a").forEach((link) => {
-      link.hidden = link.getAttribute("href") !== "worker.html";
-    });
-  }
-
   if (brandLink) {
-    brandLink.href = isLoggedIn && isWorker ? "worker.html" : "index.html#top";
+    brandLink.href = "index.html#top";
   }
 
   workerPortalLoginLinks.forEach((link) => {
-    link.hidden = isLoggedIn && isWorker;
+    link.hidden = false;
+    if (isLoggedIn && isWorker) {
+      link.href = "#";
+      link.dataset.authLogout = "true";
+      link.removeAttribute("data-i18n");
+      link.textContent = translations[currentLanguage].platform.logout;
+      return;
+    }
+
+    link.href = "login.html";
+    delete link.dataset.authLogout;
+    link.dataset.i18n = "workerPortal.loginButton";
+    link.textContent = translations[currentLanguage].workerPortal.loginButton;
   });
 
   if (!headerActionLink) {
@@ -1423,7 +1429,17 @@ function updateNavigationVisibility() {
   }
 
   if (isLoggedIn) {
+    if (isWorker) {
+      headerActionLink.href = "#";
+      headerActionLink.dataset.authLogout = "true";
+      headerActionLink.removeAttribute("data-i18n");
+      headerActionLink.removeAttribute("aria-current");
+      headerActionLink.textContent = translations[currentLanguage].platform.logout;
+      return;
+    }
+
     headerActionLink.href = getDefaultPageForRole(role);
+    delete headerActionLink.dataset.authLogout;
     headerActionLink.removeAttribute("data-i18n");
     headerActionLink.removeAttribute("aria-current");
     headerActionLink.textContent = isSystemAdministratorRole(role)
@@ -1435,6 +1451,7 @@ function updateNavigationVisibility() {
   }
 
   headerActionLink.href = "login.html";
+  delete headerActionLink.dataset.authLogout;
   headerActionLink.dataset.i18n = "nav.login";
   headerActionLink.textContent = translations[currentLanguage].nav.login;
 }
@@ -1442,11 +1459,6 @@ function updateNavigationVisibility() {
 function enforcePageAccess() {
   const isLoggedIn = Boolean(getAccessToken());
   const role = getStoredUserRole();
-
-  if (isLoggedIn && isWorkerRole(role) && pageName !== "worker") {
-    window.location.href = "worker.html";
-    return false;
-  }
 
   if (pageName === "systemAdmin" && (!isLoggedIn || !isSystemAdministratorRole(role))) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
@@ -3223,6 +3235,22 @@ systemAdminLogoutButton?.addEventListener("click", () => {
   clearAuth();
   updateNavigationVisibility();
   systemAdminDataLoadedFromApi = false;
+  currentSystemCompanies = [];
+  window.location.href = "login.html";
+});
+
+document.addEventListener("click", (event) => {
+  const logoutLink = event.target.closest?.("[data-auth-logout]");
+  if (!logoutLink) {
+    return;
+  }
+
+  event.preventDefault();
+  clearAuth();
+  updateNavigationVisibility();
+  platformDataLoadedFromApi = false;
+  systemAdminDataLoadedFromApi = false;
+  currentPlatformData = null;
   currentSystemCompanies = [];
   window.location.href = "login.html";
 });
