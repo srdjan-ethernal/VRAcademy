@@ -356,6 +356,7 @@ const translations = {
       recordCourse: "Kurs",
       recordDate: "Datum",
       recordValid: "Vazi do",
+      recordCertificateNumber: "Broj sertifikata",
       validityMonthsShort: "meseci vazi",
       workerFirstName: "Ime",
       workerLastName: "Prezime",
@@ -862,6 +863,7 @@ const translations = {
       recordCourse: "Course",
       recordDate: "Date",
       recordValid: "Valid until",
+      recordCertificateNumber: "Certificate number",
       validityMonthsShort: "months valid",
       workerFirstName: "First name",
       workerLastName: "Last name",
@@ -1278,6 +1280,7 @@ let currentSystemCompanies = [];
 let currentSystemCompanyUsers = [];
 let currentSystemCompanyWorkers = [];
 let workerSearchTerm = "";
+let certificateViewData = null;
 const defaultApiBaseUrl =
   window.location.protocol.startsWith("http") &&
   !["localhost", "127.0.0.1"].includes(window.location.hostname)
@@ -2221,6 +2224,8 @@ function renderPlatform(language, apiData = null) {
       const courseTitle = getCourseTitle(course, language) || "-";
       const issued = formatShortDate(getField(record, "issuedAt"), language);
       const validUntil = formatShortDate(getField(record, "validUntil"), language);
+      const certificateNumber = getField(record, "certificateNumber") || "-";
+      const certificateUrl = getCertificateDisplayUrl(record, workerName, courseTitle);
 
       return `
         <div role="row" class="record-row">
@@ -2228,10 +2233,11 @@ function renderPlatform(language, apiData = null) {
           <span role="cell">${courseTitle || ""}</span>
           <span role="cell">${issued}</span>
           <span role="cell">${validUntil}</span>
+          <span role="cell"><a href="${escapeAttribute(certificateUrl)}" target="_blank" rel="noopener noreferrer">${certificateNumber}</a></span>
         </div>
       `;
     })
-    .join("") || `<div role="row" class="record-row"><span role="cell">${dictionary.emptyCertificates}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
+    .join("") || `<div role="row" class="record-row"><span role="cell">${dictionary.emptyCertificates}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
   }
 
   if (enrollmentRecords) {
@@ -2678,18 +2684,22 @@ function renderWorkerPortal(language, apiData = null, message = "") {
         .map((certificate) => {
           const course = findCourseForRecord(courses, getField(certificate, "courseId"));
           const certificateNumber = getField(certificate, "certificateNumber");
+          const workerName = getWorkerName(worker);
+          const courseTitle = getCourseTitle(course, language) || "-";
+          const certificateUrl = getCertificateDisplayUrl(certificate, workerName, courseTitle);
 
           return `
             <div role="row" class="record-row">
-              <span role="cell">${getCourseTitle(course, language) || "-"}</span>
+              <span role="cell">${workerName}</span>
+              <span role="cell">${courseTitle}</span>
               <span role="cell">${formatShortDate(getField(certificate, "issuedAt"), language)}</span>
               <span role="cell">${formatShortDate(getField(certificate, "validUntil"), language)}</span>
-              <span role="cell">${certificateNumber || "-"}</span>
+              <span role="cell"><a href="${escapeAttribute(certificateUrl)}" target="_blank" rel="noopener noreferrer">${certificateNumber || "-"}</a></span>
             </div>
           `;
         })
         .join("")
-    : `<div role="row" class="record-row"><span role="cell">${dictionary.noCertificates}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
+    : `<div role="row" class="record-row"><span role="cell">${dictionary.noCertificates}</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span><span role="cell">-</span></div>`;
 }
 
 async function loadWorkerPortalData(language) {
@@ -2976,6 +2986,57 @@ function getVerificationUrl(certificateNumber) {
   return `${baseUrl}?certificate=${encodeURIComponent(certificateNumber)}`;
 }
 
+function toDateInputValue(value) {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
+}
+
+function getCertificateDisplayUrl(certificate, workerName, courseTitle) {
+  const params = new URLSearchParams({
+    certificateNumber: getField(certificate, "certificateNumber") || "",
+    name: workerName || "",
+    course: courseTitle || "",
+    issuedAt: getField(certificate, "issuedAt") || "",
+    validUntil: getField(certificate, "validUntil") || "",
+  });
+
+  return `certificates.html?${params.toString()}`;
+}
+
+function applyCertificateViewParams() {
+  if (pageName !== "certificates") {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const certificateNumber = params.get("certificateNumber")?.trim();
+  if (!certificateNumber) {
+    certificateViewData = null;
+    return;
+  }
+
+  certificateViewData = {
+    certificateNumber,
+    fullName: params.get("name")?.trim() || "",
+    courseTitle: params.get("course")?.trim() || "",
+    issuedAt: params.get("issuedAt") || "",
+    validUntil: params.get("validUntil") || "",
+  };
+
+  if (certificateNameInput && certificateViewData.fullName) {
+    certificateNameInput.value = certificateViewData.fullName;
+  }
+
+  const issuedAtInputValue = toDateInputValue(certificateViewData.issuedAt);
+  if (certificateDateInput && issuedAtInputValue) {
+    certificateDateInput.value = issuedAtInputValue;
+  }
+}
+
 function getQrCodeUrl(value) {
   return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(value)}`;
 }
@@ -3009,13 +3070,19 @@ function updateCertificate(language = currentLanguage) {
 
   currentLanguage = language;
   const dictionary = translations[language].certificates;
-  const fullName = certificateNameInput.value.trim() || (language === "sr" ? "Ime i prezime" : "Full name");
+  const fullName =
+    certificateViewData?.fullName ||
+    certificateNameInput.value.trim() ||
+    (language === "sr" ? "Ime i prezime" : "Full name");
   const courseCode = certificateCourseInput.value;
-  const course = getScenarioContentByCode(courseCode, language)?.title || "";
-  const issueValue = certificateDateInput.value;
+  const course = certificateViewData?.courseTitle || getScenarioContentByCode(courseCode, language)?.title || "";
+  const issueValue = certificateViewData ? toDateInputValue(certificateViewData.issuedAt) : certificateDateInput.value;
   const issueDate = issueValue ? new Date(`${issueValue}T12:00:00`) : new Date();
-  const validUntil = new Date(issueDate);
-  validUntil.setMonth(validUntil.getMonth() + Number(certificateValidityInput.value || 12));
+  const validUntilValue = certificateViewData ? toDateInputValue(certificateViewData.validUntil) : "";
+  const validUntil = validUntilValue ? new Date(`${validUntilValue}T12:00:00`) : new Date(issueDate);
+  if (!validUntilValue) {
+    validUntil.setMonth(validUntil.getMonth() + Number(certificateValidityInput.value || 12));
+  }
 
   document.querySelectorAll("[data-course-option]").forEach((option) => {
     option.textContent = getScenarioContentByCode(option.dataset.courseOption, language)?.title || option.textContent;
@@ -3032,7 +3099,7 @@ function updateCertificate(language = currentLanguage) {
   setCertificateText("[data-certificate-preview-course]", course);
   setCertificateText("[data-certificate-preview-date]", formatCertificateDate(issueDate, language));
   setCertificateText("[data-certificate-preview-valid]", formatCertificateDate(validUntil, language));
-  const certificateNumber = createCertificateNumber(fullName, issueValue);
+  const certificateNumber = certificateViewData?.certificateNumber || createCertificateNumber(fullName, issueValue);
   const verificationUrl = getVerificationUrl(certificateNumber);
   setCertificateText("[data-certificate-preview-number]", certificateNumber);
   setCertificateText("[data-certificate-preview-link]", verificationUrl);
@@ -3184,6 +3251,7 @@ function applyTranslations(language) {
   loadWorkerPortalData(language);
   loadSystemAdminData(language);
   loadSystemCompanyData(language);
+  applyCertificateViewParams();
   updateCertificate(language);
   if (verifyNumberInput?.value) {
     verifyCertificate(verifyNumberInput.value);
