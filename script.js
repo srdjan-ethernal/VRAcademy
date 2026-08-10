@@ -113,6 +113,10 @@ const translations = {
       },
       platformTraining: {
         metaTitle: "VR Academy obuke",
+        metaDescription: "Pregled svih dostupnih VR obuka u VR Academy platformi.",
+      },
+      platformAssignedTraining: {
+        metaTitle: "VR Academy dodeljene obuke",
         metaDescription: "Dodela VR obuka zaposlenima i pregled statusa polaganja.",
       },
       platformCertificates: {
@@ -305,6 +309,7 @@ const translations = {
       navOverview: "Pregled",
       navWorkers: "Radnici",
       navTraining: "Obuke",
+      navAssignedTraining: "Dodeljene obuke",
       navCertificates: "Sertifikati i izvestaji",
       navAccount: "Nalozi",
       demoSession: "Prijavite se da biste videli podatke iz baze.",
@@ -630,6 +635,10 @@ const translations = {
       },
       platformTraining: {
         metaTitle: "VR Academy training",
+        metaDescription: "Review all available VR training courses in the VR Academy platform.",
+      },
+      platformAssignedTraining: {
+        metaTitle: "VR Academy assigned training",
         metaDescription: "Assign VR courses to employees and review completion status.",
       },
       platformCertificates: {
@@ -821,6 +830,7 @@ const translations = {
       navOverview: "Overview",
       navWorkers: "Workers",
       navTraining: "Training",
+      navAssignedTraining: "Assigned training",
       navCertificates: "Certificates and reports",
       navAccount: "Accounts",
       demoSession: "Sign in to view database records.",
@@ -1229,7 +1239,14 @@ const languageButtons = document.querySelectorAll("[data-language-option]");
 const metaDescription = document.querySelector('meta[name="description"]');
 const scenarioCount = document.querySelector("[data-scenario-count]");
 const pageName = document.body.dataset.page || "home";
-const companyPlatformPages = new Set(["platform", "platformWorkers", "platformTraining", "platformCertificates", "platformAccount"]);
+const companyPlatformPages = new Set([
+  "platform",
+  "platformWorkers",
+  "platformTraining",
+  "platformAssignedTraining",
+  "platformCertificates",
+  "platformAccount",
+]);
 const authTabs = document.querySelectorAll("[data-auth-tab]");
 const authPanels = document.querySelectorAll("[data-auth-panel]");
 const googleAuthButtons = document.querySelectorAll("[data-google-auth]");
@@ -1417,7 +1434,7 @@ function updateNavigationVisibility() {
 
   document
     .querySelectorAll(
-      'a[href="platform.html"], a[href="platform-workers.html"], a[href="platform-training.html"], a[href="platform-certificates.html"], a[href="platform-account.html"]',
+      'a[href="platform.html"], a[href="platform-workers.html"], a[href="platform-training.html"], a[href="platform-assigned-training.html"], a[href="platform-certificates.html"], a[href="platform-account.html"]',
     )
     .forEach((link) => {
       link.hidden = !isLoggedIn || !isCompanyPlatformRole(role);

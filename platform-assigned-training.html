@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VR Academy obuke</title>
-    <meta name="description" content="Pregled svih dostupnih VR obuka u VR Academy platformi." />
+    <title>VR Academy dodeljene obuke</title>
+    <meta name="description" content="Dodela VR obuka zaposlenima i pregled statusa polaganja." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body data-page="platformTraining">
+  <body data-page="platformAssignedTraining">
     <header class="site-header" data-header>
       <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
         <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
@@ -39,11 +39,11 @@
     </header>
 
     <main id="top">
-      <section class="platform-shell" aria-labelledby="training-title">
+      <section class="platform-shell" aria-labelledby="assigned-training-title">
         <div class="platform-topbar">
           <div>
             <p class="eyebrow" data-i18n="platform.eyebrow">Kompanijski portal</p>
-            <h1 id="training-title" data-i18n="platform.coursesTitle">Dostupne VR obuke</h1>
+            <h1 id="assigned-training-title" data-i18n="platform.enrollmentsTitle">Dodeljene obuke</h1>
             <p data-i18n="platform.copy">
               Centralno mesto za upravljanje VR kursevima, radnicima, statusima polaganja i vazecim sertifikatima.
             </p>
@@ -60,20 +60,57 @@
         <nav class="platform-subnav" aria-label="Platforma">
           <a href="platform.html" data-i18n="platform.navOverview">Pregled</a>
           <a href="platform-workers.html" data-i18n="platform.navWorkers">Radnici</a>
-          <a href="platform-training.html" aria-current="page" data-i18n="platform.navTraining">Obuke</a>
-          <a href="platform-assigned-training.html" data-i18n="platform.navAssignedTraining">Dodeljene obuke</a>
+          <a href="platform-training.html" data-i18n="platform.navTraining">Obuke</a>
+          <a href="platform-assigned-training.html" aria-current="page" data-i18n="platform.navAssignedTraining">Dodeljene obuke</a>
           <a href="platform-certificates.html" data-i18n="platform.navCertificates">Sertifikati i izvestaji</a>
           <a href="platform-account.html" data-i18n="platform.navAccount">Nalozi</a>
         </nav>
 
-        <section class="dashboard-panel large-panel" aria-labelledby="courses-title">
+        <section class="dashboard-panel large-panel" aria-labelledby="assign-training-title">
           <div class="panel-heading">
             <div>
-              <span class="scenario-kicker" data-i18n="platform.coursesLabel">Kursevi</span>
-              <h2 id="courses-title" data-i18n="platform.coursesTitle">Dostupne VR obuke</h2>
+              <span class="scenario-kicker" data-i18n="platform.assignTraining">Dodeli obuku</span>
+              <h2 id="assign-training-title" data-i18n="platform.enrollmentsTitle">Dodeljene obuke</h2>
             </div>
           </div>
-          <div class="course-list" data-platform-courses></div>
+          <form class="assignment-form" data-enrollment-form>
+            <div class="form-grid">
+              <label>
+                <span data-i18n="platform.assignWorker">Radnik</span>
+                <select name="workerId" required data-enrollment-worker></select>
+              </label>
+              <label>
+                <span data-i18n="platform.assignCourse">Kurs</span>
+                <select name="courseId" required data-enrollment-course></select>
+              </label>
+              <label>
+                <span data-i18n="platform.assignDueAt">Rok za polaganje</span>
+                <input type="date" name="dueAt" />
+              </label>
+            </div>
+            <button class="button primary" type="submit" data-i18n="platform.assignTraining">Dodeli obuku</button>
+            <p class="auth-message" data-enrollment-message></p>
+          </form>
+        </section>
+
+        <section class="dashboard-panel enrollment-log" aria-labelledby="enrollment-log-title">
+          <div class="panel-heading">
+            <div>
+              <span class="scenario-kicker" data-i18n="platform.enrollmentsLabel">Obuke</span>
+              <h2 id="enrollment-log-title" data-i18n="platform.enrollmentsTitle">Dodeljene obuke</h2>
+            </div>
+          </div>
+          <div class="records-table" role="table" aria-label="Dodeljene obuke" data-i18n-aria-label="platform.enrollmentsTitle">
+            <div role="row" class="records-head enrollment-head">
+              <span role="columnheader" data-i18n="platform.recordWorker">Radnik</span>
+              <span role="columnheader" data-i18n="platform.recordCourse">Kurs</span>
+              <span role="columnheader" data-i18n="platform.enrollmentExamId">ExamId</span>
+              <span role="columnheader" data-i18n="platform.enrollmentDueAt">Rok</span>
+              <span role="columnheader" data-i18n="platform.enrollmentStatus">Status</span>
+              <span role="columnheader" data-i18n="platform.enrollmentScore">Rezultat</span>
+            </div>
+            <div data-enrollment-records></div>
+          </div>
         </section>
       </section>
     </main>
