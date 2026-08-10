@@ -509,7 +509,11 @@ app.MapGet("/api/system/companies/{companyId:guid}/workers", (
             }
 
             return authService.GetCompany(companyId).Match(
-                _ => Results.Ok(repository.GetWorkers(companyId)),
+                _ =>
+                {
+                    EnsureWorkersForUserAccounts(companyId, authService, repository);
+                    return Results.Ok(repository.GetWorkers(companyId));
+                },
                 error => Results.BadRequest(new ProblemResponse(error)));
         },
         _ => Results.Unauthorized());
@@ -745,9 +749,16 @@ app.MapGet("/api/workers", (HttpRequest request, IAuthService authService, ITrai
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
-        user => IsCompanyAdministrator(user)
-            ? Results.Ok(repository.GetWorkers(user.CompanyId))
-            : Results.Forbid(),
+        user =>
+        {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            EnsureWorkersForUserAccounts(user.CompanyId, authService, repository);
+            return Results.Ok(repository.GetWorkers(user.CompanyId));
+        },
         _ => Results.Unauthorized());
 });
 
@@ -1072,6 +1083,39 @@ static bool IsSystemAdministrator(UserProfileResponse user)
 static bool IsWorkerUser(UserProfileResponse user)
 {
     return user.Role == UserRole.User;
+}
+
+static void EnsureWorkersForUserAccounts(Guid companyId, IAuthService authService, ITrainingRepository repository)
+{
+    var workersByEmail = repository.GetWorkers(companyId)
+        .Where(worker => !string.IsNullOrWhiteSpace(worker.Email))
+        .ToDictionary(worker => worker.Email.Trim().ToLowerInvariant(), worker => worker);
+
+    var users = authService.GetUsersForCompany(companyId)
+        .Where(user => user.Role == UserRole.User && !string.IsNullOrWhiteSpace(user.Email))
+        .ToList();
+
+    foreach (var user in users)
+    {
+        var normalizedEmail = user.Email.Trim().ToLowerInvariant();
+        if (workersByEmail.ContainsKey(normalizedEmail))
+        {
+            continue;
+        }
+
+        var employeeNumber = $"USR-{user.Id:N}"[..16];
+        var result = repository.CreateWorker(companyId, new CreateWorkerRequest(
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            employeeNumber,
+            "-"));
+
+        if (result.IsSuccess && result.Value is not null)
+        {
+            workersByEmail[normalizedEmail] = result.Value;
+        }
+    }
 }
 
 static void EnsureCompatibilityColumns(TrainingDbContext dbContext, string provider)
