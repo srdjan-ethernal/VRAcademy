@@ -3083,6 +3083,17 @@ function updateCertificateCourseSize(course) {
   courseElement.setAttribute("font-size", String(fontSize));
 }
 
+function updateCertificateNumberSize(certificateNumber) {
+  const numberElement = generatedCertificate?.querySelector("[data-certificate-preview-number]");
+  if (!numberElement) {
+    return;
+  }
+
+  const length = certificateNumber.length;
+  const fontSize = length > 34 ? 14 : length > 28 ? 16 : length > 22 ? 18 : 21;
+  numberElement.setAttribute("font-size", String(fontSize));
+}
+
 function updateCertificate(language = currentLanguage) {
   if (!generatedCertificate || (!certificateForm && !certificateViewData)) {
     return;
@@ -3129,6 +3140,7 @@ function updateCertificate(language = currentLanguage) {
   }
   updateCertificateNameSize(fullName);
   updateCertificateCourseSize(course);
+  updateCertificateNumberSize(certificateNumber);
 }
 
 function downloadCertificate() {
