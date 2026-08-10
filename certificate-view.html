@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prikaz VR Academy sertifikata</title>
+    <meta name="description" content="Prikaz izdatog VR Academy sertifikata na osnovu podataka iz evidencije." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="certificateView">
+    <header class="site-header" data-header>
+      <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
+        <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
+        <span class="brand-text">VR Academy</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
+        <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
+        <a href="system-admin.html" data-i18n="nav.systemAdmin">Admin</a>
+        <a href="platform.html" data-i18n="nav.platform">Platforma</a>
+        <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
+        <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
+        <a href="verify.html" data-i18n="nav.verify">Provera</a>
+        <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
+      </nav>
+
+      <a class="header-action" href="login.html" data-i18n="nav.login">Prijava</a>
+
+      <div class="language-switch" aria-label="Izbor jezika" data-i18n-aria-label="language.label">
+        <button type="button" data-language-option="sr" aria-pressed="true">SR</button>
+        <button type="button" data-language-option="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-label="Otvori navigaciju" data-i18n-aria-label="nav.open" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="section certificate-generator certificate-view-section" aria-labelledby="certificate-view-title">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="certificates.viewEyebrow">Sertifikat</p>
+          <h1 id="certificate-view-title" data-i18n="certificates.viewTitle">Prikaz izdatog sertifikata</h1>
+          <p data-i18n="certificates.viewCopy">
+            Podaci na sertifikatu se ucitavaju iz evidencije i ne menjaju se rucno na ovoj strani.
+          </p>
+        </div>
+
+        <div class="certificate-view-actions">
+          <button class="button secondary" type="button" data-certificate-download data-i18n="certificates.downloadButton">
+            Preuzmi SVG
+          </button>
+          <button class="button secondary" type="button" data-certificate-print data-i18n="certificates.printButton">
+            PDF / stampanje
+          </button>
+        </div>
+
+        <div class="generated-certificate-frame" aria-live="polite">
+          <svg
+            class="generated-certificate"
+            data-generated-certificate
+            viewBox="0 0 1200 850"
+            role="img"
+            aria-labelledby="generated-certificate-title generated-certificate-description"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title id="generated-certificate-title">VR Academy sertifikat</title>
+            <desc id="generated-certificate-description">Personalizovani sertifikat o zavrsenoj VR obuci</desc>
+            <rect width="1200" height="850" fill="#f8fbfb" />
+            <rect x="28" y="28" width="1144" height="794" rx="8" fill="#ffffff" stroke="#17202a" stroke-width="3" />
+            <rect x="48" y="48" width="1104" height="754" rx="4" fill="none" stroke="#0f766e" stroke-width="2" />
+            <rect x="76" y="76" width="76" height="76" rx="8" fill="#17202a" />
+            <text x="114" y="124" fill="#ffffff" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle">VR</text>
+            <text x="174" y="108" fill="#17202a" font-family="Arial, sans-serif" font-size="24" font-weight="700">VR ACADEMY</text>
+            <text x="174" y="137" fill="#61707c" font-family="Arial, sans-serif" font-size="16">VR TRAINING PLATFORM</text>
+            <rect x="1012" y="78" width="104" height="104" rx="8" fill="#ffffff" stroke="#dce5e8" stroke-width="2" />
+            <image x="1020" y="86" width="88" height="88" data-certificate-qr href="" />
+            <text x="1064" y="199" fill="#61707c" font-family="Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle">VERIFY</text>
+            <text x="600" y="236" fill="#0f766e" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle" data-certificate-kicker>SERTIFIKAT</text>
+            <text x="600" y="301" fill="#17202a" font-family="Arial, sans-serif" font-size="56" font-weight="700" text-anchor="middle" data-certificate-heading>O POLOZENOM KURSU</text>
+            <text x="600" y="365" fill="#61707c" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" data-certificate-awarded>Ovim se potvrdjuje da je</text>
+            <text x="600" y="445" fill="#17202a" font-family="Georgia, serif" font-size="54" font-weight="700" text-anchor="middle" data-certificate-preview-name>-</text>
+            <line x1="270" y1="466" x2="930" y2="466" stroke="#dce5e8" stroke-width="2" />
+            <text x="600" y="515" fill="#61707c" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" data-certificate-completed>uspesno zavrsio/la VR kurs</text>
+            <text x="600" y="568" fill="#0f766e" font-family="Arial, sans-serif" font-size="31" font-weight="700" text-anchor="middle" data-certificate-preview-course>-</text>
+            <line x1="100" y1="635" x2="1100" y2="635" stroke="#dce5e8" stroke-width="2" />
+            <text x="150" y="682" fill="#61707c" font-family="Arial, sans-serif" font-size="15" font-weight="700" data-certificate-issue-label>DATUM IZDAVANJA</text>
+            <text x="150" y="715" fill="#17202a" font-family="Arial, sans-serif" font-size="21" font-weight="700" data-certificate-preview-date>-</text>
+            <text x="480" y="682" fill="#61707c" font-family="Arial, sans-serif" font-size="15" font-weight="700" data-certificate-valid-label>VAZI DO</text>
+            <text x="480" y="715" fill="#17202a" font-family="Arial, sans-serif" font-size="21" font-weight="700" data-certificate-preview-valid>-</text>
+            <text x="780" y="682" fill="#61707c" font-family="Arial, sans-serif" font-size="15" font-weight="700" data-certificate-number-label>BROJ SERTIFIKATA</text>
+            <text x="780" y="715" fill="#17202a" font-family="Arial, sans-serif" font-size="21" font-weight="700" data-certificate-preview-number>-</text>
+            <circle cx="1050" cy="706" r="56" fill="#eef5f4" stroke="#0f766e" stroke-width="3" />
+            <text x="1050" y="697" fill="#0f766e" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">VERIFIED</text>
+            <text x="1050" y="720" fill="#17202a" font-family="Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">VR ACADEMY</text>
+            <text x="600" y="775" fill="#61707c" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" data-certificate-preview-link>-</text>
+          </svg>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>VR Academy</span>
+      <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
+    </footer>
+
+    <script src="script.js?v=20260810-certificate-split"></script>
+  </body>
+</html>

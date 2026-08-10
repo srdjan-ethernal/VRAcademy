@@ -94,6 +94,10 @@ const translations = {
         metaDescription:
           "Sertifikati za polaznike koji uspesno zavrse VR obuku, sa nazivom kursa, datumom izdavanja i rokom vazenja.",
       },
+      certificateView: {
+        metaTitle: "Prikaz VR Academy sertifikata",
+        metaDescription: "Prikaz izdatog VR Academy sertifikata na osnovu podataka iz evidencije.",
+      },
       login: {
         metaTitle: "Prijava na VR Academy platformu",
         metaDescription: "Prijava i registracija kompanije za VR Academy platformu za VR obuke.",
@@ -215,6 +219,9 @@ const translations = {
       generateButton: "Kreiraj diplomu",
       downloadButton: "Preuzmi SVG",
       printButton: "PDF / stampanje",
+      viewEyebrow: "Sertifikat",
+      viewTitle: "Prikaz izdatog sertifikata",
+      viewCopy: "Podaci na sertifikatu se ucitavaju iz evidencije i ne menjaju se rucno na ovoj strani.",
       certificateKicker: "SERTIFIKAT",
       certificateHeading: "O POLOZENOM KURSU",
       certificateAwarded: "Ovim se potvrdjuje da je",
@@ -602,6 +609,10 @@ const translations = {
         metaDescription:
           "Certificates for trainees who successfully complete VR training, including course name, issue date, and validity period.",
       },
+      certificateView: {
+        metaTitle: "VR Academy certificate view",
+        metaDescription: "View an issued VR Academy certificate from certificate records.",
+      },
       login: {
         metaTitle: "Sign in to the VR Academy platform",
         metaDescription: "Company registration and sign in for the VR Academy VR training platform.",
@@ -723,6 +734,9 @@ const translations = {
       generateButton: "Create certificate",
       downloadButton: "Download SVG",
       printButton: "PDF / print",
+      viewEyebrow: "Certificate",
+      viewTitle: "Issued certificate view",
+      viewCopy: "Certificate data is loaded from records and cannot be edited manually on this page.",
       certificateKicker: "CERTIFICATE",
       certificateHeading: "OF COURSE COMPLETION",
       certificateAwarded: "This certifies that",
@@ -3004,11 +3018,11 @@ function getCertificateDisplayUrl(certificate, workerName, courseTitle) {
     validUntil: getField(certificate, "validUntil") || "",
   });
 
-  return `certificates.html?${params.toString()}`;
+  return `certificate-view.html?${params.toString()}`;
 }
 
 function applyCertificateViewParams() {
-  if (pageName !== "certificates") {
+  if (pageName !== "certificateView") {
     return;
   }
 
@@ -3064,7 +3078,7 @@ function updateCertificateCourseSize(course) {
 }
 
 function updateCertificate(language = currentLanguage) {
-  if (!generatedCertificate || !certificateForm) {
+  if (!generatedCertificate || (!certificateForm && !certificateViewData)) {
     return;
   }
 
@@ -3072,16 +3086,16 @@ function updateCertificate(language = currentLanguage) {
   const dictionary = translations[language].certificates;
   const fullName =
     certificateViewData?.fullName ||
-    certificateNameInput.value.trim() ||
+    certificateNameInput?.value.trim() ||
     (language === "sr" ? "Ime i prezime" : "Full name");
-  const courseCode = certificateCourseInput.value;
+  const courseCode = certificateCourseInput?.value || "fire-protection";
   const course = certificateViewData?.courseTitle || getScenarioContentByCode(courseCode, language)?.title || "";
-  const issueValue = certificateViewData ? toDateInputValue(certificateViewData.issuedAt) : certificateDateInput.value;
+  const issueValue = certificateViewData ? toDateInputValue(certificateViewData.issuedAt) : certificateDateInput?.value;
   const issueDate = issueValue ? new Date(`${issueValue}T12:00:00`) : new Date();
   const validUntilValue = certificateViewData ? toDateInputValue(certificateViewData.validUntil) : "";
   const validUntil = validUntilValue ? new Date(`${validUntilValue}T12:00:00`) : new Date(issueDate);
   if (!validUntilValue) {
-    validUntil.setMonth(validUntil.getMonth() + Number(certificateValidityInput.value || 12));
+    validUntil.setMonth(validUntil.getMonth() + Number(certificateValidityInput?.value || 12));
   }
 
   document.querySelectorAll("[data-course-option]").forEach((option) => {
@@ -3121,7 +3135,7 @@ function downloadCertificate() {
   const svgMarkup = serializer.serializeToString(generatedCertificate);
   const blob = new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" });
   const downloadUrl = URL.createObjectURL(blob);
-  const safeName = certificateNameInput.value
+  const safeName = (certificateViewData?.fullName || certificateNameInput?.value || "")
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")

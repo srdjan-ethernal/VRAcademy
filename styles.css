@@ -737,6 +737,23 @@ h1 {
   padding-top: 4px;
 }
 
+.certificate-view-section {
+  display: grid;
+  gap: 24px;
+}
+
+.certificate-view-section .generated-certificate-frame {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.certificate-view-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 .generated-certificate-frame {
   overflow: hidden;
   aspect-ratio: 1200 / 850;

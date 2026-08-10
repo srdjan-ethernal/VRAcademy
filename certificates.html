@@ -75,111 +75,6 @@
         </div>
       </section>
 
-      <section class="section certificate-generator" aria-labelledby="generator-title">
-        <div class="section-heading">
-          <p class="eyebrow" data-i18n="certificates.generatorEyebrow">Generator diplome</p>
-          <h2 id="generator-title" data-i18n="certificates.generatorTitle">Napravite diplomu za polaznika</h2>
-          <p data-i18n="certificates.generatorCopy">
-            Unesite podatke polaznika, izaberite kurs i datum. Diploma se automatski priprema za preuzimanje.
-          </p>
-        </div>
-
-        <div class="certificate-generator-layout">
-          <form class="certificate-form" data-certificate-form>
-            <label>
-              <span data-i18n="certificates.fullNameLabel">Ime i prezime</span>
-              <input
-                type="text"
-                name="fullName"
-                value="Pera Peric"
-                autocomplete="name"
-                required
-                data-certificate-name
-              />
-            </label>
-
-            <label>
-              <span data-i18n="certificates.courseLabel">Kurs</span>
-              <select name="course" data-certificate-course>
-                <option value="fire-protection" data-course-option="fire-protection">Protivpozarna zastita</option>
-                <option value="radioactive-materials" data-course-option="radioactive-materials">Upravljanje radioaktivnim materijalima</option>
-                <option value="chemical-waste" data-course-option="chemical-waste">Upravljanje hemijskim otpadom</option>
-                <option value="construction-waste" data-course-option="construction-waste">Upravljanje gradjevinskim otpadom</option>
-                <option value="electronic-waste" data-course-option="electronic-waste">Upravljanje elektronskim otpadom</option>
-                <option value="biomedical-waste" data-course-option="biomedical-waste">Upravljanje biomedicinskim otpadom</option>
-              </select>
-            </label>
-
-            <div class="form-grid">
-              <label>
-                <span data-i18n="certificates.issueDateLabel">Datum izdavanja</span>
-                <input type="date" name="issueDate" required data-certificate-date />
-              </label>
-              <label>
-                <span data-i18n="certificates.validityLabel">Period vazenja</span>
-                <select name="validityMonths" data-certificate-validity>
-                  <option value="12" data-i18n="certificates.validity12">12 meseci</option>
-                  <option value="24" data-i18n="certificates.validity24">24 meseca</option>
-                  <option value="36" data-i18n="certificates.validity36">36 meseci</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="certificate-form-actions">
-              <button class="button primary" type="submit" data-i18n="certificates.generateButton">Kreiraj diplomu</button>
-              <button class="button secondary" type="button" data-certificate-download data-i18n="certificates.downloadButton">
-                Preuzmi SVG
-              </button>
-              <button class="button secondary" type="button" data-certificate-print data-i18n="certificates.printButton">
-                PDF / stampanje
-              </button>
-            </div>
-          </form>
-
-          <div class="generated-certificate-frame" aria-live="polite">
-            <svg
-              class="generated-certificate"
-              data-generated-certificate
-              viewBox="0 0 1200 850"
-              role="img"
-              aria-labelledby="generated-certificate-title generated-certificate-description"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title id="generated-certificate-title">VR Academy sertifikat</title>
-              <desc id="generated-certificate-description">Personalizovani sertifikat o zavrsenoj VR obuci</desc>
-              <rect width="1200" height="850" fill="#f8fbfb" />
-              <rect x="28" y="28" width="1144" height="794" rx="8" fill="#ffffff" stroke="#17202a" stroke-width="3" />
-              <rect x="48" y="48" width="1104" height="754" rx="4" fill="none" stroke="#0f766e" stroke-width="2" />
-              <rect x="76" y="76" width="76" height="76" rx="8" fill="#17202a" />
-              <text x="114" y="124" fill="#ffffff" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle">VR</text>
-              <text x="174" y="108" fill="#17202a" font-family="Arial, sans-serif" font-size="24" font-weight="700">VR ACADEMY</text>
-              <text x="174" y="137" fill="#61707c" font-family="Arial, sans-serif" font-size="16">VR TRAINING PLATFORM</text>
-              <rect x="1012" y="78" width="104" height="104" rx="8" fill="#ffffff" stroke="#dce5e8" stroke-width="2" />
-              <image x="1020" y="86" width="88" height="88" data-certificate-qr href="" />
-              <text x="1064" y="199" fill="#61707c" font-family="Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle">VERIFY</text>
-              <text x="600" y="236" fill="#0f766e" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle" data-certificate-kicker>SERTIFIKAT</text>
-              <text x="600" y="301" fill="#17202a" font-family="Arial, sans-serif" font-size="56" font-weight="700" text-anchor="middle" data-certificate-heading>O POLOZENOM KURSU</text>
-              <text x="600" y="365" fill="#61707c" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" data-certificate-awarded>Ovim se potvrdjuje da je</text>
-              <text x="600" y="445" fill="#17202a" font-family="Georgia, serif" font-size="54" font-weight="700" text-anchor="middle" data-certificate-preview-name>Pera Peric</text>
-              <line x1="270" y1="466" x2="930" y2="466" stroke="#dce5e8" stroke-width="2" />
-              <text x="600" y="515" fill="#61707c" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" data-certificate-completed>uspesno zavrsio/la VR kurs</text>
-              <text x="600" y="568" fill="#0f766e" font-family="Arial, sans-serif" font-size="31" font-weight="700" text-anchor="middle" data-certificate-preview-course>Protivpozarna zastita</text>
-              <line x1="100" y1="635" x2="1100" y2="635" stroke="#dce5e8" stroke-width="2" />
-              <text x="150" y="682" fill="#61707c" font-family="Arial, sans-serif" font-size="15" font-weight="700" data-certificate-issue-label>DATUM IZDAVANJA</text>
-              <text x="150" y="715" fill="#17202a" font-family="Arial, sans-serif" font-size="21" font-weight="700" data-certificate-preview-date>27.06.2026.</text>
-              <text x="480" y="682" fill="#61707c" font-family="Arial, sans-serif" font-size="15" font-weight="700" data-certificate-valid-label>VAZI DO</text>
-              <text x="480" y="715" fill="#17202a" font-family="Arial, sans-serif" font-size="21" font-weight="700" data-certificate-preview-valid>27.06.2027.</text>
-              <text x="780" y="682" fill="#61707c" font-family="Arial, sans-serif" font-size="15" font-weight="700" data-certificate-number-label>BROJ SERTIFIKATA</text>
-              <text x="780" y="715" fill="#17202a" font-family="Arial, sans-serif" font-size="21" font-weight="700" data-certificate-preview-number>SS-2026-0627-0001</text>
-              <circle cx="1050" cy="706" r="56" fill="#eef5f4" stroke="#0f766e" stroke-width="3" />
-              <text x="1050" y="697" fill="#0f766e" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">VERIFIED</text>
-              <text x="1050" y="720" fill="#17202a" font-family="Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">VR ACADEMY</text>
-              <text x="600" y="775" fill="#61707c" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" data-certificate-preview-link>verify.html?certificate=SS-2026-0627-0001</text>
-            </svg>
-          </div>
-        </div>
-      </section>
-
       <section class="section certificate-features" aria-label="Prednosti sertifikata">
         <div class="benefit-grid">
           <article>
@@ -214,6 +109,6 @@
       <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
     </footer>
 
-    <script src="script.js?v=20260810-certificate-links"></script>
+    <script src="script.js?v=20260810-certificate-split"></script>
   </body>
 </html>
