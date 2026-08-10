@@ -420,15 +420,18 @@ public sealed class EfTrainingRepository : ITrainingRepository
         var certificate = _dbContext.Certificates
             .AsNoTracking()
             .Include(existingCertificate => existingCertificate.Course)
+            .Include(existingCertificate => existingCertificate.Worker)
             .SingleOrDefault(existingCertificate => existingCertificate.CertificateNumber == normalizedNumber);
 
-        if (certificate?.Course is null)
+        if (certificate?.Course is null || certificate.Worker is null)
         {
             return null;
         }
 
+        var workerName = $"{certificate.Worker.FirstName} {certificate.Worker.LastName}".Trim();
         return new CertificateVerificationResponse(
             certificate.CertificateNumber,
+            workerName,
             certificate.Course.NameSr,
             certificate.Course.NameEn,
             certificate.IssuedAt,

@@ -246,9 +246,11 @@ const translations = {
       missingStatus: "Nije pronadjeno",
       missingTitle: "Sertifikat nije pronadjen",
       missingCopy: "Proverite broj sertifikata ili kontaktirajte izdavaoca.",
+      worker: "Ime",
       course: "Kurs",
       issued: "Datum izdavanja",
       validUntil: "Vazi do",
+      certificate: "Sertifikat",
     },
     auth: {
       eyebrow: "Platforma za obuku",
@@ -761,9 +763,11 @@ const translations = {
       missingStatus: "Not found",
       missingTitle: "Certificate was not found",
       missingCopy: "Check the certificate number or contact the issuer.",
+      worker: "Name",
       course: "Course",
       issued: "Issue date",
       validUntil: "Valid until",
+      certificate: "Certificate",
     },
     auth: {
       eyebrow: "Training platform",
@@ -1264,9 +1268,11 @@ const verifyNumberInput = document.querySelector("[data-verify-number]");
 const verifyStatus = document.querySelector("[data-verify-status]");
 const verifyHeading = document.querySelector("[data-verify-heading]");
 const verifyCopy = document.querySelector("[data-verify-copy]");
+const verifyWorker = document.querySelector("[data-verify-worker]");
 const verifyCourse = document.querySelector("[data-verify-course]");
 const verifyIssued = document.querySelector("[data-verify-issued]");
 const verifyValid = document.querySelector("[data-verify-valid]");
+const verifyCertificateLink = document.querySelector("[data-verify-certificate]");
 const workerPortalMessage = document.querySelector("[data-worker-portal-message]");
 const workerPortalLoginLinks = document.querySelectorAll("[data-worker-login-link]");
 const workerPortalMetrics = document.querySelectorAll("[data-worker-metric]");
@@ -3185,6 +3191,23 @@ function printCertificate() {
 function renderVerificationResult(result, language) {
   const dictionary = translations[language].verify;
   const found = Boolean(result);
+  const workerName = getField(result, "workerName") || "-";
+  const courseTitle = found
+    ? language === "sr"
+      ? getField(result, "courseTitleSr") || getField(result, "courseTitleEn")
+      : getField(result, "courseTitleEn") || getField(result, "courseTitleSr")
+    : "-";
+  const certificateUrl = found
+    ? getCertificateDisplayUrl(
+        {
+          certificateNumber: getField(result, "certificateNumber"),
+          issuedAt: getField(result, "issuedAt"),
+          validUntil: getField(result, "validUntil"),
+        },
+        workerName,
+        courseTitle,
+      )
+    : "";
 
   if (verifyStatus) {
     verifyStatus.textContent = found ? dictionary.activeStatus : dictionary.missingStatus;
@@ -3198,12 +3221,14 @@ function renderVerificationResult(result, language) {
     verifyCopy.textContent = found ? dictionary.activeCopy : dictionary.missingCopy;
   }
 
+  if (verifyWorker) {
+    verifyWorker.textContent = found ? workerName : "-";
+    verifyWorker.href = found ? certificateUrl : "certificates.html";
+    verifyWorker.toggleAttribute("aria-disabled", !found);
+  }
+
   if (verifyCourse) {
-    verifyCourse.textContent = found
-      ? language === "sr"
-        ? getField(result, "courseTitleSr") || getField(result, "courseTitleEn")
-        : getField(result, "courseTitleEn") || getField(result, "courseTitleSr")
-      : "-";
+    verifyCourse.textContent = courseTitle;
   }
 
   if (verifyIssued) {
@@ -3212,6 +3237,12 @@ function renderVerificationResult(result, language) {
 
   if (verifyValid) {
     verifyValid.textContent = found ? formatShortDate(getField(result, "validUntil"), language) : "-";
+  }
+
+  if (verifyCertificateLink) {
+    verifyCertificateLink.textContent = found ? getField(result, "certificateNumber") || "-" : "-";
+    verifyCertificateLink.href = found ? certificateUrl : "certificates.html";
+    verifyCertificateLink.toggleAttribute("aria-disabled", !found);
   }
 }
 

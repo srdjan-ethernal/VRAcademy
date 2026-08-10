@@ -870,6 +870,17 @@ h1 {
   font-weight: 800;
 }
 
+.verify-details a {
+  color: var(--teal-dark);
+  font-weight: 900;
+}
+
+.verify-details a[aria-disabled] {
+  color: var(--ink);
+  pointer-events: none;
+  text-decoration: none;
+}
+
 .certificate-cta {
   margin-top: 0;
 }

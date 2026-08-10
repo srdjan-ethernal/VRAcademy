@@ -357,13 +357,16 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
             }
 
             var course = _courses.SingleOrDefault(existingCourse => existingCourse.Id == certificate.CourseId);
-            if (course is null)
+            var worker = _workers.SingleOrDefault(existingWorker => existingWorker.Id == certificate.WorkerId);
+            if (course is null || worker is null)
             {
                 return null;
             }
 
+            var workerName = $"{worker.FirstName} {worker.LastName}".Trim();
             return new CertificateVerificationResponse(
                 certificate.CertificateNumber,
+                workerName,
                 course.NameSr,
                 course.NameEn,
                 certificate.IssuedAt,
