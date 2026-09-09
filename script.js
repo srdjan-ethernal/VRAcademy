@@ -1327,7 +1327,16 @@ const apiBaseUrl =
   window.SAFETY_SIM_API_BASE_URL ||
   localStorage.getItem("safetySimApiBaseUrl") ||
   defaultApiBaseUrl;
-const externalExamBaseUrl = window.VR_ACADEMY_EXAM_BASE_URL || localStorage.getItem("vrAcademyExamBaseUrl") || "https://vracademy.io/";
+const externalTrainingBaseUrl =
+  window.VR_ACADEMY_TRAINING_BASE_URL ||
+  localStorage.getItem("vrAcademyTrainingBaseUrl") ||
+  "https://play.unity.com/en/games/b9c15d03-6f3b-420f-ad71-b49e178fcfe7/builds";
+const externalExamCheckBaseUrl =
+  window.VR_ACADEMY_EXAM_CHECK_BASE_URL ||
+  localStorage.getItem("vrAcademyExamCheckBaseUrl") ||
+  window.VR_ACADEMY_EXAM_BASE_URL ||
+  localStorage.getItem("vrAcademyExamBaseUrl") ||
+  "https://vracademy.io/";
 const authStorageKey = "safetySimAuth";
 
 if (pageName === "login") {
@@ -1795,8 +1804,8 @@ function getExamId(enrollment) {
   return getField(enrollment, "examId") || getField(enrollment, "ExamId") || "-";
 }
 
-function getExternalBaseUrl() {
-  return String(externalExamBaseUrl || "").replace(/\/+$/, "");
+function getExternalBaseUrl(baseUrl) {
+  return String(baseUrl || "").replace(/\/+$/, "");
 }
 
 function getExternalExamUrl(examId) {
@@ -1804,7 +1813,7 @@ function getExternalExamUrl(examId) {
     return "";
   }
 
-  return `${getExternalBaseUrl()}/${encodeURIComponent(examId)}`;
+  return `${getExternalBaseUrl(externalTrainingBaseUrl)}/${encodeURIComponent(examId)}`;
 }
 
 function getExternalExamCheckUrl(examId) {
@@ -1812,7 +1821,7 @@ function getExternalExamCheckUrl(examId) {
     return "";
   }
 
-  return `${getExternalBaseUrl()}/check/${encodeURIComponent(examId)}`;
+  return `${getExternalBaseUrl(externalExamCheckBaseUrl)}/check/${encodeURIComponent(examId)}`;
 }
 
 function openExternalTrainingWindow(url) {
@@ -2683,7 +2692,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
           const enrollmentId = getField(enrollment, "id");
           const examId = getExamId(enrollment);
           const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
-          const canStart = normalizedStatus === "enrolled";
+          const canStart = normalizedStatus === "enrolled" || normalizedStatus === "inprogress";
           const canCheck = normalizedStatus === "inprogress";
           const actionMarkup = canStart || canCheck
             ? `
