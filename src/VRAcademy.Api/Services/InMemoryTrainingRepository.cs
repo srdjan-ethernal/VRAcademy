@@ -156,12 +156,18 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
             }
 
             var enrollment = _enrollments[enrollmentIndex];
-            if (enrollment.Status is EnrollmentStatus.Passed or EnrollmentStatus.Failed)
+            if (enrollment.Status == EnrollmentStatus.Passed)
             {
-                return Result<Enrollment>.Failure("Zavrsena obuka ne moze ponovo da se pokrene.");
+                return Result<Enrollment>.Failure("Polozena obuka ne moze ponovo da se pokrene.");
             }
 
-            var startedEnrollment = enrollment with { Status = EnrollmentStatus.InProgress };
+            var startedEnrollment = enrollment with
+            {
+                Status = EnrollmentStatus.InProgress,
+                CompletedAt = null,
+                Score = null,
+                DurationMinutes = null
+            };
             _enrollments[enrollmentIndex] = startedEnrollment;
 
             return Result<Enrollment>.Success(startedEnrollment);
@@ -218,6 +224,46 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
             return Result<EnrollmentCompletionResponse>.Success(new EnrollmentCompletionResponse(
                 completedEnrollment,
                 certificate));
+        }
+    }
+
+    public ResetEnrollmentsResponse ResetEnrollmentsToUnpassed(Guid companyId)
+    {
+        lock (_lock)
+        {
+            var workerIds = _workers
+                .Where(worker => worker.CompanyId == companyId)
+                .Select(worker => worker.Id)
+                .ToHashSet();
+
+            var enrollmentKeys = _enrollments
+                .Where(enrollment => workerIds.Contains(enrollment.WorkerId))
+                .Select(enrollment => CreateEnrollmentCertificateKey(enrollment.WorkerId, enrollment.CourseId))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var resetCount = 0;
+            for (var index = 0; index < _enrollments.Count; index += 1)
+            {
+                var enrollment = _enrollments[index];
+                if (!workerIds.Contains(enrollment.WorkerId))
+                {
+                    continue;
+                }
+
+                _enrollments[index] = enrollment with
+                {
+                    Status = EnrollmentStatus.Failed,
+                    CompletedAt = null,
+                    Score = null,
+                    DurationMinutes = null
+                };
+                resetCount += 1;
+            }
+
+            var removedCertificateCount = _certificates.RemoveAll(certificate =>
+                enrollmentKeys.Contains(CreateEnrollmentCertificateKey(certificate.WorkerId, certificate.CourseId)));
+
+            return new ResetEnrollmentsResponse(resetCount, removedCertificateCount, EnrollmentStatus.Failed);
         }
     }
 
@@ -438,6 +484,11 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
     private static string CreateExamId()
     {
         return $"EX-{Guid.NewGuid():N}";
+    }
+
+    private static string CreateEnrollmentCertificateKey(Guid workerId, Guid courseId)
+    {
+        return $"{workerId:N}:{courseId:N}";
     }
 }
 

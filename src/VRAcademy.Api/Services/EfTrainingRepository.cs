@@ -169,12 +169,15 @@ public sealed class EfTrainingRepository : ITrainingRepository
             return Result<Enrollment>.Failure("Upis na kurs nije pronadjen.");
         }
 
-        if (enrollment.Status is EnrollmentStatus.Passed or EnrollmentStatus.Failed)
+        if (enrollment.Status == EnrollmentStatus.Passed)
         {
-            return Result<Enrollment>.Failure("Zavrsena obuka ne moze ponovo da se pokrene.");
+            return Result<Enrollment>.Failure("Polozena obuka ne moze ponovo da se pokrene.");
         }
 
         enrollment.Status = EnrollmentStatus.InProgress;
+        enrollment.CompletedAt = null;
+        enrollment.Score = null;
+        enrollment.DurationMinutes = null;
         _dbContext.SaveChanges();
 
         return Result<Enrollment>.Success(ToDomain(enrollment));
@@ -294,6 +297,38 @@ public sealed class EfTrainingRepository : ITrainingRepository
         return Result<EnrollmentCompletionResponse>.Success(new EnrollmentCompletionResponse(
             ToDomain(enrollment),
             certificate is null ? null : ToDomain(certificate)));
+    }
+
+    public ResetEnrollmentsResponse ResetEnrollmentsToUnpassed(Guid companyId)
+    {
+        var enrollments = _dbContext.Enrollments
+            .Include(enrollment => enrollment.Worker)
+            .Where(enrollment => enrollment.Worker != null && enrollment.Worker.CompanyId == companyId)
+            .ToList();
+
+        var enrollmentKeys = enrollments
+            .Select(enrollment => CreateEnrollmentCertificateKey(enrollment.WorkerId, enrollment.CourseId))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var certificates = _dbContext.Certificates
+            .Include(certificate => certificate.Worker)
+            .Where(certificate => certificate.Worker != null && certificate.Worker.CompanyId == companyId)
+            .ToList()
+            .Where(certificate => enrollmentKeys.Contains(CreateEnrollmentCertificateKey(certificate.WorkerId, certificate.CourseId)))
+            .ToList();
+
+        foreach (var enrollment in enrollments)
+        {
+            enrollment.Status = EnrollmentStatus.Failed;
+            enrollment.CompletedAt = null;
+            enrollment.Score = null;
+            enrollment.DurationMinutes = null;
+        }
+
+        _dbContext.Certificates.RemoveRange(certificates);
+        _dbContext.SaveChanges();
+
+        return new ResetEnrollmentsResponse(enrollments.Count, certificates.Count, EnrollmentStatus.Failed);
     }
 
     public DashboardSummaryResponse GetDashboardSummary(Guid companyId)
@@ -514,5 +549,10 @@ public sealed class EfTrainingRepository : ITrainingRepository
     private static string CreateExamId()
     {
         return $"EX-{Guid.NewGuid():N}";
+    }
+
+    private static string CreateEnrollmentCertificateKey(Guid workerId, Guid courseId)
+    {
+        return $"{workerId:N}:{courseId:N}";
     }
 }

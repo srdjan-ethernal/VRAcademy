@@ -825,6 +825,22 @@ app.MapGet("/api/enrollments", (HttpRequest request, IAuthService authService, I
         _ => Results.Unauthorized());
 });
 
+app.MapPost("/api/enrollments/reset-unpassed", (HttpRequest request, IAuthService authService, ITrainingRepository repository) =>
+{
+    var currentUser = ResolveCurrentUser(request, authService);
+    return currentUser.Match(
+        user =>
+        {
+            if (!IsCompanyAdministrator(user))
+            {
+                return Results.Forbid();
+            }
+
+            return Results.Ok(repository.ResetEnrollmentsToUnpassed(user.CompanyId));
+        },
+        _ => Results.Unauthorized());
+});
+
 app.MapPost("/api/enrollments/{enrollmentId:guid}/complete", (
     Guid enrollmentId,
     CompleteTrainingRequest request,

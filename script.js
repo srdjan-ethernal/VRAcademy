@@ -2692,7 +2692,8 @@ function renderWorkerPortal(language, apiData = null, message = "") {
           const enrollmentId = getField(enrollment, "id");
           const examId = getExamId(enrollment);
           const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
-          const canStart = normalizedStatus === "enrolled" || normalizedStatus === "inprogress";
+          const canStart =
+            normalizedStatus === "enrolled" || normalizedStatus === "inprogress" || normalizedStatus === "failed";
           const canCheck = normalizedStatus === "inprogress";
           const actionMarkup = canStart || canCheck
             ? `
