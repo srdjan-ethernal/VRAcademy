@@ -1248,6 +1248,14 @@ const scenarios = [
   },
 ];
 
+Object.entries(globalLanguageSettings.scenarios || {}).forEach(([language, localizedScenarios]) => {
+  localizedScenarios.forEach((content, index) => {
+    if (scenarios[index]) {
+      scenarios[index].content[language] = content;
+    }
+  });
+});
+
 const supportedLanguages = Object.keys(globalLanguageSettings.names);
 
 document.querySelectorAll(".language-switch").forEach((switcher) => {

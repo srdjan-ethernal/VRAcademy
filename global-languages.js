@@ -153,6 +153,77 @@
     },
   };
 
+  function scenario(title, label, description, points) {
+    return { title, label, alt: `VR - ${title}`, description, points };
+  }
+
+  const scenarioPacks = {
+    es: [
+      scenario("Protección contra incendios", "Formación en seguridad", "La simulación enseña a reconocer riesgos, evacuar, elegir el equipo y responder correctamente en condiciones controladas.", ["Respuesta ante humo y llamas", "Selección del extintor y distancia segura", "Decisiones de evacuación bajo presión"]),
+      scenario("Manipulación de materiales radiactivos", "Escenario de laboratorio", "La formación VR permite practicar protocolos, equipos de protección, control de exposición y respuesta ante errores de procedimiento.", ["Uso de equipos de protección y barreras", "Control de acceso y medición de la exposición", "Comprobaciones antes y después del trabajo"]),
+      scenario("Gestión de residuos químicos", "Escenario industrial", "La simulación entrena la clasificación, el etiquetado, el almacenamiento temporal y la respuesta durante la gestión de residuos químicos.", ["Separación de sustancias compatibles e incompatibles", "Uso de equipos de protección y barreras", "Respuesta ante derrames y errores de procedimiento"]),
+      scenario("Gestión de residuos de construcción", "Escenario de construcción", "La formación VR ayuda a separar materiales, controlar los riesgos del lugar y seguir el flujo de residuos hasta su reutilización.", ["Separación de hormigón, metal, madera y embalajes", "Trabajo seguro en zonas de eliminación y transporte", "Registro, etiquetado y procesos de reutilización"]),
+      scenario("Gestión de residuos electrónicos", "Escenario de reciclaje", "El escenario cubre la clasificación segura de dispositivos, baterías, cables y componentes con control de riesgos y trazabilidad.", ["Identificación de baterías, pantallas y componentes sensibles", "Separación de materiales para su procesamiento", "Control de daños, incendios y contaminación"]),
+      scenario("Gestión de residuos biomédicos", "Escenario sanitario", "El escenario entrena la separación, el embalaje, el etiquetado y el almacenamiento temporal seguros de residuos sanitarios.", ["Separación de objetos punzantes, equipos de protección y residuos médicos", "Uso de contenedores y procedimientos para material contaminado", "Control de riesgos durante la recogida, transporte y entrega"]),
+    ],
+    fr: [
+      scenario("Protection incendie", "Formation à la sécurité", "La simulation apprend à reconnaître les risques, évacuer, choisir l'équipement et réagir correctement dans des conditions contrôlées.", ["Réaction face à la fumée et aux flammes", "Choix de l'extincteur et distance de sécurité", "Décisions d'évacuation sous pression"]),
+      scenario("Manipulation de matières radioactives", "Scénario de laboratoire", "La formation VR permet de pratiquer les protocoles, les équipements de protection, le contrôle de l'exposition et la réaction aux erreurs de procédure.", ["Utilisation des équipements de protection et des barrières", "Contrôle d'accès et mesure de l'exposition", "Vérifications avant et après le travail"]),
+      scenario("Gestion des déchets chimiques", "Scénario industriel", "La simulation entraîne à la classification, l'étiquetage, au stockage temporaire et aux procédures de réaction pour les déchets chimiques.", ["Séparation des substances compatibles et incompatibles", "Utilisation des équipements de protection et des barrières", "Réaction aux déversements et aux erreurs de procédure"]),
+      scenario("Gestion des déchets de construction", "Scénario de construction", "La formation VR aide à trier les matériaux, maîtriser les risques du site et suivre les flux de déchets jusqu'à leur réutilisation.", ["Tri du béton, du métal, du bois et des emballages", "Travail sûr dans les zones d'élimination et de transport", "Enregistrement, étiquetage et réutilisation"]),
+      scenario("Gestion des déchets électroniques", "Scénario de recyclage", "Le scénario couvre le tri sûr des appareils, batteries, câbles et composants, avec maîtrise des risques et traçabilité.", ["Identification des batteries, écrans et composants sensibles", "Séparation des matériaux pour leur traitement", "Maîtrise des risques de dommage, d'incendie et de contamination"]),
+      scenario("Gestion des déchets biomédicaux", "Scénario de santé", "Le scénario entraîne au tri, à l'emballage, à l'étiquetage et au stockage temporaire sûrs des déchets de santé.", ["Séparation des objets tranchants, équipements de protection et déchets médicaux", "Utilisation des conteneurs et procédures pour les matières contaminées", "Maîtrise des risques pendant la collecte, le transport et la remise"]),
+    ],
+    de: [
+      scenario("Brandschutz", "Sicherheitstraining", "Die Simulation trainiert Gefahrenerkennung, Evakuierung, Geräteauswahl und richtiges Handeln unter kontrollierten Bedingungen.", ["Reaktion auf Rauch und Flammen", "Auswahl des Feuerlöschers und Sicherheitsabstand", "Evakuierungsentscheidungen unter Druck"]),
+      scenario("Umgang mit radioaktiven Stoffen", "Laborszenario", "Das VR-Training vermittelt Protokolle, Schutzausrüstung, Expositionskontrolle und den Umgang mit Verfahrensfehlern.", ["Einsatz von Schutzausrüstung und Barrieren", "Zugangskontrolle und Expositionsmessung", "Prüfungen vor und nach der Arbeit"]),
+      scenario("Entsorgung chemischer Abfälle", "Industrieszenario", "Die Simulation trainiert Klassifizierung, Kennzeichnung, Zwischenlagerung und Reaktionsabläufe beim Umgang mit chemischen Abfällen.", ["Trennung verträglicher und unverträglicher Stoffe", "Einsatz von Schutzausrüstung und Sicherheitsbarrieren", "Reaktion auf Verschüttungen und Verfahrensfehler"]),
+      scenario("Entsorgung von Bauabfällen", "Bauszenario", "Das VR-Training unterstützt Teams beim Sortieren, bei der Kontrolle von Baustellenrisiken und bei der Verfolgung der Abfallströme.", ["Trennung von Beton, Metall, Holz und Verpackungen", "Sicheres Arbeiten in Entsorgungs- und Transportzonen", "Dokumentation, Kennzeichnung und Wiederverwendung"]),
+      scenario("Entsorgung von Elektronikabfällen", "Recyclingszenario", "Das Szenario behandelt die sichere Sortierung von Geräten, Batterien, Kabeln und Bauteilen mit Risikokontrolle und Rückverfolgbarkeit.", ["Erkennung von Batterien, Bildschirmen und empfindlichen Bauteilen", "Trennung der Materialien zur Weiterverarbeitung", "Kontrolle von Beschädigungs-, Brand- und Kontaminationsrisiken"]),
+      scenario("Entsorgung biomedizinischer Abfälle", "Gesundheitsszenario", "Das Szenario trainiert die sichere Trennung, Verpackung, Kennzeichnung und Zwischenlagerung von Abfällen aus dem Gesundheitswesen.", ["Trennung von scharfen Gegenständen, Schutzausrüstung und medizinischen Abfällen", "Einsatz von Behältern und Verfahren für kontaminiertes Material", "Risikokontrolle bei Sammlung, Transport und Übergabe"]),
+    ],
+    pt: [
+      scenario("Proteção contra incêndios", "Treinamento de segurança", "A simulação ensina reconhecimento de riscos, evacuação, escolha de equipamentos e resposta correta em condições controladas.", ["Resposta a fumaça e chamas", "Escolha do extintor e distância segura", "Decisões de evacuação sob pressão"]),
+      scenario("Manuseio de materiais radioativos", "Cenário de laboratório", "O treinamento em VR permite praticar protocolos, equipamentos de proteção, controle de exposição e resposta a erros de procedimento.", ["Uso de equipamentos de proteção e barreiras", "Controle de acesso e medição de exposição", "Verificações antes e depois do trabalho"]),
+      scenario("Gestão de resíduos químicos", "Cenário industrial", "A simulação treina classificação, rotulagem, armazenamento temporário e resposta no manuseio de resíduos químicos.", ["Separação de substâncias compatíveis e incompatíveis", "Uso de equipamentos de proteção e barreiras", "Resposta a derramamentos e erros de procedimento"]),
+      scenario("Gestão de resíduos de construção", "Cenário de construção", "O treinamento em VR ajuda a separar materiais, controlar riscos no local e acompanhar os fluxos de resíduos até a reutilização.", ["Separação de concreto, metal, madeira e embalagens", "Trabalho seguro nas zonas de descarte e transporte", "Registro, rotulagem e processos de reutilização"]),
+      scenario("Gestão de resíduos eletrônicos", "Cenário de reciclagem", "O cenário aborda a separação segura de aparelhos, baterias, cabos e componentes com controle de riscos e rastreabilidade.", ["Identificação de baterias, telas e componentes sensíveis", "Separação de materiais para processamento", "Controle de danos, incêndio e contaminação"]),
+      scenario("Gestão de resíduos biomédicos", "Cenário de saúde", "O cenário treina separação, embalagem, rotulagem e armazenamento temporário seguros de resíduos de serviços de saúde.", ["Separação de perfurocortantes, equipamentos de proteção e resíduos médicos", "Uso de recipientes e procedimentos para material contaminado", "Controle de riscos durante coleta, transporte e entrega"]),
+    ],
+    ar: [
+      scenario("الحماية من الحرائق", "تدريب السلامة", "تدرب المحاكاة على التعرف على المخاطر والإخلاء واختيار المعدات والاستجابة الصحيحة في ظروف مضبوطة.", ["الاستجابة للدخان واللهب", "اختيار مطفأة الحريق والمسافة الآمنة", "قرارات الإخلاء تحت الضغط"]),
+      scenario("التعامل مع المواد المشعة", "سيناريو مختبري", "يساعد تدريب الواقع الافتراضي على ممارسة البروتوكولات ومعدات الحماية والتحكم في التعرض والاستجابة للأخطاء الإجرائية.", ["استخدام معدات الحماية والحواجز", "التحكم في الدخول وقياس التعرض", "الفحوصات قبل العمل وبعده"]),
+      scenario("إدارة النفايات الكيميائية", "سيناريو صناعي", "تدرب المحاكاة على التصنيف ووضع الملصقات والتخزين المؤقت والاستجابة عند التعامل مع النفايات الكيميائية.", ["فصل المواد المتوافقة وغير المتوافقة", "استخدام معدات الحماية وحواجز السلامة", "الاستجابة للانسكابات والأخطاء الإجرائية"]),
+      scenario("إدارة مخلفات البناء", "سيناريو البناء", "يساعد التدريب الفرق على فرز المواد والتحكم في مخاطر الموقع وتتبع تدفقات النفايات حتى إعادة الاستخدام.", ["فرز الخرسانة والمعادن والخشب ومواد التغليف", "العمل الآمن في مناطق التخلص والنقل", "التسجيل ووضع العلامات وإعادة الاستخدام"]),
+      scenario("إدارة النفايات الإلكترونية", "سيناريو إعادة التدوير", "يغطي السيناريو الفرز الآمن للأجهزة والبطاريات والكابلات والمكونات مع التحكم في المخاطر وإمكانية التتبع.", ["تحديد البطاريات والشاشات والمكونات الحساسة", "فصل المواد لمراحل المعالجة التالية", "التحكم في مخاطر التلف والحريق والتلوث"]),
+      scenario("إدارة النفايات الطبية", "سيناريو الرعاية الصحية", "يدرب السيناريو على الفصل والتعبئة ووضع الملصقات والتخزين المؤقت الآمن لنفايات الرعاية الصحية.", ["فصل الأدوات الحادة ومعدات الحماية والنفايات الطبية", "استخدام الحاويات والإجراءات الخاصة بالمواد الملوثة", "التحكم في المخاطر أثناء الجمع والنقل والتسليم"]),
+    ],
+    zh: [
+      scenario("消防安全", "安全培训", "模拟训练风险识别、疏散、设备选择以及在受控条件下采取正确行动。", ["应对烟雾和火焰", "选择灭火器并保持安全距离", "压力下的疏散决策"]),
+      scenario("放射性材料处理", "实验室场景", "VR 培训帮助团队练习规程、防护设备、暴露控制以及对程序错误的响应。", ["使用防护设备和屏障", "访问控制和暴露测量", "工作前后的程序检查"]),
+      scenario("化学废物管理", "工业场景", "模拟训练化学废物处理中的分类、标识、临时储存和应急响应。", ["分离相容和不相容物质", "使用防护设备和安全屏障", "应对泄漏和程序错误"]),
+      scenario("建筑废物管理", "建筑场景", "VR 培训帮助团队正确分类材料、控制现场风险并跟踪废物流向。", ["分类混凝土、金属、木材和包装", "在处置和运输区域安全作业", "记录、标识和再利用流程"]),
+      scenario("电子废物管理", "回收场景", "该场景涵盖设备、电池、电缆和元件的安全分类，并提供风险控制和可追溯性。", ["识别电池、屏幕和敏感元件", "分离材料以便后续处理", "控制损坏、火灾和污染风险"]),
+      scenario("生物医学废物管理", "医疗场景", "该场景训练医疗废物的安全分类、包装、标识和临时储存。", ["分离锐器、防护设备和医疗废物", "使用污染物专用容器和操作规程", "控制收集、运输和交接过程中的风险"]),
+    ],
+    ja: [
+      scenario("防火対策", "安全トレーニング", "リスク認識、避難、機器の選択、管理された条件での正しい対応を訓練します。", ["煙と炎への対応", "消火器の選択と安全距離", "緊迫した状況での避難判断"]),
+      scenario("放射性物質の取り扱い", "ラボシナリオ", "VRトレーニングにより、手順、防護具、被ばく管理、手順ミスへの対応を練習できます。", ["防護具とバリアの使用", "アクセス管理と被ばく測定", "作業前後の手順確認"]),
+      scenario("化学廃棄物管理", "産業シナリオ", "化学廃棄物を扱う際の分類、表示、一時保管、対応手順を訓練します。", ["適合物質と不適合物質の分離", "防護具と安全バリアの使用", "漏洩と手順ミスへの対応"]),
+      scenario("建設廃棄物管理", "建設シナリオ", "材料の適切な分別、現場リスクの管理、再利用までの廃棄物フローの追跡を支援します。", ["コンクリート、金属、木材、梱包材の分別", "処分・輸送区域での安全作業", "記録、表示、再利用の流れ"]),
+      scenario("電子廃棄物管理", "リサイクルシナリオ", "機器、バッテリー、ケーブル、部品を安全に分別し、リスク管理と追跡性を確保します。", ["バッテリー、画面、精密部品の識別", "後工程に向けた材料の分離", "損傷、火災、汚染リスクの管理"]),
+      scenario("生物医療廃棄物管理", "医療シナリオ", "医療廃棄物の安全な分別、梱包、表示、一時保管を訓練します。", ["鋭利物、防護具、医療廃棄物の分別", "汚染物用の容器と手順の使用", "回収、輸送、引き渡し時のリスク管理"]),
+    ],
+    hi: [
+      scenario("अग्नि सुरक्षा", "सुरक्षा प्रशिक्षण", "सिमुलेशन जोखिम पहचान, निकासी, उपकरण चयन और नियंत्रित परिस्थितियों में सही प्रतिक्रिया का अभ्यास कराता है।", ["धुएँ और आग की स्थिति में प्रतिक्रिया", "अग्निशामक का चयन और सुरक्षित दूरी", "दबाव में निकासी के निर्णय"]),
+      scenario("रेडियोधर्मी सामग्री प्रबंधन", "प्रयोगशाला परिदृश्य", "VR प्रशिक्षण प्रोटोकॉल, सुरक्षा उपकरण, एक्सपोज़र नियंत्रण और प्रक्रियागत गलतियों पर प्रतिक्रिया का अभ्यास कराता है।", ["सुरक्षा उपकरण और अवरोधों का उपयोग", "प्रवेश नियंत्रण और एक्सपोज़र मापन", "काम से पहले और बाद की प्रक्रियागत जाँच"]),
+      scenario("रासायनिक अपशिष्ट प्रबंधन", "औद्योगिक परिदृश्य", "सिमुलेशन रासायनिक अपशिष्ट के वर्गीकरण, लेबलिंग, अस्थायी भंडारण और प्रतिक्रिया प्रक्रियाओं का अभ्यास कराता है।", ["संगत और असंगत पदार्थों को अलग करना", "सुरक्षा उपकरण और अवरोधों का उपयोग", "रिसाव और प्रक्रियागत गलतियों पर प्रतिक्रिया"]),
+      scenario("निर्माण अपशिष्ट प्रबंधन", "निर्माण परिदृश्य", "VR प्रशिक्षण सामग्री को सही ढंग से अलग करने, साइट जोखिम नियंत्रित करने और अपशिष्ट प्रवाह को ट्रैक करने में मदद करता है।", ["कंक्रीट, धातु, लकड़ी और पैकेजिंग को अलग करना", "निपटान और परिवहन क्षेत्र में सुरक्षित काम", "रिकॉर्ड, लेबलिंग और पुन: उपयोग प्रक्रियाएँ"]),
+      scenario("इलेक्ट्रॉनिक अपशिष्ट प्रबंधन", "रीसाइक्लिंग परिदृश्य", "यह परिदृश्य उपकरणों, बैटरियों, केबलों और घटकों की सुरक्षित छँटाई, जोखिम नियंत्रण और ट्रेसबिलिटी को कवर करता है।", ["बैटरी, स्क्रीन और संवेदनशील घटकों की पहचान", "आगे की प्रक्रिया के लिए सामग्री अलग करना", "क्षति, आग और संदूषण जोखिम नियंत्रित करना"]),
+      scenario("जैव-चिकित्सा अपशिष्ट प्रबंधन", "स्वास्थ्य सेवा परिदृश्य", "यह परिदृश्य स्वास्थ्य अपशिष्ट के सुरक्षित पृथक्करण, पैकेजिंग, लेबलिंग और अस्थायी भंडारण का अभ्यास कराता है।", ["नुकीली वस्तुओं, सुरक्षा उपकरण और चिकित्सा अपशिष्ट को अलग करना", "दूषित सामग्री के लिए कंटेनर और प्रक्रियाओं का उपयोग", "संग्रह, परिवहन और हस्तांतरण के दौरान जोखिम नियंत्रण"]),
+    ],
+  };
+
   function makePack(config) {
     const nav = config.nav;
     const pricing = config.pricing;
@@ -184,5 +255,6 @@
   window.VRAcademyLanguages = {
     names: languageNames,
     packs: Object.fromEntries(Object.entries(configs).map(([code, config]) => [code, makePack(config)])),
+    scenarios: scenarioPacks,
   };
 })();
