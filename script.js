@@ -1044,6 +1044,25 @@ const translations = {
   },
 };
 
+function mergeLanguagePack(base, override) {
+  const result = Array.isArray(base) ? [...base] : { ...base };
+
+  Object.entries(override || {}).forEach(([key, value]) => {
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      result[key] = mergeLanguagePack(base?.[key] || {}, value);
+    } else {
+      result[key] = value;
+    }
+  });
+
+  return result;
+}
+
+const globalLanguageSettings = window.VRAcademyLanguages || { names: { sr: "Srpski", en: "English" }, packs: {} };
+Object.entries(globalLanguageSettings.packs).forEach(([language, pack]) => {
+  translations[language] = mergeLanguagePack(translations.en, pack);
+});
+
 const scenarios = [
   {
     image: "assets/fire-protection-vr.png",
@@ -1229,13 +1248,26 @@ const scenarios = [
   },
 ];
 
-const supportedLanguages = ["sr", "en"];
+const supportedLanguages = Object.keys(globalLanguageSettings.names);
+
+document.querySelectorAll(".language-switch").forEach((switcher) => {
+  const label = translations.sr.language.label;
+  switcher.innerHTML = `
+    <select class="language-select" data-language-select aria-label="${label}">
+      ${supportedLanguages
+        .map((language) => `<option value="${language}">${globalLanguageSettings.names[language]}</option>`)
+        .join("")}
+    </select>
+  `;
+});
+
 const scenarioGrid = document.querySelector("[data-scenario-grid]");
 const header = document.querySelector("[data-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const brandLink = document.querySelector(".brand");
 const headerActionLink = document.querySelector(".header-action");
 const languageButtons = document.querySelectorAll("[data-language-option]");
+const languageSelects = document.querySelectorAll("[data-language-select]");
 const metaDescription = document.querySelector('meta[name="description"]');
 const scenarioCount = document.querySelector("[data-scenario-count]");
 const pageName = document.body.dataset.page || "home";
@@ -1686,8 +1718,8 @@ function getInitialLanguage() {
     return savedLanguage;
   }
 
-  const browserLanguage = navigator.language?.slice(0, 2);
-  return supportedLanguages.includes(browserLanguage) ? browserLanguage : "sr";
+  const browserLanguage = navigator.language?.toLowerCase().split("-")[0];
+  return supportedLanguages.includes(browserLanguage) ? browserLanguage : "en";
 }
 
 function renderScenarios(language) {
@@ -1699,7 +1731,7 @@ function renderScenarios(language) {
 
   scenarioGrid.innerHTML = scenarios
     .map((scenario) => {
-      const content = scenario.content[language];
+      const content = scenario.content[language] || scenario.content.en;
       const dictionary = translations[language].scenarios;
       const demoLink = scenario.demoUrl
         ? `<a class="scenario-demo-link" href="${scenario.demoUrl}" target="_blank" rel="noopener noreferrer">${dictionary.demoLink}</a>`
@@ -1734,7 +1766,7 @@ function getScenarioByCode(code) {
 
 function getCourseTitle(course, language) {
   if (course?.content) {
-    return course.content[language].title;
+    return (course.content[language] || course.content.en).title;
   }
 
   return language === "sr"
@@ -1762,7 +1794,7 @@ function getCourseImage(course) {
 
 function getCourseAlt(course, language) {
   if (course?.content) {
-    return course.content[language].alt;
+    return (course.content[language] || course.content.en).alt;
   }
 
   return getCourseTitle(course, language);
@@ -3002,7 +3034,20 @@ function mapCsvWorkers(text) {
 }
 
 function formatCertificateDate(date, language) {
-  return new Intl.DateTimeFormat(language === "sr" ? "sr-RS" : "en-GB", {
+  const dateLocales = {
+    sr: "sr-RS",
+    en: "en-GB",
+    es: "es-ES",
+    fr: "fr-FR",
+    de: "de-DE",
+    pt: "pt-BR",
+    ar: "ar",
+    zh: "zh-CN",
+    ja: "ja-JP",
+    hi: "hi-IN",
+  };
+
+  return new Intl.DateTimeFormat(dateLocales[language] || "en-GB", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -3306,6 +3351,7 @@ function applyTranslations(language) {
   currentLanguage = language;
 
   document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   document.title = pageMeta?.metaTitle || dictionary.metaTitle;
   metaDescription.setAttribute("content", pageMeta?.metaDescription || dictionary.metaDescription);
 
@@ -3326,6 +3372,11 @@ function applyTranslations(language) {
   languageButtons.forEach((button) => {
     const isActive = button.dataset.languageOption === language;
     button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  languageSelects.forEach((select) => {
+    select.value = language;
+    select.setAttribute("aria-label", dictionary.language.label);
   });
 
   updateNavigationVisibility();
@@ -4069,6 +4120,14 @@ navToggle.addEventListener("click", () => {
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
     applyTranslations(button.dataset.languageOption);
+    updateNavigationVisibility();
+    header.classList.remove("is-open");
+  });
+});
+
+languageSelects.forEach((select) => {
+  select.addEventListener("change", () => {
+    applyTranslations(select.value);
     updateNavigationVisibility();
     header.classList.remove("is-open");
   });
