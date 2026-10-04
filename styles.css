@@ -134,10 +134,21 @@ a {
   border-radius: inherit;
   background: var(--surface);
   color: var(--ink);
+  color-scheme: light;
   cursor: pointer;
   font: inherit;
   font-size: 13px;
   font-weight: 700;
+}
+
+.language-select option {
+  background-color: #ffffff;
+  color: #17202a;
+}
+
+.language-select option:checked {
+  background-color: #e1efed;
+  color: #0b3b37;
 }
 
 .language-select:focus-visible {
