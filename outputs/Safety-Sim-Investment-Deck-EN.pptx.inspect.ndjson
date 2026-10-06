@@ -1,0 +1,158 @@
+{"kind":"deck","id":"pr/di3bqq","name":"Deck"}
+{"kind":"layout","layoutId":"f71a6922-cb73-45c2-8753-278d8a212dc8","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"03ba2819-1555-4e1e-802c-4ef775396a1f","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/tqb1h0","slide":1,"title":"INVESTMENT PRESENTATION","textShapes":5}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":1,"text":"INVESTMENT PRESENTATION","textPreview":"INVESTMENT PRESENTATION","textChars":23,"textLines":1,"bbox":[72,74,430,26]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":1,"text":"Safety Sim builds measurable VR training","textPreview":"Safety Sim builds measurable VR training","textChars":40,"textLines":1,"bbox":[72,170,548,210]}
+{"kind":"textbox","id":"sh/twra5gbq","slide":1,"text":"The initial focus is high-risk industrial procedures where practice, records, and certification are business requirements.","textPreview":"The initial focus is high-risk industrial procedures where practice, records, and certification are business requirements.","textChars":122,"textLines":1,"bbox":[76,416,520,110]}
+{"kind":"shape","id":"sh/4byhgn29","slide":1,"bbox":[72,585,180,5]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":1,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/d8v6psfi","slide":1,"name":"","geometry":"roundRect","alt":"Safety Sim builds measurable VR training","bbox":[706,64,476,560]}
+{"kind":"notes","id":"nt/tqb1h0","slide":1,"text":""}
+{"kind":"slide","id":"sl/a9pxa2","slide":2,"title":"Training is moving from attendance to provable readiness","textShapes":10}
+{"kind":"textbox","id":"sh/twra5gbq","slide":2,"text":"Training is moving from attendance to provable readiness","textPreview":"Training is moving from attendance to provable readiness","textChars":56,"textLines":1,"bbox":[64,54,860,104]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":2,"text":"Companies increasingly need training that can be repeated, measured, and documented. VR creates a safe environment for procedures that are costly or risky to practice in real life.","textPreview":"Companies increasingly need training that can be repeated, measured, and documented. VR creates a safe environment for procedures that ar...","textChars":180,"textLines":1,"bbox":[68,176,720,86]}
+{"kind":"shape","id":"sh/bq1oryts","slide":2,"bbox":[68,316,336,220]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":2,"text":"Safe","textPreview":"Safe","textChars":4,"textLines":1,"bbox":[96,344,278,68]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":2,"text":"Dangerous situations are practiced without exposing people or equipment.","textPreview":"Dangerous situations are practiced without exposing people or equipment.","textChars":72,"textLines":1,"bbox":[98,426,272,70]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":2,"bbox":[454,316,336,220]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":2,"text":"Repeat","textPreview":"Repeat","textChars":6,"textLines":1,"bbox":[482,344,278,68]}
+{"kind":"textbox","id":"sh/4vmtwra5","slide":2,"text":"The same scenario can train many workers, sites, and shifts.","textPreview":"The same scenario can train many workers, sites, and shifts.","textChars":60,"textLines":1,"bbox":[484,426,272,70]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":2,"bbox":[840,316,336,220]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":2,"text":"Record","textPreview":"Record","textChars":6,"textLines":1,"bbox":[868,344,278,68]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":2,"text":"Results and certificates become part of the company record.","textPreview":"Results and certificates become part of the company record.","textChars":59,"textLines":1,"bbox":[870,426,272,70]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":2,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/a9pxa2","slide":2,"text":""}
+{"kind":"slide","id":"sl/gjj3ob","slide":3,"title":"VR training fits where practice is expensive","textShapes":10}
+{"kind":"textbox","id":"sh/nuxc3ylc","slide":3,"text":"VR training fits where practice is expensive","textPreview":"VR training fits where practice is expensive","textChars":44,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/gbq1oryt","slide":3,"text":"PwC reports that VR can speed up training, increase focus, and become cost-effective at scale. Recent research also shows applications in industrial hazards and evacuation protocols.","textPreview":"PwC reports that VR can speed up training, increase focus, and become cost-effective at scale. Recent research also shows applications in...","textChars":182,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/5wjudg7a","slide":3,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/yhgn29gr","slide":3,"text":"Scenario-based learning","textPreview":"Scenario-based learning","textChars":23,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/n29gr2p8","slide":3,"text":"VR supports practice in context, not only memorization of procedures.","textPreview":"VR supports practice in context, not only memorization of procedures.","textChars":69,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/gn29gr2p","slide":3,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/58z25kb6","slide":3,"text":"Scalable content","textPreview":"Scalable content","textChars":16,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/ytsvu9kn","slide":3,"text":"Once created, a scenario can be sold per worker, per company, and per vertical.","textPreview":"Once created, a scenario can be sold per worker, per company, and per vertical.","textChars":79,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/neloj2t8","slide":3,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/nap4r65w","slide":3,"text":"Industrial wedge","textPreview":"Industrial wedge","textChars":16,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/upwb2hwf","slide":3,"text":"Safety, hazardous materials, and waste handling have a clear need for documented training.","textPreview":"Safety, hazardous materials, and waste handling have a clear need for documented training.","textChars":90,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/cvixczed","slide":3,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/nyd0z610","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/2x4nap4r","slide":3,"name":"","geometry":"roundRect","alt":"VR training fits where practice is expensive","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/gjj3ob","slide":3,"text":""}
+{"kind":"slide","id":"sl/tw5tc2","slide":4,"title":"The product is already shaped as a SaaS platform, not a one-off demo","textShapes":10}
+{"kind":"textbox","id":"sh/5sneloj2","slide":4,"text":"The product is already shaped as a SaaS platform, not a one-off demo","textPreview":"The product is already shaped as a SaaS platform, not a one-off demo","textChars":68,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/u54zidon","slide":4,"text":"The backend is multi-tenant, users belong to companies, and worker and certificate data stay within each tenant.","textPreview":"The backend is multi-tenant, users belong to companies, and worker and certificate data stay within each tenant.","textChars":112,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/nqxs72x4","slide":4,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/czed8v6p","slide":4,"text":"Scenario catalog","textPreview":"Scenario catalog","textChars":16,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/5kb6xkf6","slide":4,"text":"Six areas are ready for presentation and further modeling.","textPreview":"Six areas are ready for presentation and further modeling.","textChars":58,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/ytsvu9kn","slide":4,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/neloj2t8","slide":4,"text":"Tenant logic","textPreview":"Tenant logic","textChars":12,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/gn29gr2p","slide":4,"text":"Companies, users, workers, enrollments, and certificates are separated by organization.","textPreview":"Companies, users, workers, enrollments, and certificates are separated by organization.","textChars":87,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/58z25kb6","slide":4,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/d8bat47y","slide":4,"text":"Deployment path","textPreview":"Deployment path","textChars":15,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/knih4byh","slide":4,"text":"Frontend and backend run on Hugging Face, with Azure SQL Free tier for the demo database.","textPreview":"Frontend and backend run on Hugging Face, with Azure SQL Free tier for the demo database.","textChars":89,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/2lszqtcj","slide":4,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/d0z61032","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/8bat47y1","slide":4,"name":"","geometry":"roundRect","alt":"The product is already shaped as a SaaS platform, not a one-off demo","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/tw5tc2","slide":4,"text":""}
+{"kind":"slide","id":"sl/tssg0c","slide":5,"title":"The initial catalog covers high-risk and regulated processes","textShapes":9}
+{"kind":"textbox","id":"sh/gvy90je9","slide":5,"text":"The initial catalog covers high-risk and regulated processes","textPreview":"The initial catalog covers high-risk and regulated processes","textChars":60,"textLines":1,"bbox":[64,52,820,96]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":5,"text":"Fire protection","textPreview":"Fire protection","textChars":15,"textLines":1,"bbox":[64,324,300,30]}
+{"kind":"shape","id":"sh/94fu18jq","slide":5,"bbox":[64,364,58,5]}
+{"kind":"textbox","id":"sh/r2p8nqxs","slide":5,"text":"Radioactive materials","textPreview":"Radioactive materials","textChars":21,"textLines":1,"bbox":[450,324,300,30]}
+{"kind":"shape","id":"sh/2hwfyxob","slide":5,"bbox":[450,364,58,5]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":5,"text":"Chemical waste","textPreview":"Chemical waste","textChars":14,"textLines":1,"bbox":[836,324,300,30]}
+{"kind":"shape","id":"sh/2p8nqxs7","slide":5,"bbox":[836,364,58,5]}
+{"kind":"textbox","id":"sh/gvy90je9","slide":5,"text":"Construction waste","textPreview":"Construction waste","textChars":18,"textLines":1,"bbox":[64,542,300,30]}
+{"kind":"shape","id":"sh/9gr2p8nq","slide":5,"bbox":[64,582,58,5]}
+{"kind":"textbox","id":"sh/r2p8nqxs","slide":5,"text":"Electronic waste","textPreview":"Electronic waste","textChars":16,"textLines":1,"bbox":[450,542,300,30]}
+{"kind":"shape","id":"sh/kjm1cfa9","slide":5,"bbox":[450,582,58,5]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":5,"text":"Biomedical waste","textPreview":"Biomedical waste","textChars":16,"textLines":1,"bbox":[836,542,300,30]}
+{"kind":"shape","id":"sh/rqd4vmtw","slide":5,"bbox":[836,582,58,5]}
+{"kind":"textbox","id":"sh/jm1cfa9w","slide":5,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/u18jqh0f","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/qh0fepkz","slide":5,"name":"","geometry":"roundRect","alt":"Fire protection","bbox":[64,176,340,132]}
+{"kind":"image","id":"im/1w7mp0bi","slide":5,"name":"","geometry":"roundRect","alt":"Radioactive materials","bbox":[450,176,340,132]}
+{"kind":"image","id":"im/c3ylc7u5","slide":5,"name":"","geometry":"roundRect","alt":"Chemical waste","bbox":[836,176,340,132]}
+{"kind":"image","id":"im/g3ex0nux","slide":5,"name":"","geometry":"roundRect","alt":"Construction waste","bbox":[64,394,340,132]}
+{"kind":"image","id":"im/9cvixcze","slide":5,"name":"","geometry":"roundRect","alt":"Electronic waste","bbox":[450,394,340,132]}
+{"kind":"image","id":"im/ylc7u54z","slide":5,"name":"","geometry":"roundRect","alt":"Biomedical waste","bbox":[836,394,340,132]}
+{"kind":"notes","id":"nt/tssg0c","slide":5,"text":""}
+{"kind":"slide","id":"sl/iojb06","slide":6,"title":"Pricing is simple enough for a fast buying decision","textShapes":16}
+{"kind":"textbox","id":"sh/oj2t83it","slide":6,"text":"Pricing is simple enough for a fast buying decision","textPreview":"Pricing is simple enough for a fast buying decision","textChars":51,"textLines":1,"bbox":[64,52,860,96]}
+{"kind":"shape","id":"sh/vy90je9c","slide":6,"bbox":[76,206,328,290]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":6,"text":"Small companies","textPreview":"Small companies","textChars":15,"textLines":1,"bbox":[102,234,260,30]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":6,"text":"up to 10 workers","textPreview":"up to 10 workers","textChars":16,"textLines":1,"bbox":[102,286,250,28]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":6,"text":"up to EUR 10 monthly","textPreview":"up to EUR 10 monthly","textChars":20,"textLines":1,"bbox":[102,354,260,38]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":6,"text":"up to EUR 100 yearly","textPreview":"up to EUR 100 yearly","textChars":20,"textLines":1,"bbox":[102,410,260,30]}
+{"kind":"shape","id":"sh/61032lsz","slide":6,"bbox":[458,206,328,290]}
+{"kind":"textbox","id":"sh/dg7adsji","slide":6,"text":"Mid-size companies","textPreview":"Mid-size companies","textChars":18,"textLines":1,"bbox":[484,234,260,30]}
+{"kind":"textbox","id":"sh/ovahoza1","slide":6,"text":"up to 100 workers","textPreview":"up to 100 workers","textChars":17,"textLines":1,"bbox":[484,286,250,28]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":6,"text":"up to EUR 100 monthly","textPreview":"up to EUR 100 monthly","textChars":21,"textLines":1,"bbox":[484,354,260,38]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":6,"text":"up to EUR 1,000 yearly","textPreview":"up to EUR 1,000 yearly","textChars":22,"textLines":1,"bbox":[484,410,260,30]}
+{"kind":"shape","id":"sh/4zidonyd","slide":6,"bbox":[840,206,328,290]}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":6,"text":"Large companies","textPreview":"Large companies","textChars":15,"textLines":1,"bbox":[866,234,260,30]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":6,"text":"100+ workers","textPreview":"100+ workers","textChars":12,"textLines":1,"bbox":[866,286,250,28]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":6,"text":"EUR 1 x number of workers","textPreview":"EUR 1 x number of workers","textChars":25,"textLines":1,"bbox":[866,354,260,38]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":6,"text":"EUR 10 x number of workers","textPreview":"EUR 10 x number of workers","textChars":26,"textLines":1,"bbox":[866,410,260,30]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":6,"text":"Base model: EUR 1 per worker per month or EUR 10 per worker per year.","textPreview":"Base model: EUR 1 per worker per month or EUR 10 per worker per year.","textChars":69,"textLines":1,"bbox":[90,545,840,42]}
+{"kind":"textbox","id":"sh/m94fu18j","slide":6,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/fu18jqh0","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/iojb06","slide":6,"text":""}
+{"kind":"slide","id":"sl/fago7m","slide":7,"title":"Go-to-market starts with narrow pilots, then expands through the catalog","textShapes":18}
+{"kind":"textbox","id":"sh/za1gvy90","slide":7,"text":"Go-to-market starts with narrow pilots, then expands through the catalog","textPreview":"Go-to-market starts with narrow pilots, then expands through the catalog","textChars":72,"textLines":1,"bbox":[64,54,860,94]}
+{"kind":"shape","id":"sh/svu9knih","slide":7,"bbox":[88,228,180,180]}
+{"kind":"textbox","id":"sh/hgn29gr2","slide":7,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[112,248,90,44]}
+{"kind":"textbox","id":"sh/a1gvy90j","slide":7,"text":"Pilot","textPreview":"Pilot","textChars":5,"textLines":1,"bbox":[112,310,150,52]}
+{"kind":"textbox","id":"sh/zidonyd0","slide":7,"text":"One company, one topic, one small worker group.","textPreview":"One company, one topic, one small worker group.","textChars":47,"textLines":1,"bbox":[112,382,154,92]}
+{"kind":"shape","id":"sh/s36hcrmh","slide":7,"bbox":[274,310,44,3]}
+{"kind":"shape","id":"sh/hoza1gvy","slide":7,"bbox":[320,228,180,180]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":7,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[344,248,90,44]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":7,"text":"Proof","textPreview":"Proof","textChars":5,"textLines":1,"bbox":[344,310,150,52]}
+{"kind":"textbox","id":"sh/zidonyd0","slide":7,"text":"Completed training, certificates, and instructor feedback.","textPreview":"Completed training, certificates, and instructor feedback.","textChars":58,"textLines":1,"bbox":[344,382,154,92]}
+{"kind":"shape","id":"sh/a1gvy90j","slide":7,"bbox":[506,310,44,3]}
+{"kind":"shape","id":"sh/hoza1gvy","slide":7,"bbox":[552,228,180,180]}
+{"kind":"textbox","id":"sh/s36hcrmh","slide":7,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[576,248,90,44]}
+{"kind":"textbox","id":"sh/za1gvy90","slide":7,"text":"Expand","textPreview":"Expand","textChars":6,"textLines":1,"bbox":[576,310,150,52]}
+{"kind":"textbox","id":"sh/ap4r65wj","slide":7,"text":"Add sites, languages, and scenarios.","textPreview":"Add sites, languages, and scenarios.","textChars":36,"textLines":1,"bbox":[576,382,154,92]}
+{"kind":"shape","id":"sh/hgn29gr2","slide":7,"bbox":[738,310,44,3]}
+{"kind":"shape","id":"sh/svu9knih","slide":7,"bbox":[784,228,180,180]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":7,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[808,248,90,44]}
+{"kind":"textbox","id":"sh/adsji5sn","slide":7,"text":"Partner","textPreview":"Partner","textChars":7,"textLines":1,"bbox":[808,310,150,52]}
+{"kind":"textbox","id":"sh/idonyd0z","slide":7,"text":"Sell through HSE consultants and training centers.","textPreview":"Sell through HSE consultants and training centers.","textChars":50,"textLines":1,"bbox":[808,382,154,92]}
+{"kind":"shape","id":"sh/byhgn29g","slide":7,"bbox":[970,310,44,3]}
+{"kind":"shape","id":"sh/0je9cvix","slide":7,"bbox":[1016,228,180,180]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":7,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1040,248,90,44]}
+{"kind":"textbox","id":"sh/il0rqd4v","slide":7,"text":"Platform","textPreview":"Platform","textChars":8,"textLines":1,"bbox":[1040,310,150,52]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":7,"text":"Scenario library as recurring revenue.","textPreview":"Scenario library as recurring revenue.","textChars":38,"textLines":1,"bbox":[1040,382,154,92]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":7,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/fago7m","slide":7,"text":""}
+{"kind":"slide","id":"sl/y4hpgm","slide":8,"title":"The roadmap increases value per customer and lowers sales cost","textShapes":10}
+{"kind":"textbox","id":"sh/psfil0rq","slide":8,"text":"The roadmap increases value per customer and lowers sales cost","textPreview":"The roadmap increases value per customer and lowers sales cost","textChars":62,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/e1w7mp0b","slide":8,"text":"The most important next steps are validation with first customers and stronger product depth around analytics and content.","textPreview":"The most important next steps are validation with first customers and stronger product depth around analytics and content.","textChars":122,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/7mp0bi9s","slide":8,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/wval87ed","slide":8,"text":"Short term","textPreview":"Short term","textChars":10,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/pg3ex0nu","slide":8,"text":"Stabilize the Azure SQL production database, onboarding, and basic reports.","textPreview":"Stabilize the Azure SQL production database, onboarding, and basic reports.","textChars":75,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/epkzupwb","slide":8,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/7adsji5s","slide":8,"text":"Mid term","textPreview":"Mid term","textChars":8,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/wra5gbq1","slide":8,"text":"Add mistake analytics, certificate templates, and new languages.","textPreview":"Add mistake analytics, certificate templates, and new languages.","textChars":64,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/lc7u54zi","slide":8,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/9w3m94fu","slide":8,"text":"Long term","textPreview":"Long term","textChars":9,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":8,"text":"AI feedback, LMS/HR integrations, and a scenario marketplace.","textPreview":"AI feedback, LMS/HR integrations, and a scenario marketplace.","textChars":61,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":8,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/9knih4by","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/8bat47y1","slide":8,"name":"","geometry":"roundRect","alt":"The roadmap increases value per customer and lowers sales cost","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/y4hpgm","slide":8,"text":""}
+{"kind":"slide","id":"sl/1epvt7","slide":9,"title":"The investment story needs capital or partnership to validate the market","textShapes":7}
+{"kind":"textbox","id":"sh/donyd0z6","slide":9,"text":"The investment story needs capital or partnership to validate the market","textPreview":"The investment story needs capital or partnership to validate the market","textChars":72,"textLines":1,"bbox":[72,76,850,120]}
+{"kind":"textbox","id":"sh/2x4nap4r","slide":9,"text":"1. Complete 2-3 paid pilots in industrial safety.","textPreview":"1. Complete 2-3 paid pilots in industrial safety.","textChars":49,"textLines":1,"bbox":[88,238,760,42]}
+{"kind":"textbox","id":"sh/vixczed8","slide":9,"text":"2. Turn the most requested procedures into repeatable VR modules.","textPreview":"2. Turn the most requested procedures into repeatable VR modules.","textChars":65,"textLines":1,"bbox":[88,300,760,42]}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":9,"text":"3. Build a sales channel through HSE and training partners.","textPreview":"3. Build a sales channel through HSE and training partners.","textChars":59,"textLines":1,"bbox":[88,362,760,42]}
+{"kind":"shape","id":"sh/dcbulwva","slide":9,"bbox":[72,538,620,70]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":9,"text":"Goal: repeatable SaaS model","textPreview":"Goal: repeatable SaaS model","textChars":27,"textLines":1,"bbox":[104,558,560,34]}
+{"kind":"textbox","id":"sh/val87ed8","slide":9,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/knih4byh","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/1epvt7","slide":9,"text":""}

@@ -1,0 +1,158 @@
+{"kind":"deck","id":"pr/lbjqa9","name":"Deck"}
+{"kind":"layout","layoutId":"79dc20e8-6257-4481-aa81-2212b0be1841","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"d6b80da7-5346-4fb0-b307-315f3662bf5f","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/usb0b0","slide":1,"title":"SALES PREZENTACIJA","textShapes":5}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":1,"text":"SALES PREZENTACIJA","textPreview":"SALES PREZENTACIJA","textChars":18,"textLines":1,"bbox":[72,74,430,26]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":1,"text":"VR obuke za industrijsku bezbednost","textPreview":"VR obuke za industrijsku bezbednost","textChars":35,"textLines":1,"bbox":[72,170,548,210]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":1,"text":"Safety Sim pomaže kompanijama da uvežbaju rizične procedure pre nego što se dogodi stvaran incident.","textPreview":"Safety Sim pomaže kompanijama da uvežbaju rizične procedure pre nego što se dogodi stvaran incident.","textChars":100,"textLines":1,"bbox":[76,416,520,110]}
+{"kind":"shape","id":"sh/ixczed8v","slide":1,"bbox":[72,585,180,5]}
+{"kind":"textbox","id":"sh/tovahoza","slide":1,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/032lszqt","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/neloj2t8","slide":1,"name":"","geometry":"roundRect","alt":"VR obuke za industrijsku bezbednost","bbox":[706,64,476,560]}
+{"kind":"notes","id":"nt/usb0b0","slide":1,"text":""}
+{"kind":"slide","id":"sl/i2k480","slide":2,"title":"Klasična obuka teško priprema ljude za pritisak stvarnog incidenta","textShapes":10}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":2,"text":"Klasična obuka teško priprema ljude za pritisak stvarnog incidenta","textPreview":"Klasična obuka teško priprema ljude za pritisak stvarnog incidenta","textChars":66,"textLines":1,"bbox":[64,54,860,104]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":2,"text":"Papirni testovi i predavanja mogu dokazati prisustvo, ali ne i spremnost radnika da prepozna rizik, izabere opremu i reaguje u pravom redosledu.","textPreview":"Papirni testovi i predavanja mogu dokazati prisustvo, ali ne i spremnost radnika da prepozna rizik, izabere opremu i reaguje u pravom red...","textChars":144,"textLines":1,"bbox":[68,176,720,86]}
+{"kind":"shape","id":"sh/0fepkzup","slide":2,"bbox":[68,316,336,220]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":2,"text":"Rizik","textPreview":"Rizik","textChars":5,"textLines":1,"bbox":[96,344,278,68]}
+{"kind":"textbox","id":"sh/ixczed8v","slide":2,"text":"Opasne situacije nije moguće vežbati dovoljno često u realnom okruženju.","textPreview":"Opasne situacije nije moguće vežbati dovoljno često u realnom okruženju.","textChars":72,"textLines":1,"bbox":[98,426,272,70]}
+{"kind":"shape","id":"sh/tovahoza","slide":2,"bbox":[454,316,336,220]}
+{"kind":"textbox","id":"sh/032lszqt","slide":2,"text":"Standard","textPreview":"Standard","textChars":8,"textLines":1,"bbox":[482,344,278,68]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":2,"text":"Različiti instruktori i lokacije često daju neujednačeno iskustvo.","textPreview":"Različiti instruktori i lokacije često daju neujednačeno iskustvo.","textChars":66,"textLines":1,"bbox":[484,426,272,70]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":2,"bbox":[840,316,336,220]}
+{"kind":"textbox","id":"sh/ovahoza1","slide":2,"text":"Dokaz","textPreview":"Dokaz","textChars":5,"textLines":1,"bbox":[868,344,278,68]}
+{"kind":"textbox","id":"sh/dg7adsji","slide":2,"text":"Kompaniji treba evidencija ko je prošao obuku, rezultat i sertifikat.","textPreview":"Kompaniji treba evidencija ko je prošao obuku, rezultat i sertifikat.","textChars":69,"textLines":1,"bbox":[870,426,272,70]}
+{"kind":"textbox","id":"sh/6tovahoz","slide":2,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/vahoza1g","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/i2k480","slide":2,"text":""}
+{"kind":"slide","id":"sl/1xu3mm","slide":3,"title":"Safety Sim pretvara obuku u kontrolisanu praksu","textShapes":10}
+{"kind":"textbox","id":"sh/byhgn29g","slide":3,"text":"Safety Sim pretvara obuku u kontrolisanu praksu","textPreview":"Safety Sim pretvara obuku u kontrolisanu praksu","textChars":47,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":3,"text":"Platforma kombinuje VR scenario, evidenciju radnika i sertifikat o završenoj obuci.","textPreview":"Platforma kombinuje VR scenario, evidenciju radnika i sertifikat o završenoj obuci.","textChars":83,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/t47y1kre","slide":3,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/il0rqd4v","slide":3,"text":"Realističan scenario","textPreview":"Realističan scenario","textChars":20,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":3,"text":"Radnik prolazi kroz odluke, opremu, greške i posledice u bezbednom okruženju.","textPreview":"Radnik prolazi kroz odluke, opremu, greške i posledice u bezbednom okruženju.","textChars":77,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/0rqd4vmt","slide":3,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":3,"text":"Merljiv rezultat","textPreview":"Merljiv rezultat","textChars":16,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/ixczed8v","slide":3,"text":"Sistem beleži rezultat, trajanje, status i izdavanje sertifikata.","textPreview":"Sistem beleži rezultat, trajanje, status i izdavanje sertifikata.","textChars":65,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/bi9s36hc","slide":3,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":3,"text":"Višejezična primena","textPreview":"Višejezična primena","textChars":19,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/yd0z6103","slide":3,"text":"Srpski i engleski su već podržani, uz mogućnost dodavanja novih jezika.","textPreview":"Srpski i engleski su već podržani, uz mogućnost dodavanja novih jezika.","textChars":71,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":3,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/25kb6xkf","slide":3,"name":"","geometry":"roundRect","alt":"Safety Sim pretvara obuku u kontrolisanu praksu","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/1xu3mm","slide":3,"text":""}
+{"kind":"slide","id":"sl/m2tnf7","slide":4,"title":"Početni katalog pokriva visokorizične i regulisane procese","textShapes":9}
+{"kind":"textbox","id":"sh/w7mp0bi9","slide":4,"text":"Početni katalog pokriva visokorizične i regulisane procese","textPreview":"Početni katalog pokriva visokorizične i regulisane procese","textChars":58,"textLines":1,"bbox":[64,52,820,96]}
+{"kind":"textbox","id":"sh/e1w7mp0b","slide":4,"text":"Protivpožarna zaštita","textPreview":"Protivpožarna zaštita","textChars":21,"textLines":1,"bbox":[64,324,300,30]}
+{"kind":"shape","id":"sh/pg3ex0nu","slide":4,"bbox":[64,364,58,5]}
+{"kind":"textbox","id":"sh/7adsji5s","slide":4,"text":"Radioaktivni materijali","textPreview":"Radioaktivni materijali","textChars":23,"textLines":1,"bbox":[450,324,300,30]}
+{"kind":"shape","id":"sh/epkzupwb","slide":4,"bbox":[450,364,58,5]}
+{"kind":"textbox","id":"sh/wra5gbq1","slide":4,"text":"Hemijski otpad","textPreview":"Hemijski otpad","textChars":14,"textLines":1,"bbox":[836,324,300,30]}
+{"kind":"shape","id":"sh/upwb2hwf","slide":4,"bbox":[836,364,58,5]}
+{"kind":"textbox","id":"sh/cvixczed","slide":4,"text":"Građevinski otpad","textPreview":"Građevinski otpad","textChars":17,"textLines":1,"bbox":[64,542,300,30]}
+{"kind":"shape","id":"sh/5gbq1ory","slide":4,"bbox":[64,582,58,5]}
+{"kind":"textbox","id":"sh/nyd0z610","slide":4,"text":"Elektronski otpad","textPreview":"Elektronski otpad","textChars":17,"textLines":1,"bbox":[450,542,300,30]}
+{"kind":"shape","id":"sh/cj6tovah","slide":4,"bbox":[450,582,58,5]}
+{"kind":"textbox","id":"sh/u9knih4b","slide":4,"text":"Biomedicinski otpad","textPreview":"Biomedicinski otpad","textChars":19,"textLines":1,"bbox":[836,542,300,30]}
+{"kind":"shape","id":"sh/judg7ads","slide":4,"bbox":[836,582,58,5]}
+{"kind":"textbox","id":"sh/fil0rqd4","slide":4,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/qxs72x4n","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/e9cvixcz","slide":4,"name":"","geometry":"roundRect","alt":"Protivpožarna zaštita","bbox":[64,176,340,132]}
+{"kind":"image","id":"im/loj2t83i","slide":4,"name":"","geometry":"roundRect","alt":"Radioaktivni materijali","bbox":[450,176,340,132]}
+{"kind":"image","id":"im/szqtcj6t","slide":4,"name":"","geometry":"roundRect","alt":"Hemijski otpad","bbox":[836,176,340,132]}
+{"kind":"image","id":"im/orytsvu9","slide":4,"name":"","geometry":"roundRect","alt":"Građevinski otpad","bbox":[64,394,340,132]}
+{"kind":"image","id":"im/h0fepkzu","slide":4,"name":"","geometry":"roundRect","alt":"Elektronski otpad","bbox":[450,394,340,132]}
+{"kind":"image","id":"im/a9w3m94f","slide":4,"name":"","geometry":"roundRect","alt":"Biomedicinski otpad","bbox":[836,394,340,132]}
+{"kind":"notes","id":"nt/m2tnf7","slide":4,"text":""}
+{"kind":"slide","id":"sl/3689s8","slide":5,"title":"Workflow je napravljen za kompanije, instruktore i radnike","textShapes":18}
+{"kind":"textbox","id":"sh/d8bat47y","slide":5,"text":"Workflow je napravljen za kompanije, instruktore i radnike","textPreview":"Workflow je napravljen za kompanije, instruktore i radnike","textChars":58,"textLines":1,"bbox":[64,54,860,94]}
+{"kind":"shape","id":"sh/2lszqtcj","slide":5,"bbox":[88,228,180,180]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":5,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[112,248,90,44]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":5,"text":"Kompanija","textPreview":"Kompanija","textChars":9,"textLines":1,"bbox":[112,310,150,52]}
+{"kind":"textbox","id":"sh/d0z61032","slide":5,"text":"Registracija tenant-a i korisnika kompanije.","textPreview":"Registracija tenant-a i korisnika kompanije.","textChars":44,"textLines":1,"bbox":[112,382,154,92]}
+{"kind":"shape","id":"sh/29gr2p8n","slide":5,"bbox":[274,310,44,3]}
+{"kind":"shape","id":"sh/vu9knih4","slide":5,"bbox":[320,228,180,180]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":5,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[344,248,90,44]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":5,"text":"Radnici","textPreview":"Radnici","textChars":7,"textLines":1,"bbox":[344,310,150,52]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":5,"text":"Dodavanje radnika i odeljenja.","textPreview":"Dodavanje radnika i odeljenja.","textChars":30,"textLines":1,"bbox":[344,382,154,92]}
+{"kind":"shape","id":"sh/0fepkzup","slide":5,"bbox":[506,310,44,3]}
+{"kind":"shape","id":"sh/bulwval8","slide":5,"bbox":[552,228,180,180]}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":5,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[576,248,90,44]}
+{"kind":"textbox","id":"sh/tovahoza","slide":5,"text":"Kursevi","textPreview":"Kursevi","textChars":7,"textLines":1,"bbox":[576,310,150,52]}
+{"kind":"textbox","id":"sh/032lszqt","slide":5,"text":"Dodela scenarija i praćenje statusa.","textPreview":"Dodela scenarija i praćenje statusa.","textChars":36,"textLines":1,"bbox":[576,382,154,92]}
+{"kind":"shape","id":"sh/bi9s36hc","slide":5,"bbox":[738,310,44,3]}
+{"kind":"shape","id":"sh/ixczed8v","slide":5,"bbox":[784,228,180,180]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":5,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[808,248,90,44]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":5,"text":"Sertifikat","textPreview":"Sertifikat","textChars":10,"textLines":1,"bbox":[808,310,150,52]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":5,"text":"Automatska evidencija položenog kursa.","textPreview":"Automatska evidencija položenog kursa.","textChars":38,"textLines":1,"bbox":[808,382,154,92]}
+{"kind":"shape","id":"sh/90je9cvi","slide":5,"bbox":[970,310,44,3]}
+{"kind":"shape","id":"sh/yd0z6103","slide":5,"bbox":[1016,228,180,180]}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1040,248,90,44]}
+{"kind":"textbox","id":"sh/g7adsji5","slide":5,"text":"Provera","textPreview":"Provera","textChars":7,"textLines":1,"bbox":[1040,310,150,52]}
+{"kind":"textbox","id":"sh/9s36hcrm","slide":5,"text":"Javna verifikacija broja sertifikata.","textPreview":"Javna verifikacija broja sertifikata.","textChars":37,"textLines":1,"bbox":[1040,382,154,92]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":5,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/3689s8","slide":5,"text":""}
+{"kind":"slide","id":"sl/7aknq9","slide":6,"title":"Za kupca je najvažniji efekat na rizik i evidenciju","textShapes":10}
+{"kind":"textbox","id":"sh/rqd4vmtw","slide":6,"text":"Za kupca je najvažniji efekat na rizik i evidenciju","textPreview":"Za kupca je najvažniji efekat na rizik i evidenciju","textChars":51,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":6,"text":"Safety Sim se ne prodaje kao igra, već kao alat za standardizaciju bezbednosne obuke.","textPreview":"Safety Sim se ne prodaje kao igra, već kao alat za standardizaciju bezbednosne obuke.","textChars":85,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/9w3m94fu","slide":6,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/2t83itgf","slide":6,"text":"Bezbedna praksa pre realnog rizika","textPreview":"Bezbedna praksa pre realnog rizika","textChars":34,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/re1w7mp0","slide":6,"text":"Radnici mogu da greše u simulaciji, a ne u objektu, laboratoriji ili proizvodnji.","textPreview":"Radnici mogu da greše u simulaciji, a ne u objektu, laboratoriji ili proizvodnji.","textChars":81,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/kzupwb2h","slide":6,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/9knih4by","slide":6,"text":"Jedan standard za sve lokacije","textPreview":"Jedan standard za sve lokacije","textChars":30,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":6,"text":"Isti scenario, kriterijumi i instrukcije za svaki tim.","textPreview":"Isti scenario, kriterijumi i instrukcije za svaki tim.","textChars":54,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/ra5gbq1o","slide":6,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":6,"text":"Evidencija za menadžment","textPreview":"Evidencija za menadžment","textChars":24,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":6,"text":"Kompanija vidi radnike, upise, rezultate, sertifikate i rok važenja.","textPreview":"Kompanija vidi radnike, upise, rezultate, sertifikate i rok važenja.","textChars":68,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/s72x4nap","slide":6,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/q5o7qpg3","slide":6,"name":"","geometry":"roundRect","alt":"Za kupca je najvažniji efekat na rizik i evidenciju","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/7aknq9","slide":6,"text":""}
+{"kind":"slide","id":"sl/qodker","slide":7,"title":"Cena je dovoljno jednostavna da se odluka donese brzo","textShapes":16}
+{"kind":"textbox","id":"sh/oj2t83it","slide":7,"text":"Cena je dovoljno jednostavna da se odluka donese brzo","textPreview":"Cena je dovoljno jednostavna da se odluka donese brzo","textChars":53,"textLines":1,"bbox":[64,52,860,96]}
+{"kind":"shape","id":"sh/vy90je9c","slide":7,"bbox":[76,206,328,290]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":7,"text":"Mala preduzeća","textPreview":"Mala preduzeća","textChars":14,"textLines":1,"bbox":[102,234,260,30]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":7,"text":"do 10 radnika","textPreview":"do 10 radnika","textChars":13,"textLines":1,"bbox":[102,286,250,28]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":7,"text":"do 10 EUR mesečno","textPreview":"do 10 EUR mesečno","textChars":17,"textLines":1,"bbox":[102,354,260,38]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":7,"text":"do 100 EUR godišnje","textPreview":"do 100 EUR godišnje","textChars":19,"textLines":1,"bbox":[102,410,260,30]}
+{"kind":"shape","id":"sh/61032lsz","slide":7,"bbox":[458,206,328,290]}
+{"kind":"textbox","id":"sh/dg7adsji","slide":7,"text":"Srednja preduzeća","textPreview":"Srednja preduzeća","textChars":17,"textLines":1,"bbox":[484,234,260,30]}
+{"kind":"textbox","id":"sh/ovahoza1","slide":7,"text":"do 100 radnika","textPreview":"do 100 radnika","textChars":14,"textLines":1,"bbox":[484,286,250,28]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":7,"text":"do 100 EUR mesečno","textPreview":"do 100 EUR mesečno","textChars":18,"textLines":1,"bbox":[484,354,260,38]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":7,"text":"do 1.000 EUR godišnje","textPreview":"do 1.000 EUR godišnje","textChars":21,"textLines":1,"bbox":[484,410,260,30]}
+{"kind":"shape","id":"sh/4zidonyd","slide":7,"bbox":[840,206,328,290]}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":7,"text":"Velika preduzeća","textPreview":"Velika preduzeća","textChars":16,"textLines":1,"bbox":[866,234,260,30]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":7,"text":"100+ radnika","textPreview":"100+ radnika","textChars":12,"textLines":1,"bbox":[866,286,250,28]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":7,"text":"1 EUR x broj radnika","textPreview":"1 EUR x broj radnika","textChars":20,"textLines":1,"bbox":[866,354,260,38]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":7,"text":"10 EUR x broj radnika","textPreview":"10 EUR x broj radnika","textChars":21,"textLines":1,"bbox":[866,410,260,30]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":7,"text":"Osnovni model: 1 EUR po radniku mesečno ili 10 EUR po radniku godišnje.","textPreview":"Osnovni model: 1 EUR po radniku mesečno ili 10 EUR po radniku godišnje.","textChars":71,"textLines":1,"bbox":[90,545,840,42]}
+{"kind":"textbox","id":"sh/m94fu18j","slide":7,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/fu18jqh0","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/qodker","slide":7,"text":""}
+{"kind":"slide","id":"sl/mmugn1","slide":8,"title":"Pilot može krenuti sa jednim scenarijem i jednom grupom radnika","textShapes":10}
+{"kind":"textbox","id":"sh/7u54zido","slide":8,"text":"Pilot može krenuti sa jednim scenarijem i jednom grupom radnika","textPreview":"Pilot može krenuti sa jednim scenarijem i jednom grupom radnika","textChars":63,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/wfyxobm5","slide":8,"text":"Najbrži put do prodaje je konkretan demo za oblast koju kupac već mora da pokriva obukom.","textPreview":"Najbrži put do prodaje je konkretan demo za oblast koju kupac već mora da pokriva obukom.","textChars":89,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/l0rqd4vm","slide":8,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/eloj2t83","slide":8,"text":"Izbor scenarija","textPreview":"Izbor scenarija","textChars":15,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/36hcrmhk","slide":8,"text":"Protivpožarna zaštita, radioaktivni materijali ili scenario otpada.","textPreview":"Protivpožarna zaštita, radioaktivni materijali ili scenario otpada.","textChars":67,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/wra5gbq1","slide":8,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/lc7u54zi","slide":8,"text":"Unos radnika","textPreview":"Unos radnika","textChars":12,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/epkzupwb","slide":8,"text":"Mala pilot grupa omogućava brzu proveru procesa i izveštaja.","textPreview":"Mala pilot grupa omogućava brzu proveru procesa i izveštaja.","textChars":60,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/7adsji5s","slide":8,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/nqxs72x4","slide":8,"text":"Procena posle pilot-a","textPreview":"Procena posle pilot-a","textChars":21,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/u54zidon","slide":8,"text":"Rezultat se meri kroz završene obuke, sertifikate i povratnu informaciju instruktora.","textPreview":"Rezultat se meri kroz završene obuke, sertifikate i povratnu informaciju instruktora.","textChars":85,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/cbulwval","slide":8,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/neloj2t8","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/mtwra5gb","slide":8,"name":"","geometry":"roundRect","alt":"Pilot može krenuti sa jednim scenarijem i jednom grupom radnika","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/mmugn1","slide":8,"text":""}
+{"kind":"slide","id":"sl/jesp5d","slide":9,"title":"Sledeći razgovor treba da završi izborom pilot scenarija","textShapes":7}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":9,"text":"Sledeći razgovor treba da završi izborom pilot scenarija","textPreview":"Sledeći razgovor treba da završi izborom pilot scenarija","textChars":56,"textLines":1,"bbox":[72,76,850,120]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":9,"text":"1. Izabrati oblast i broj radnika za pilot.","textPreview":"1. Izabrati oblast i broj radnika za pilot.","textChars":43,"textLines":1,"bbox":[88,238,760,42]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":9,"text":"2. Dogovoriti kompanijski nalog i listu polaznika.","textPreview":"2. Dogovoriti kompanijski nalog i listu polaznika.","textChars":50,"textLines":1,"bbox":[88,300,760,42]}
+{"kind":"textbox","id":"sh/idonyd0z","slide":9,"text":"3. Pokazati demo i potvrditi komercijalni paket.","textPreview":"3. Pokazati demo i potvrditi komercijalni paket.","textChars":48,"textLines":1,"bbox":[88,362,760,42]}
+{"kind":"shape","id":"sh/byhgn29g","slide":9,"bbox":[72,538,620,70]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":9,"text":"Kontakt: office@nswebdevelopment.com","textPreview":"Kontakt: office@nswebdevelopment.com","textChars":36,"textLines":1,"bbox":[104,558,560,34]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":9,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/jesp5d","slide":9,"text":""}

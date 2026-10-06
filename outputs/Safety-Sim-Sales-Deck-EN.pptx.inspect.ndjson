@@ -1,0 +1,158 @@
+{"kind":"deck","id":"pr/zw7kuo","name":"Deck"}
+{"kind":"layout","layoutId":"56abc3ff-ff46-43cf-95b3-9f1a9851b08c","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"9122da7d-d502-43c9-be93-000b541bdb0d","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/wmw240","slide":1,"title":"SALES PRESENTATION","textShapes":5}
+{"kind":"textbox","id":"sh/m94fu18j","slide":1,"text":"SALES PRESENTATION","textPreview":"SALES PRESENTATION","textChars":18,"textLines":1,"bbox":[72,74,430,26]}
+{"kind":"textbox","id":"sh/fu18jqh0","slide":1,"text":"VR training for industrial safety","textPreview":"VR training for industrial safety","textChars":33,"textLines":1,"bbox":[72,170,548,210]}
+{"kind":"textbox","id":"sh/83itgfml","slide":1,"text":"Safety Sim helps companies rehearse risky procedures before a real incident happens.","textPreview":"Safety Sim helps companies rehearse risky procedures before a real incident happens.","textChars":84,"textLines":1,"bbox":[76,416,520,110]}
+{"kind":"shape","id":"sh/xobm58z2","slide":1,"bbox":[72,585,180,5]}
+{"kind":"textbox","id":"sh/qxs72x4n","slide":1,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/fil0rqd4","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/0fepkzup","slide":1,"name":"","geometry":"roundRect","alt":"VR training for industrial safety","bbox":[706,64,476,560]}
+{"kind":"notes","id":"nt/wmw240","slide":1,"text":""}
+{"kind":"slide","id":"sl/j5lbtb","slide":2,"title":"Traditional training rarely prepares people for the pressure of a real incident","textShapes":10}
+{"kind":"textbox","id":"sh/t83itgfm","slide":2,"text":"Traditional training rarely prepares people for the pressure of a real incident","textPreview":"Traditional training rarely prepares people for the pressure of a real incident","textChars":79,"textLines":1,"bbox":[64,54,860,104]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":2,"text":"Paper tests and classroom sessions can prove attendance, but not whether a worker can spot the risk, select equipment, and react in the right order.","textPreview":"Paper tests and classroom sessions can prove attendance, but not whether a worker can spot the risk, select equipment, and react in the r...","textChars":148,"textLines":1,"bbox":[68,176,720,86]}
+{"kind":"shape","id":"sh/b2hwfyxo","slide":2,"bbox":[68,316,336,220]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":2,"text":"Risk","textPreview":"Risk","textChars":4,"textLines":1,"bbox":[96,344,278,68]}
+{"kind":"textbox","id":"sh/twra5gbq","slide":2,"text":"Dangerous situations cannot be practiced often enough in the real environment.","textPreview":"Dangerous situations cannot be practiced often enough in the real environment.","textChars":78,"textLines":1,"bbox":[98,426,272,70]}
+{"kind":"shape","id":"sh/m58z25kb","slide":2,"bbox":[454,316,336,220]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":2,"text":"Standard","textPreview":"Standard","textChars":8,"textLines":1,"bbox":[482,344,278,68]}
+{"kind":"textbox","id":"sh/47y1kre1","slide":2,"text":"Different instructors and sites often create an inconsistent learning experience.","textPreview":"Different instructors and sites often create an inconsistent learning experience.","textChars":81,"textLines":1,"bbox":[484,426,272,70]}
+{"kind":"shape","id":"sh/tsvu9kni","slide":2,"bbox":[840,316,336,220]}
+{"kind":"textbox","id":"sh/90je9cvi","slide":2,"text":"Proof","textPreview":"Proof","textChars":5,"textLines":1,"bbox":[868,344,278,68]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":2,"text":"The company needs records showing who completed training, results, and certificates.","textPreview":"The company needs records showing who completed training, results, and certificates.","textChars":84,"textLines":1,"bbox":[870,426,272,70]}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":2,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/yd0z6103","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/j5lbtb","slide":2,"text":""}
+{"kind":"slide","id":"sl/8prwks","slide":3,"title":"Safety Sim turns training into controlled practice","textShapes":10}
+{"kind":"textbox","id":"sh/x0nuxc3y","slide":3,"text":"Safety Sim turns training into controlled practice","textPreview":"Safety Sim turns training into controlled practice","textChars":50,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/m94fu18j","slide":3,"text":"The platform combines VR scenarios, worker records, and certificates for completed training.","textPreview":"The platform combines VR scenarios, worker records, and certificates for completed training.","textChars":92,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/fu18jqh0","slide":3,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/83itgfml","slide":3,"text":"Realistic scenario","textPreview":"Realistic scenario","textChars":18,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/xobm58z2","slide":3,"text":"Workers make decisions, use equipment, see mistakes, and learn consequences in a safe setting.","textPreview":"Workers make decisions, use equipment, see mistakes, and learn consequences in a safe setting.","textChars":94,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/qxs72x4n","slide":3,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/fil0rqd4","slide":3,"text":"Measurable result","textPreview":"Measurable result","textChars":17,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/4zidonyd","slide":3,"text":"The system records score, duration, status, and certificate issuance.","textPreview":"The system records score, duration, status, and certificate issuance.","textChars":69,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/xkf6dcbu","slide":3,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":3,"text":"Multilingual rollout","textPreview":"Multilingual rollout","textChars":20,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/c3ylc7u5","slide":3,"text":"Serbian and English are already supported, with room to add more languages.","textPreview":"Serbian and English are already supported, with room to add more languages.","textChars":75,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/uxc3ylc7","slide":3,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/wval87ed","slide":3,"name":"","geometry":"roundRect","alt":"Safety Sim turns training into controlled practice","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/8prwks","slide":3,"text":""}
+{"kind":"slide","id":"sl/zozjmi","slide":4,"title":"The initial catalog covers high-risk and regulated processes","textShapes":9}
+{"kind":"textbox","id":"sh/xczed8v6","slide":4,"text":"The initial catalog covers high-risk and regulated processes","textPreview":"The initial catalog covers high-risk and regulated processes","textChars":60,"textLines":1,"bbox":[64,52,820,96]}
+{"kind":"textbox","id":"sh/fa9w3m94","slide":4,"text":"Fire protection","textPreview":"Fire protection","textChars":15,"textLines":1,"bbox":[64,324,300,30]}
+{"kind":"shape","id":"sh/8jqh0fep","slide":4,"bbox":[64,364,58,5]}
+{"kind":"textbox","id":"sh/qd4vmtwr","slide":4,"text":"Radioactive materials","textPreview":"Radioactive materials","textChars":21,"textLines":1,"bbox":[450,324,300,30]}
+{"kind":"shape","id":"sh/fyxobm58","slide":4,"bbox":[450,364,58,5]}
+{"kind":"textbox","id":"sh/xs72x4na","slide":4,"text":"Chemical waste","textPreview":"Chemical waste","textChars":14,"textLines":1,"bbox":[836,324,300,30]}
+{"kind":"shape","id":"sh/xkf6dcbu","slide":4,"bbox":[836,364,58,5]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":4,"text":"Construction waste","textPreview":"Construction waste","textChars":18,"textLines":1,"bbox":[64,542,300,30]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":4,"bbox":[64,582,58,5]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":4,"text":"Electronic waste","textPreview":"Electronic waste","textChars":16,"textLines":1,"bbox":[450,542,300,30]}
+{"kind":"shape","id":"sh/f6dcbulw","slide":4,"bbox":[450,582,58,5]}
+{"kind":"textbox","id":"sh/x0nuxc3y","slide":4,"text":"Biomedical waste","textPreview":"Biomedical waste","textChars":16,"textLines":1,"bbox":[836,542,300,30]}
+{"kind":"shape","id":"sh/4fu18jqh","slide":4,"bbox":[836,582,58,5]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":4,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/jm1cfa9w","slide":4,"name":"","geometry":"roundRect","alt":"Fire protection","bbox":[64,176,340,132]}
+{"kind":"image","id":"im/cfa9w3m9","slide":4,"name":"","geometry":"roundRect","alt":"Radioactive materials","bbox":[450,176,340,132]}
+{"kind":"image","id":"im/54zidony","slide":4,"name":"","geometry":"roundRect","alt":"Chemical waste","bbox":[836,176,340,132]}
+{"kind":"image","id":"im/3itgfmlk","slide":4,"name":"","geometry":"roundRect","alt":"Construction waste","bbox":[64,394,340,132]}
+{"kind":"image","id":"im/e9cvixcz","slide":4,"name":"","geometry":"roundRect","alt":"Electronic waste","bbox":[450,394,340,132]}
+{"kind":"image","id":"im/lwval87e","slide":4,"name":"","geometry":"roundRect","alt":"Biomedical waste","bbox":[836,394,340,132]}
+{"kind":"notes","id":"nt/zozjmi","slide":4,"text":""}
+{"kind":"slide","id":"sl/63g0j4","slide":5,"title":"The workflow supports companies, instructors, and workers","textShapes":18}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":5,"text":"The workflow supports companies, instructors, and workers","textPreview":"The workflow supports companies, instructors, and workers","textChars":57,"textLines":1,"bbox":[64,54,860,94]}
+{"kind":"shape","id":"sh/judg7ads","slide":5,"bbox":[88,228,180,180]}
+{"kind":"textbox","id":"sh/u9knih4b","slide":5,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[112,248,90,44]}
+{"kind":"textbox","id":"sh/1orytsvu","slide":5,"text":"Company","textPreview":"Company","textChars":7,"textLines":1,"bbox":[112,310,150,52]}
+{"kind":"textbox","id":"sh/c7u54zid","slide":5,"text":"Tenant and company user registration.","textPreview":"Tenant and company user registration.","textChars":37,"textLines":1,"bbox":[112,382,154,92]}
+{"kind":"shape","id":"sh/jm1cfa9w","slide":5,"bbox":[274,310,44,3]}
+{"kind":"shape","id":"sh/u18jqh0f","slide":5,"bbox":[320,228,180,180]}
+{"kind":"textbox","id":"sh/5gbq1ory","slide":5,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[344,248,90,44]}
+{"kind":"textbox","id":"sh/cvixczed","slide":5,"text":"Workers","textPreview":"Workers","textChars":7,"textLines":1,"bbox":[344,310,150,52]}
+{"kind":"textbox","id":"sh/m1cfa9w3","slide":5,"text":"Worker and department management.","textPreview":"Worker and department management.","textChars":33,"textLines":1,"bbox":[344,382,154,92]}
+{"kind":"shape","id":"sh/bm58z25k","slide":5,"bbox":[506,310,44,3]}
+{"kind":"shape","id":"sh/47y1kre1","slide":5,"bbox":[552,228,180,180]}
+{"kind":"textbox","id":"sh/tsvu9kni","slide":5,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[576,248,90,44]}
+{"kind":"textbox","id":"sh/mp0bi9s3","slide":5,"text":"Courses","textPreview":"Courses","textChars":7,"textLines":1,"bbox":[576,310,150,52]}
+{"kind":"textbox","id":"sh/bat47y1k","slide":5,"text":"Scenario assignment and status tracking.","textPreview":"Scenario assignment and status tracking.","textChars":40,"textLines":1,"bbox":[576,382,154,92]}
+{"kind":"shape","id":"sh/4vmtwra5","slide":5,"bbox":[738,310,44,3]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":5,"bbox":[784,228,180,180]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":5,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[808,248,90,44]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":5,"text":"Certificate","textPreview":"Certificate","textChars":11,"textLines":1,"bbox":[808,310,150,52]}
+{"kind":"textbox","id":"sh/7u54zido","slide":5,"text":"Automatic record of completed courses.","textPreview":"Automatic record of completed courses.","textChars":38,"textLines":1,"bbox":[808,382,154,92]}
+{"kind":"shape","id":"sh/ed8bat47","slide":5,"bbox":[970,310,44,3]}
+{"kind":"shape","id":"sh/l0rqd4vm","slide":5,"bbox":[1016,228,180,180]}
+{"kind":"textbox","id":"sh/wfyxobm5","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1040,248,90,44]}
+{"kind":"textbox","id":"sh/36hcrmhk","slide":5,"text":"Verify","textPreview":"Verify","textChars":6,"textLines":1,"bbox":[1040,310,150,52]}
+{"kind":"textbox","id":"sh/eloj2t83","slide":5,"text":"Public certificate number verification.","textPreview":"Public certificate number verification.","textChars":39,"textLines":1,"bbox":[1040,382,154,92]}
+{"kind":"textbox","id":"sh/lc7u54zi","slide":5,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/wra5gbq1","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/63g0j4","slide":5,"text":""}
+{"kind":"slide","id":"sl/t9verd","slide":6,"title":"For buyers, the value is lower risk and better records","textShapes":10}
+{"kind":"textbox","id":"sh/2x4nap4r","slide":6,"text":"For buyers, the value is lower risk and better records","textPreview":"For buyers, the value is lower risk and better records","textChars":54,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":6,"text":"Safety Sim is not sold as a game. It is a tool for standardizing safety training.","textPreview":"Safety Sim is not sold as a game. It is a tool for standardizing safety training.","textChars":81,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/k3q5o7qp","slide":6,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/val87ed8","slide":6,"text":"Safe practice before real risk","textPreview":"Safe practice before real risk","textChars":30,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":6,"text":"Workers can make mistakes in simulation, not in a facility, laboratory, or production area.","textPreview":"Workers can make mistakes in simulation, not in a facility, laboratory, or production area.","textChars":91,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/dcbulwva","slide":6,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":6,"text":"One standard across sites","textPreview":"One standard across sites","textChars":25,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":6,"text":"The same scenario, criteria, and instructions can be used for every team.","textPreview":"The same scenario, criteria, and instructions can be used for every team.","textChars":73,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/2lszqtcj","slide":6,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":6,"text":"Management evidence","textPreview":"Management evidence","textChars":19,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":6,"text":"The company can see workers, enrollments, results, certificates, and expiry dates.","textPreview":"The company can see workers, enrollments, results, certificates, and expiry dates.","textChars":82,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/3ex0nuxc","slide":6,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/sneloj2t","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/dsji5sne","slide":6,"name":"","geometry":"roundRect","alt":"For buyers, the value is lower risk and better records","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/t9verd","slide":6,"text":""}
+{"kind":"slide","id":"sl/155bw6","slide":7,"title":"Pricing is simple enough for a fast buying decision","textShapes":16}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":7,"text":"Pricing is simple enough for a fast buying decision","textPreview":"Pricing is simple enough for a fast buying decision","textChars":51,"textLines":1,"bbox":[64,52,860,96]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":7,"bbox":[76,206,328,290]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":7,"text":"Small companies","textPreview":"Small companies","textChars":15,"textLines":1,"bbox":[102,234,260,30]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":7,"text":"up to 10 workers","textPreview":"up to 10 workers","textChars":16,"textLines":1,"bbox":[102,286,250,28]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":7,"text":"up to EUR 10 monthly","textPreview":"up to EUR 10 monthly","textChars":20,"textLines":1,"bbox":[102,354,260,38]}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":7,"text":"up to EUR 100 yearly","textPreview":"up to EUR 100 yearly","textChars":20,"textLines":1,"bbox":[102,410,260,30]}
+{"kind":"shape","id":"sh/4zidonyd","slide":7,"bbox":[458,206,328,290]}
+{"kind":"textbox","id":"sh/fil0rqd4","slide":7,"text":"Mid-size companies","textPreview":"Mid-size companies","textChars":18,"textLines":1,"bbox":[484,234,260,30]}
+{"kind":"textbox","id":"sh/qxs72x4n","slide":7,"text":"up to 100 workers","textPreview":"up to 100 workers","textChars":17,"textLines":1,"bbox":[484,286,250,28]}
+{"kind":"textbox","id":"sh/0bi9s36h","slide":7,"text":"up to EUR 100 monthly","textPreview":"up to EUR 100 monthly","textChars":21,"textLines":1,"bbox":[484,354,260,38]}
+{"kind":"textbox","id":"sh/pwb2hwfy","slide":7,"text":"up to EUR 1,000 yearly","textPreview":"up to EUR 1,000 yearly","textChars":22,"textLines":1,"bbox":[484,410,260,30]}
+{"kind":"shape","id":"sh/i5sneloj","slide":7,"bbox":[840,206,328,290]}
+{"kind":"textbox","id":"sh/7qpg3ex0","slide":7,"text":"Large companies","textPreview":"Large companies","textChars":15,"textLines":1,"bbox":[866,234,260,30]}
+{"kind":"textbox","id":"sh/wjudg7ad","slide":7,"text":"100+ workers","textPreview":"100+ workers","textChars":12,"textLines":1,"bbox":[866,286,250,28]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":7,"text":"EUR 1 x number of workers","textPreview":"EUR 1 x number of workers","textChars":25,"textLines":1,"bbox":[866,354,260,38]}
+{"kind":"textbox","id":"sh/ed8v6psf","slide":7,"text":"EUR 10 x number of workers","textPreview":"EUR 10 x number of workers","textChars":26,"textLines":1,"bbox":[866,410,260,30]}
+{"kind":"textbox","id":"sh/7y1kre1w","slide":7,"text":"Base model: EUR 1 per worker per month or EUR 10 per worker per year.","textPreview":"Base model: EUR 1 per worker per month or EUR 10 per worker per year.","textChars":69,"textLines":1,"bbox":[90,545,840,42]}
+{"kind":"textbox","id":"sh/0nuxc3yl","slide":7,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/p8nqxs72","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/155bw6","slide":7,"text":""}
+{"kind":"slide","id":"sl/lcy0f4","slide":8,"title":"A pilot can start with one scenario and one worker group","textShapes":10}
+{"kind":"textbox","id":"sh/sneloj2t","slide":8,"text":"A pilot can start with one scenario and one worker group","textPreview":"A pilot can start with one scenario and one worker group","textChars":56,"textLines":1,"bbox":[64,52,650,100]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":8,"text":"The fastest sales path is a concrete demo for a training area the buyer already needs to cover.","textPreview":"The fastest sales path is a concrete demo for a training area the buyer already needs to cover.","textChars":95,"textLines":1,"bbox":[68,160,574,70]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":8,"bbox":[72,281,14,14]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":8,"text":"Choose the scenario","textPreview":"Choose the scenario","textChars":19,"textLines":1,"bbox":[104,272,500,30]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":8,"text":"Fire protection, radioactive materials, or one of the waste handling scenarios.","textPreview":"Fire protection, radioactive materials, or one of the waste handling scenarios.","textChars":79,"textLines":1,"bbox":[104,306,500,42]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":8,"bbox":[72,373,14,14]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":8,"text":"Add workers","textPreview":"Add workers","textChars":11,"textLines":1,"bbox":[104,364,500,30]}
+{"kind":"textbox","id":"sh/loj2t83i","slide":8,"text":"A small pilot group makes it easy to test the workflow and reporting.","textPreview":"A small pilot group makes it easy to test the workflow and reporting.","textChars":69,"textLines":1,"bbox":[104,398,500,42]}
+{"kind":"shape","id":"sh/w3m94fu1","slide":8,"bbox":[72,465,14,14]}
+{"kind":"textbox","id":"sh/udg7adsj","slide":8,"text":"Evaluate after the pilot","textPreview":"Evaluate after the pilot","textChars":24,"textLines":1,"bbox":[104,456,500,30]}
+{"kind":"textbox","id":"sh/nyd0z610","slide":8,"text":"Success is measured through completed training, certificates, and instructor feedback.","textPreview":"Success is measured through completed training, certificates, and instructor feedback.","textChars":86,"textLines":1,"bbox":[104,490,500,42]}
+{"kind":"textbox","id":"sh/54zidony","slide":8,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/upwb2hwf","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"image","id":"im/72x4nap4","slide":8,"name":"","geometry":"roundRect","alt":"A pilot can start with one scenario and one worker group","bbox":[730,84,470,500]}
+{"kind":"notes","id":"nt/lcy0f4","slide":8,"text":""}
+{"kind":"slide","id":"sl/d4vhpg","slide":9,"title":"The next conversation should choose the pilot scenario","textShapes":7}
+{"kind":"textbox","id":"sh/zupwb2hw","slide":9,"text":"The next conversation should choose the pilot scenario","textPreview":"The next conversation should choose the pilot scenario","textChars":54,"textLines":1,"bbox":[72,76,850,120]}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":9,"text":"1. Select the training area and number of workers.","textPreview":"1. Select the training area and number of workers.","textChars":50,"textLines":1,"bbox":[88,238,760,42]}
+{"kind":"textbox","id":"sh/h0fepkzu","slide":9,"text":"2. Agree on the company account and participant list.","textPreview":"2. Agree on the company account and participant list.","textChars":53,"textLines":1,"bbox":[88,300,760,42]}
+{"kind":"textbox","id":"sh/al87ed8b","slide":9,"text":"3. Show the demo and confirm the commercial package.","textPreview":"3. Show the demo and confirm the commercial package.","textChars":52,"textLines":1,"bbox":[88,362,760,42]}
+{"kind":"shape","id":"sh/z61032ls","slide":9,"bbox":[72,538,620,70]}
+{"kind":"textbox","id":"sh/orytsvu9","slide":9,"text":"Contact: office@nswebdevelopment.com","textPreview":"Contact: office@nswebdevelopment.com","textChars":36,"textLines":1,"bbox":[104,558,560,34]}
+{"kind":"textbox","id":"sh/hcrmhk3q","slide":9,"text":"Safety Sim","textPreview":"Safety Sim","textChars":10,"textLines":1,"bbox":[56,666,240,22]}
+{"kind":"textbox","id":"sh/6xkf6dcb","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1170,666,54,22]}
+{"kind":"notes","id":"nt/d4vhpg","slide":9,"text":""}

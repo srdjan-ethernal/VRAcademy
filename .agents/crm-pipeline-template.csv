@@ -1,0 +1,2 @@
+company,domain,country,industry,employee_count,segment,contact_name,contact_role,email,linkedin,lead_source,source_date,fit_score,intent_score,engagement_score,scenario,participant_count,course_count,estimated_value_eur,stage,last_touch,next_action,next_action_date,opt_out,legal_basis,notes
+Example Manufacturing,example.com,Serbia,Manufacturing,500,Private manufacturing,,,,,manual research,2026-09-16,80,0,0,Fire protection,30,1,899.70,Target,,,,false,legitimate interest,Replace this row with real accounts.
