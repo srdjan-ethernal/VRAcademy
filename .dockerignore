@@ -7,3 +7,9 @@ obj
 VRSimulator-site.zip
 .server.err.log
 .server.out.log
+.agents
+outputs
+_docx_render_aid4sme
+build_aid4sme_proposal_docx.py
+deploy/**/.env
+deploy/hetzner/backups

@@ -12,18 +12,19 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
 ENV ASPNETCORE_URLS=http://+:7860
-ENV Database__Provider=PostgreSql
-ENV Database__EnsureCreated=true
+ENV Database__Provider=SqlServer
+ENV Database__EnsureCreated=false
+ENV Database__ApplyMigrations=false
 ENV Database__FallbackToInMemory=false
-ENV Cors__AllowAnyOrigin=true
+ENV Cors__AllowAnyOrigin=false
 
 COPY --from=build /app/publish ./
 COPY index.html pricing.html certificates.html certificate-view.html login.html platform.html platform-workers.html platform-training.html platform-assigned-training.html platform-certificates.html platform-account.html system-admin.html system-company.html verify.html worker.html ./
-COPY styles.css script.js ./
+COPY styles.css script.js global-languages.js ./
 COPY assets ./assets
 
 RUN mkdir -p wwwroot \
-    && cp index.html pricing.html certificates.html certificate-view.html login.html platform.html platform-workers.html platform-training.html platform-assigned-training.html platform-certificates.html platform-account.html system-admin.html system-company.html verify.html worker.html styles.css script.js wwwroot/ \
+    && cp index.html pricing.html certificates.html certificate-view.html login.html platform.html platform-workers.html platform-training.html platform-assigned-training.html platform-certificates.html platform-account.html system-admin.html system-company.html verify.html worker.html styles.css script.js global-languages.js wwwroot/ \
     && cp -r assets wwwroot/assets
 
 EXPOSE 7860

@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using Microsoft.EntityFrameworkCore;
 using VRAcademy.Api.Domain;
 using VRAcademy.Api.Persistence;
 using VRAcademy.Api.Persistence.Entities;
@@ -21,8 +20,6 @@ public static class DemoAccountSeeder
         {
             return;
         }
-
-        dbContext.Database.Migrate();
 
         var email = NormalizeEmail(configuration["DemoAccount:Email"] ?? DefaultEmail);
         var companyName = (configuration["DemoAccount:CompanyName"] ?? DefaultCompanyName).Trim();

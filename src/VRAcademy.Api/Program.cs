@@ -18,6 +18,7 @@ builder.Logging.AddDebug();
 
 var databaseProvider = builder.Configuration["Database:Provider"] ?? "SqlServer";
 var autoCreateDatabase = builder.Configuration.GetValue<bool>("Database:EnsureCreated");
+var applyDatabaseMigrations = builder.Configuration.GetValue("Database:ApplyMigrations", false);
 var connectionStringCandidates = new[]
 {
     new ConnectionStringCandidate("DATABASE_URL", builder.Configuration["DATABASE_URL"]),
@@ -129,14 +130,22 @@ builder.Services.Configure<JsonOptions>(options =>
 
 var app = builder.Build();
 
-if (!useInMemoryServices && autoCreateDatabase)
+if (!useInMemoryServices && (autoCreateDatabase || applyDatabaseMigrations))
 {
     using var scope = app.Services.CreateScope();
     Console.WriteLine($"Database startup: provider={databaseProvider}; source={connectionStringSource}; rawLength={rawConnectionString?.Length ?? 0}; normalizedLength={connectionString?.Length ?? 0}; startsWithServer={connectionString?.StartsWith("Server=", StringComparison.OrdinalIgnoreCase) ?? false}");
     try
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<TrainingDbContext>();
-        dbContext.Database.EnsureCreated();
+        if (applyDatabaseMigrations)
+        {
+            dbContext.Database.Migrate();
+        }
+        else
+        {
+            dbContext.Database.EnsureCreated();
+        }
+
         EnsureCompatibilityColumns(dbContext, databaseProvider);
     }
     catch (Exception exception)

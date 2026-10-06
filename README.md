@@ -96,7 +96,25 @@ https://<vas-domen>/api/auth/google/callback
 
 Za lokalnu bazu instalirati SQL Server Express LocalDB ili podesiti `ConnectionStrings:TrainingDatabase` na postojeci SQL Server. Migracije su u `src/VRAcademy.Api/Persistence/Migrations`.
 
-## Demo deployment: Hugging Face + Neon
+## Recommended production deployment: one Hetzner server
+
+The simplest production architecture now runs the complete VR Academy system on one Hetzner Cloud VPS:
+
+- ASP.NET Core 10 API and frontend
+- Microsoft SQL Server 2022 Express
+- Caddy reverse proxy with automatic HTTPS
+- persistent database storage and backup script
+
+Deployment files are in `deploy/hetzner`. Start with:
+
+```bash
+cp deploy/hetzner/.env.example deploy/hetzner/.env
+bash deploy/hetzner/deploy.sh
+```
+
+The full server setup, DNS, backup, update, and Azure SQL data migration instructions are in `deploy/hetzner/README.md`.
+
+## Legacy demo deployment: Hugging Face + Neon
 
 Repo sadrzi `Dockerfile` za Hugging Face Docker Space. Docker build objavljuje ASP.NET Core API i staticki frontend zajedno, na portu `7860`. Ovo je najjednostavniji demo deployment: Hugging Face hostuje aplikaciju, a Neon PostgreSQL cuva podatke.
 

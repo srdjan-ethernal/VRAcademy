@@ -1,0 +1,94 @@
+name: vracademy
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      MSSQL_MEMORY_LIMIT_MB: ${MSSQL_MEMORY_LIMIT_MB:-2048}
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - sqlserver_backups:/var/opt/mssql/backups
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - SQLCMD=/opt/mssql-tools18/bin/sqlcmd; [ -x "$$SQLCMD" ] || SQLCMD=/opt/mssql-tools/bin/sqlcmd; "$$SQLCMD" -C -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -b -o /dev/null || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - backend
+
+  app:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    image: vracademy-app:latest
+    restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:7860
+      ASPNETCORE_ENVIRONMENT: Production
+      Database__Provider: SqlServer
+      Database__ApplyMigrations: "true"
+      Database__EnsureCreated: "false"
+      Database__FallbackToInMemory: "false"
+      Cors__AllowAnyOrigin: "false"
+      Cors__AllowedOrigins__0: https://${APP_DOMAIN}
+      ConnectionStrings__TrainingDatabase: Server=sqlserver,1433;Database=VRAcademyTraining;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=True;TrustServerCertificate=True;MultipleActiveResultSets=True;Connection Timeout=30
+      DemoAccount__Enabled: ${BOOTSTRAP_ADMIN_ENABLED:-false}
+      DemoAccount__CompanyName: ${BOOTSTRAP_ADMIN_COMPANY:-Ethernal}
+      DemoAccount__Email: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      DemoAccount__Password: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+      DemoAccount__FirstName: ${BOOTSTRAP_ADMIN_FIRST_NAME:-System}
+      DemoAccount__LastName: ${BOOTSTRAP_ADMIN_LAST_NAME:-Administrator}
+      Authentication__Google__ClientId: ${GOOGLE_CLIENT_ID:-}
+      Authentication__Google__ClientSecret: ${GOOGLE_CLIENT_SECRET:-}
+      Email__Enabled: ${EMAIL_ENABLED:-false}
+      Email__Host: ${EMAIL_HOST:-smtp.office365.com}
+      Email__Port: ${EMAIL_PORT:-587}
+      Email__EnableSsl: ${EMAIL_ENABLE_SSL:-true}
+      Email__FromAddress: ${EMAIL_FROM_ADDRESS:-office@nswebdevelopment.com}
+      Email__UserName: ${EMAIL_USERNAME:-}
+      Email__Password: ${EMAIL_PASSWORD:-}
+    ports:
+      - "127.0.0.1:7860:7860"
+    networks:
+      - frontend
+      - backend
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      WWW_DOMAIN: ${WWW_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - frontend
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  sqlserver_data:
+  sqlserver_backups:
+  caddy_data:
+  caddy_config:

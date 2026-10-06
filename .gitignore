@@ -4,6 +4,8 @@ bin/
 obj/
 *.log
 deploy/azure-vm/.env
+deploy/hetzner/.env
+deploy/hetzner/backups/
 .dotnet-home/
 .nuget/
 
