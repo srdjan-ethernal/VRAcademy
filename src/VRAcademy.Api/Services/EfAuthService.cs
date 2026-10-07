@@ -68,6 +68,7 @@ public sealed class EfAuthService : IAuthService
         };
 
         _dbContext.Users.Add(user);
+        UserWorkerProvisioner.EnsureWorker(_dbContext, user);
         _dbContext.SaveChanges();
 
         return Result<AuthResponse>.Success(CreateAuthResponse(user, company));
@@ -145,6 +146,7 @@ public sealed class EfAuthService : IAuthService
         };
 
         _dbContext.Users.Add(user);
+        UserWorkerProvisioner.EnsureWorker(_dbContext, user);
         _dbContext.SaveChanges();
         return Result<AuthResponse>.Success(CreateAuthResponse(user, company));
     }
@@ -257,6 +259,7 @@ public sealed class EfAuthService : IAuthService
         };
 
         _dbContext.Users.Add(user);
+        UserWorkerProvisioner.EnsureWorker(_dbContext, user);
         _dbContext.SaveChanges();
 
         return Result<UserProfileResponse>.Success(ToProfile(user, company));
@@ -417,7 +420,7 @@ public sealed class EfAuthService : IAuthService
             }
 
             var password = HashPassword(request.AdministratorPassword);
-            _dbContext.Users.Add(new UserEntity
+            var administrator = new UserEntity
             {
                 Id = Guid.NewGuid(),
                 CompanyId = company.Id,
@@ -428,7 +431,9 @@ public sealed class EfAuthService : IAuthService
                 CreatedAt = DateTimeOffset.UtcNow,
                 PasswordHash = password.Hash,
                 PasswordSalt = password.Salt
-            });
+            };
+            _dbContext.Users.Add(administrator);
+            UserWorkerProvisioner.EnsureWorker(_dbContext, administrator);
         }
 
         _dbContext.SaveChanges();

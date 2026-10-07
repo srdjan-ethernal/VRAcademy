@@ -15,6 +15,12 @@ public sealed class InMemoryAuthService : IAuthService
     private readonly List<Company> _companies = new();
     private readonly List<StoredUser> _users = new();
     private readonly List<AuthSession> _sessions = new();
+    private readonly ITrainingRepository _trainingRepository;
+
+    public InMemoryAuthService(ITrainingRepository trainingRepository)
+    {
+        _trainingRepository = trainingRepository;
+    }
 
     public Result<AuthResponse> Register(RegisterUserRequest request)
     {
@@ -60,6 +66,7 @@ public sealed class InMemoryAuthService : IAuthService
 
             var storedUser = new StoredUser(account, password.Hash, password.Salt);
             _users.Add(storedUser);
+            EnsureWorker(storedUser);
 
             return Result<AuthResponse>.Success(CreateAuthResponse(storedUser, company));
         }
@@ -137,6 +144,7 @@ public sealed class InMemoryAuthService : IAuthService
                 DateTimeOffset.UtcNow);
             storedUser = new StoredUser(account, password.Hash, password.Salt);
             _users.Add(storedUser);
+            EnsureWorker(storedUser);
 
             return Result<AuthResponse>.Success(CreateAuthResponse(storedUser, company));
         }
@@ -274,6 +282,7 @@ public sealed class InMemoryAuthService : IAuthService
 
             var storedUser = new StoredUser(account, password.Hash, password.Salt);
             _users.Add(storedUser);
+            EnsureWorker(storedUser);
 
             return Result<UserProfileResponse>.Success(ToProfile(storedUser, company));
         }
@@ -455,7 +464,9 @@ public sealed class InMemoryAuthService : IAuthService
                     request.AdministratorLastName.Trim(),
                     UserRole.CompanyAdministrator,
                     DateTimeOffset.UtcNow);
-                _users.Add(new StoredUser(account, password.Hash, password.Salt));
+                var storedUser = new StoredUser(account, password.Hash, password.Salt);
+                _users.Add(storedUser);
+                EnsureWorker(storedUser);
             }
 
             return Result<CompanyResponse>.Success(ToCompanyResponse(company));
@@ -497,6 +508,21 @@ public sealed class InMemoryAuthService : IAuthService
 
             return Result<CompanyResponse>.Success(response);
         }
+    }
+
+    private void EnsureWorker(StoredUser user)
+    {
+        if (_trainingRepository.GetWorkerByEmail(user.CompanyId, user.Email) is not null)
+        {
+            return;
+        }
+
+        _trainingRepository.CreateWorker(user.CompanyId, new CreateWorkerRequest(
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            UserWorkerProvisioner.CreateEmployeeNumber(user.Id),
+            "-"));
     }
 
     private AuthResponse CreateAuthResponse(StoredUser storedUser, Company company)

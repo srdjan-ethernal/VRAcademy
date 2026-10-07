@@ -52,11 +52,12 @@ public static class DemoAccountSeeder
             existingUser.PasswordHash = password.Hash;
             existingUser.PasswordSalt = password.Salt;
             dbContext.AuthSessions.RemoveRange(dbContext.AuthSessions.Where(session => session.UserId == existingUser.Id));
+            UserWorkerProvisioner.EnsureWorker(dbContext, existingUser);
             dbContext.SaveChanges();
             return;
         }
 
-        dbContext.Users.Add(new UserEntity
+        var user = new UserEntity
         {
             Id = Guid.NewGuid(),
             CompanyId = company.Id,
@@ -67,7 +68,9 @@ public static class DemoAccountSeeder
             CreatedAt = DateTimeOffset.UtcNow,
             PasswordHash = password.Hash,
             PasswordSalt = password.Salt
-        });
+        };
+        dbContext.Users.Add(user);
+        UserWorkerProvisioner.EnsureWorker(dbContext, user);
 
         dbContext.SaveChanges();
     }

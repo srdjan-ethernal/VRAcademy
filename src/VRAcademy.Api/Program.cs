@@ -1114,10 +1114,11 @@ static void EnsureWorkersForUserAccounts(Guid companyId, IAuthService authServic
 {
     var workersByEmail = repository.GetWorkers(companyId)
         .Where(worker => !string.IsNullOrWhiteSpace(worker.Email))
-        .ToDictionary(worker => worker.Email.Trim().ToLowerInvariant(), worker => worker);
+        .GroupBy(worker => worker.Email.Trim().ToLowerInvariant())
+        .ToDictionary(group => group.Key, group => group.First());
 
     var users = authService.GetUsersForCompany(companyId)
-        .Where(user => user.Role == UserRole.User && !string.IsNullOrWhiteSpace(user.Email))
+        .Where(user => !string.IsNullOrWhiteSpace(user.Email))
         .ToList();
 
     foreach (var user in users)
@@ -1128,12 +1129,11 @@ static void EnsureWorkersForUserAccounts(Guid companyId, IAuthService authServic
             continue;
         }
 
-        var employeeNumber = $"USR-{user.Id:N}"[..16];
         var result = repository.CreateWorker(companyId, new CreateWorkerRequest(
             user.FirstName,
             user.LastName,
             user.Email,
-            employeeNumber,
+            UserWorkerProvisioner.CreateEmployeeNumber(user.Id),
             "-"));
 
         if (result.IsSuccess && result.Value is not null)
