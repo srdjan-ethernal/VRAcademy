@@ -1,4 +1,4 @@
-{$APP_DOMAIN} {
+(vracademy) {
     encode zstd gzip
 
     header {
@@ -9,6 +9,14 @@
     }
 
     reverse_proxy app:7860
+}
+
+{$APP_DOMAIN} {
+    import vracademy
+}
+
+http://{$SERVER_IP} {
+    import vracademy
 }
 
 {$WWW_DOMAIN} {

@@ -41,6 +41,7 @@ services:
       Database__FallbackToInMemory: "false"
       Cors__AllowAnyOrigin: "false"
       Cors__AllowedOrigins__0: https://${APP_DOMAIN}
+      Cors__AllowedOrigins__1: http://${SERVER_IP}
       ConnectionStrings__TrainingDatabase: Server=sqlserver,1433;Database=VRAcademyTraining;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=True;TrustServerCertificate=True;MultipleActiveResultSets=True;Connection Timeout=30
       DemoAccount__Enabled: ${BOOTSTRAP_ADMIN_ENABLED:-false}
       DemoAccount__CompanyName: ${BOOTSTRAP_ADMIN_COMPANY:-Ethernal}
@@ -71,6 +72,7 @@ services:
     environment:
       APP_DOMAIN: ${APP_DOMAIN}
       WWW_DOMAIN: ${WWW_DOMAIN}
+      SERVER_IP: ${SERVER_IP}
     ports:
       - "80:80"
       - "443:443"

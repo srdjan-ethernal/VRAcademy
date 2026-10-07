@@ -22,6 +22,11 @@ if ! grep -Eq '^WWW_DOMAIN=[A-Za-z0-9.-]+$' "$ENV_FILE"; then
   exit 1
 fi
 
+if ! grep -Eq '^SERVER_IP=([0-9]{1,3}\.){3}[0-9]{1,3}$' "$ENV_FILE"; then
+  echo "Set SERVER_IP to the public Hetzner IPv4 address in deploy/hetzner/.env"
+  exit 1
+fi
+
 if ! grep -Eq '^MSSQL_SA_PASSWORD=.{16,}$' "$ENV_FILE" || grep -q '^MSSQL_SA_PASSWORD=CHANGE_ME' "$ENV_FILE"; then
   echo "Set a strong MSSQL_SA_PASSWORD with at least 16 characters."
   exit 1

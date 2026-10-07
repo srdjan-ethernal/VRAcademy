@@ -48,10 +48,14 @@ At minimum, set:
 
 ```text
 APP_DOMAIN=vracademy.io
+WWW_DOMAIN=www.vracademy.io
+SERVER_IP=your-public-Hetzner-IPv4-address
 MSSQL_SA_PASSWORD=a-strong-unique-password
 ```
 
 The `.env` file is ignored by Git. Do not commit it.
+
+Before DNS is moved, the application is also available at `http://SERVER_IP`. This temporary IP endpoint uses plain HTTP, so use it only for visual checks. Do not enter production passwords or sensitive data until the domain is using HTTPS.
 
 When importing the existing Azure database, leave `BOOTSTRAP_ADMIN_ENABLED=false` because the existing administrator will be imported with the data. For a completely fresh database, set the bootstrap values and enable them only for the first deployment:
 
