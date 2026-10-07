@@ -224,7 +224,18 @@
     ],
   };
 
-  function makePack(config) {
+  const trainingPacks = {
+    es: { eyebrow: "Formacion VR", title: "Preparacion del curso", copy: "Comprobamos el curso asignado y preparamos el inicio seguro de la simulacion.", loading: "Cargando formacion...", backToPortal: "Volver a mi portal", assignedCourse: "Curso asignado", courseId: "ID del curso", examId: "ExamId", status: "Estado", dueDate: "Fecha limite", launch: "Iniciar simulacion VR", launchHint: "La simulacion se abrira en una nueva pestana.", ready: "La formacion esta lista para comenzar.", missingCourse: "Falta el ID del curso. Vuelva al portal e intentelo de nuevo.", notAssigned: "Esta formacion no se encuentra entre sus cursos asignados.", unavailable: "Los datos de la formacion no estan disponibles." },
+    fr: { eyebrow: "Formation VR", title: "Preparation du cours", copy: "Nous verifions le cours attribue et preparons le lancement securise de la simulation.", loading: "Chargement de la formation...", backToPortal: "Retour a mon portail", assignedCourse: "Cours attribue", courseId: "ID du cours", examId: "ExamId", status: "Statut", dueDate: "Echeance", launch: "Lancer la simulation VR", launchHint: "La simulation s'ouvrira dans un nouvel onglet.", ready: "La formation est prete a demarrer.", missingCourse: "L'ID du cours est manquant. Revenez au portail et reessayez.", notAssigned: "Cette formation ne figure pas parmi vos cours attribues.", unavailable: "Les donnees de formation sont indisponibles." },
+    de: { eyebrow: "VR-Training", title: "Kursvorbereitung", copy: "Der zugewiesene Kurs wird gepruft und fur den sicheren Start vorbereitet.", loading: "Training wird geladen...", backToPortal: "Zuruck zu meinem Portal", assignedCourse: "Zugewiesener Kurs", courseId: "Kurs-ID", examId: "ExamId", status: "Status", dueDate: "Falligkeit", launch: "VR-Simulation starten", launchHint: "Die Simulation wird in einem neuen Tab geoffnet.", ready: "Das Training kann gestartet werden.", missingCourse: "Die Kurs-ID fehlt. Kehren Sie zum Portal zuruck und starten Sie erneut.", notAssigned: "Dieses Training wurde nicht unter Ihren zugewiesenen Kursen gefunden.", unavailable: "Die Trainingsdaten sind derzeit nicht verfugbar." },
+    pt: { eyebrow: "Treinamento em VR", title: "Preparacao do curso", copy: "Estamos verificando o curso atribuido e preparando o inicio seguro da simulacao.", loading: "Carregando treinamento...", backToPortal: "Voltar ao meu portal", assignedCourse: "Curso atribuido", courseId: "ID do curso", examId: "ExamId", status: "Status", dueDate: "Prazo", launch: "Iniciar simulacao VR", launchHint: "A simulacao sera aberta em uma nova guia.", ready: "O treinamento esta pronto para iniciar.", missingCourse: "O ID do curso esta ausente. Volte ao portal e tente novamente.", notAssigned: "Este treinamento nao foi encontrado entre os cursos atribuidos.", unavailable: "Os dados do treinamento nao estao disponiveis." },
+    ar: { eyebrow: "تدريب الواقع الافتراضي", title: "إعداد الدورة", copy: "نتحقق من الدورة المخصصة ونجهز التشغيل الآمن للمحاكاة.", loading: "جار تحميل التدريب...", backToPortal: "العودة إلى بوابتي", assignedCourse: "الدورة المخصصة", courseId: "معرف الدورة", examId: "ExamId", status: "الحالة", dueDate: "الموعد النهائي", launch: "تشغيل محاكاة الواقع الافتراضي", launchHint: "ستفتح المحاكاة في علامة تبويب جديدة.", ready: "التدريب جاهز للتشغيل.", missingCourse: "معرف الدورة غير موجود. ارجع إلى البوابة وحاول مرة أخرى.", notAssigned: "لم يتم العثور على هذا التدريب ضمن الدورات المخصصة لك.", unavailable: "بيانات التدريب غير متاحة حاليا." },
+    zh: { eyebrow: "VR 培训", title: "课程准备", copy: "正在检查已分配课程并准备安全启动模拟。", loading: "正在加载培训...", backToPortal: "返回我的门户", assignedCourse: "已分配课程", courseId: "课程 ID", examId: "ExamId", status: "状态", dueDate: "截止日期", launch: "启动 VR 模拟", launchHint: "模拟将在新标签页中打开。", ready: "培训已准备好启动。", missingCourse: "缺少课程 ID。请返回门户并重新启动培训。", notAssigned: "在您分配的课程中找不到此培训。", unavailable: "培训数据当前不可用。" },
+    ja: { eyebrow: "VRトレーニング", title: "コースの準備", copy: "割り当てられたコースを確認し、安全にシミュレーションを開始する準備をしています。", loading: "トレーニングを読み込み中...", backToPortal: "ポータルに戻る", assignedCourse: "割り当てられたコース", courseId: "コースID", examId: "ExamId", status: "ステータス", dueDate: "期限", launch: "VRシミュレーションを開始", launchHint: "シミュレーションは新しいタブで開きます。", ready: "トレーニングを開始できます。", missingCourse: "コースIDがありません。ポータルに戻って再度開始してください。", notAssigned: "割り当てられたコースにこのトレーニングが見つかりません。", unavailable: "トレーニングデータを利用できません。" },
+    hi: { eyebrow: "VR प्रशिक्षण", title: "कोर्स की तैयारी", copy: "हम दिए गए कोर्स की जांच कर रहे हैं और सिमुलेशन को सुरक्षित रूप से शुरू करने की तैयारी कर रहे हैं।", loading: "प्रशिक्षण लोड हो रहा है...", backToPortal: "मेरे पोर्टल पर वापस जाएं", assignedCourse: "दिया गया कोर्स", courseId: "कोर्स ID", examId: "ExamId", status: "स्थिति", dueDate: "अंतिम तिथि", launch: "VR सिमुलेशन शुरू करें", launchHint: "सिमुलेशन नए टैब में खुलेगा।", ready: "प्रशिक्षण शुरू करने के लिए तैयार है।", missingCourse: "कोर्स ID उपलब्ध नहीं है। पोर्टल पर लौटकर फिर से शुरू करें।", notAssigned: "यह प्रशिक्षण आपके दिए गए कोर्स में नहीं मिला।", unavailable: "प्रशिक्षण डेटा अभी उपलब्ध नहीं है।" },
+  };
+
+  function makePack(config, code) {
     const nav = config.nav;
     const pricing = config.pricing;
     const auth = config.auth;
@@ -249,12 +260,13 @@
       certificates: { eyebrow: certificate[0], title: certificate[1], copy: certificate[2], cardTitle: certificate[3], viewEyebrow: certificate[4], viewTitle: certificate[5], downloadButton: certificate[6], printButton: certificate[7], certificateIssueLabel: certificate[8], certificateValidLabel: certificate[9], certificateNumberLabel: certificate[10] },
       verify: { eyebrow: verify[0], title: verify[1], copy: verify[2], numberLabel: verify[3], button: verify[4], readyStatus: verify[5], readyTitle: verify[6], activeTitle: verify[7], missingTitle: verify[8], worker: verify[9], course: verify[10], issued: verify[11], validUntil: verify[12] },
       platform: { eyebrow: platform[0], navOverview: platform[1], navWorkers: platform[2], navTraining: platform[3], navAssignedTraining: platform[4], navCertificates: platform[5], navAccount: platform[6], logout: platform[7], statusEnrolled: platform[8], statusInProgress: platform[9], statusPassed: platform[10], statusFailed: platform[11] },
+      training: trainingPacks[code],
     };
   }
 
   window.VRAcademyLanguages = {
     names: languageNames,
-    packs: Object.fromEntries(Object.entries(configs).map(([code, config]) => [code, makePack(config)])),
+    packs: Object.fromEntries(Object.entries(configs).map(([code, config]) => [code, makePack(config, code)])),
     scenarios: scenarioPacks,
   };
 })();

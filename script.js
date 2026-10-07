@@ -139,6 +139,10 @@ const translations = {
         metaTitle: "Moj VR Academy portal",
         metaDescription: "Radnicki portal za pregled dodeljenih VR obuka, rezultata i sertifikata.",
       },
+      training: {
+        metaTitle: "VR Academy obuka",
+        metaDescription: "Pokretanje dodeljene VR Academy obuke.",
+      },
       verify: {
         metaTitle: "Provera VR Academy sertifikata",
         metaDescription: "Javna provera vazenja VR Academy sertifikata na osnovu broja sertifikata.",
@@ -474,6 +478,24 @@ const translations = {
       examIdLabel: "ExamId",
       externalExamReady: "Obuka je otvorena u novom prozoru. ExamId: {examId}.",
     },
+    training: {
+      eyebrow: "VR obuka",
+      title: "Priprema kursa",
+      copy: "Proveravamo dodeljenu obuku i pripremamo bezbedno pokretanje simulacije.",
+      loading: "Ucitavanje obuke...",
+      backToPortal: "Nazad na moj portal",
+      assignedCourse: "Dodeljeni kurs",
+      courseId: "ID kursa",
+      examId: "ExamId",
+      status: "Status",
+      dueDate: "Rok",
+      launch: "Pokreni VR simulaciju",
+      launchHint: "Simulacija ce se otvoriti u novom tabu.",
+      ready: "Obuka je spremna za pokretanje.",
+      missingCourse: "ID kursa nije prosledjen. Vratite se na portal i ponovo pokrenite obuku.",
+      notAssigned: "Ova obuka nije pronadjena medju vasim dodeljenim kursevima.",
+      unavailable: "Podaci o obuci trenutno nisu dostupni.",
+    },
     systemAdmin: {
       eyebrow: "System admin",
       title: "Kompanije i preplate",
@@ -660,6 +682,10 @@ const translations = {
       worker: {
         metaTitle: "My VR Academy portal",
         metaDescription: "Worker portal for assigned VR training, results, and certificates.",
+      },
+      training: {
+        metaTitle: "VR Academy training",
+        metaDescription: "Launch an assigned VR Academy training course.",
       },
       verify: {
         metaTitle: "VR Academy certificate verification",
@@ -994,6 +1020,24 @@ const translations = {
       downloadCertificate: "Certificate number",
       examIdLabel: "ExamId",
       externalExamReady: "Training has been opened in a new window. ExamId: {examId}.",
+    },
+    training: {
+      eyebrow: "VR training",
+      title: "Course preparation",
+      copy: "We are checking the assigned course and preparing a secure simulation launch.",
+      loading: "Loading training...",
+      backToPortal: "Back to my portal",
+      assignedCourse: "Assigned course",
+      courseId: "Course ID",
+      examId: "ExamId",
+      status: "Status",
+      dueDate: "Due date",
+      launch: "Launch VR simulation",
+      launchHint: "The simulation will open in a new tab.",
+      ready: "Training is ready to launch.",
+      missingCourse: "The course ID is missing. Return to the portal and start the training again.",
+      notAssigned: "This training was not found among your assigned courses.",
+      unavailable: "Training data is currently unavailable.",
     },
     systemAdmin: {
       eyebrow: "System admin",
@@ -1335,6 +1379,18 @@ const workerPortalLoginLinks = document.querySelectorAll("[data-worker-login-lin
 const workerPortalMetrics = document.querySelectorAll("[data-worker-metric]");
 const workerPortalEnrollments = document.querySelector("[data-worker-enrollments]");
 const workerPortalCertificates = document.querySelector("[data-worker-certificates]");
+const trainingContent = document.querySelector("[data-training-content]");
+const trainingMessage = document.querySelector("[data-training-message]");
+const trainingPageTitle = document.querySelector("[data-training-page-title]");
+const trainingPageCopy = document.querySelector("[data-training-page-copy]");
+const trainingCourseImage = document.querySelector("[data-training-image]");
+const trainingCourseTitle = document.querySelector("[data-training-course-title]");
+const trainingCourseDescription = document.querySelector("[data-training-course-description]");
+const trainingCourseId = document.querySelector("[data-training-course-id]");
+const trainingExamId = document.querySelector("[data-training-exam-id]");
+const trainingStatus = document.querySelector("[data-training-status]");
+const trainingDueDate = document.querySelector("[data-training-due-date]");
+const trainingLaunchButton = document.querySelector("[data-training-launch]");
 const systemAdminMessage = document.querySelector("[data-system-admin-message]");
 const systemAdminLogoutButton = document.querySelector("[data-system-admin-logout]");
 const systemCompanyList = document.querySelector("[data-system-company-list]");
@@ -1358,6 +1414,7 @@ let currentSystemCompanyUsers = [];
 let currentSystemCompanyWorkers = [];
 let workerSearchTerm = "";
 let certificateViewData = null;
+let activeTrainingExamId = "";
 const defaultApiBaseUrl =
   window.location.protocol.startsWith("http") &&
   !["localhost", "127.0.0.1"].includes(window.location.hostname)
@@ -1568,7 +1625,7 @@ function enforcePageAccess() {
     return false;
   }
 
-  if (pageName === "worker" && (!isLoggedIn || !isWorkerRole(role))) {
+  if ((pageName === "worker" || pageName === "training") && (!isLoggedIn || !isWorkerRole(role))) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
@@ -1782,6 +1839,12 @@ function getCourseTitle(course, language) {
     : getField(course, "nameEn") || getField(course, "nameSr");
 }
 
+function getCourseDescription(course, language) {
+  return language === "sr"
+    ? getField(course, "descriptionSr") || getField(course, "descriptionEn")
+    : getField(course, "descriptionEn") || getField(course, "descriptionSr");
+}
+
 function getCourseLabel(course, language) {
   if (course?.content) {
     return course.content[language].label;
@@ -1862,6 +1925,15 @@ function getExternalExamCheckUrl(examId) {
   }
 
   return `${getExternalBaseUrl(externalExamCheckBaseUrl)}/check/${encodeURIComponent(examId)}`;
+}
+
+function getTrainingPageUrl(courseId, enrollmentId) {
+  const params = new URLSearchParams({
+    courseId: String(courseId || ""),
+    enrollmentId: String(enrollmentId || ""),
+  });
+
+  return `training.html?${params.toString()}`;
 }
 
 function openExternalTrainingWindow(url) {
@@ -2730,6 +2802,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
           const dueAt = formatShortDate(getField(enrollment, "dueAt"), language);
           const status = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
           const enrollmentId = getField(enrollment, "id");
+          const courseId = getField(enrollment, "courseId");
           const examId = getExamId(enrollment);
           const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
           const canStart =
@@ -2740,7 +2813,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
               <div class="worker-course-actions">
                 ${
                   canStart
-                    ? `<button class="status-pill" type="button" data-worker-start-enrollment="${escapeAttribute(enrollmentId)}" data-worker-exam-id="${escapeAttribute(examId)}" ${isLive ? "" : "disabled"}>${dictionary.startTraining}</button>`
+                    ? `<button class="status-pill" type="button" data-worker-start-enrollment="${escapeAttribute(enrollmentId)}" data-worker-course-id="${escapeAttribute(courseId)}" data-worker-exam-id="${escapeAttribute(examId)}" ${isLive ? "" : "disabled"}>${dictionary.startTraining}</button>`
                     : ""
                 }
                 ${
@@ -2818,7 +2891,65 @@ async function loadWorkerPortalData(language) {
   renderWorkerPortal(language, result.data);
 }
 
-async function startWorkerPortalEnrollment(enrollmentId, examId, triggerButton = null) {
+async function loadTrainingPage(language) {
+  if (!trainingContent || !trainingMessage) {
+    return;
+  }
+
+  const dictionary = translations[language].training;
+  const params = new URLSearchParams(window.location.search);
+  const courseId = params.get("courseId")?.trim();
+  const enrollmentId = params.get("enrollmentId")?.trim();
+
+  trainingContent.hidden = true;
+  activeTrainingExamId = "";
+  trainingMessage.textContent = dictionary.loading;
+
+  if (!courseId) {
+    trainingMessage.textContent = dictionary.missingCourse;
+    return;
+  }
+
+  const result = await apiRequest("/api/worker-portal/me", { auth: true });
+  if (!result.ok) {
+    trainingMessage.textContent = result.error || dictionary.unavailable;
+    return;
+  }
+
+  const courses = getField(result.data, "courses") || [];
+  const enrollments = getField(result.data, "enrollments") || [];
+  const course = findCourseForRecord(courses, courseId);
+  const enrollment = enrollments.find((item) => {
+    const matchesCourse = String(getField(item, "courseId")) === String(courseId);
+    const matchesEnrollment = !enrollmentId || String(getField(item, "id")) === String(enrollmentId);
+    return matchesCourse && matchesEnrollment;
+  });
+
+  if (!course || !enrollment) {
+    trainingMessage.textContent = dictionary.notAssigned;
+    return;
+  }
+
+  const title = getCourseTitle(course, language) || dictionary.title;
+  const examId = getExamId(enrollment);
+  activeTrainingExamId = examId === "-" ? "" : examId;
+
+  trainingPageTitle.textContent = title;
+  trainingPageCopy.textContent = getCourseDescription(course, language) || dictionary.copy;
+  trainingCourseImage.src = getCourseImage(course);
+  trainingCourseImage.alt = getCourseAlt(course, language);
+  trainingCourseTitle.textContent = title;
+  trainingCourseDescription.textContent = getCourseDescription(course, language) || dictionary.copy;
+  trainingCourseId.textContent = String(getField(course, "id") || courseId);
+  trainingExamId.textContent = examId;
+  trainingStatus.textContent = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
+  trainingDueDate.textContent = formatShortDate(getField(enrollment, "dueAt"), language);
+  trainingLaunchButton.disabled = !activeTrainingExamId;
+  trainingContent.hidden = false;
+  trainingMessage.textContent = dictionary.ready;
+}
+
+async function startWorkerPortalEnrollment(enrollmentId, courseId, triggerButton = null) {
   if (!getAccessToken()) {
     setWorkerPortalMessage(translations[currentLanguage].workerPortal.loginRequired);
     return;
@@ -2828,7 +2959,6 @@ async function startWorkerPortalEnrollment(enrollmentId, examId, triggerButton =
     triggerButton.disabled = true;
   }
 
-  openExternalTrainingWindow(getExternalExamUrl(examId));
   setWorkerPortalMessage(translations[currentLanguage].workerPortal.startWorking);
   const result = await apiRequest(`/api/worker-portal/enrollments/${encodeURIComponent(enrollmentId)}/start`, {
     method: "POST",
@@ -2843,12 +2973,7 @@ async function startWorkerPortalEnrollment(enrollmentId, examId, triggerButton =
     return;
   }
 
-  const resolvedExamId = getExamId(result.data) || examId;
-  setWorkerPortalMessage(
-    translations[currentLanguage].workerPortal.externalExamReady.replace("{examId}", resolvedExamId) ||
-      translations[currentLanguage].workerPortal.startSuccess,
-  );
-  loadWorkerPortalData(currentLanguage);
+  window.location.href = getTrainingPageUrl(getField(result.data, "courseId") || courseId, enrollmentId);
 }
 
 async function checkWorkerPortalEnrollment(enrollmentId, examId, durationMinutes, triggerButton = null) {
@@ -3392,6 +3517,7 @@ function applyTranslations(language) {
   renderScenarios(language);
   loadPlatformData(language);
   loadWorkerPortalData(language);
+  loadTrainingPage(language);
   loadSystemAdminData(language);
   loadSystemCompanyData(language);
   applyCertificateViewParams();
@@ -3636,10 +3762,14 @@ document.addEventListener("click", (event) => {
   }
 
   const enrollmentId = startButton.dataset.workerStartEnrollment;
-  const examId = startButton.dataset.workerExamId;
+  const courseId = startButton.dataset.workerCourseId;
   if (enrollmentId) {
-    startWorkerPortalEnrollment(enrollmentId, examId, startButton);
+    startWorkerPortalEnrollment(enrollmentId, courseId, startButton);
   }
+});
+
+trainingLaunchButton?.addEventListener("click", () => {
+  openExternalTrainingWindow(getExternalExamUrl(activeTrainingExamId));
 });
 
 document.addEventListener("click", (event) => {

@@ -932,6 +932,113 @@ h1 {
     var(--page);
 }
 
+.training-shell {
+  padding: 136px clamp(20px, 5vw, 64px) 72px;
+  background:
+    linear-gradient(180deg, rgba(238, 245, 244, 0.9), rgba(247, 249, 251, 0)),
+    var(--page);
+}
+
+.training-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.training-heading h1 {
+  max-width: 820px;
+  margin-bottom: 12px;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1;
+}
+
+.training-heading > div > p:not(.eyebrow, .platform-session) {
+  max-width: 760px;
+  color: var(--muted);
+}
+
+.training-workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.training-media {
+  min-height: 100%;
+  background: #dce8ea;
+}
+
+.training-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  object-fit: cover;
+}
+
+.training-details {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(28px, 5vw, 64px);
+}
+
+.training-details h2 {
+  margin: 8px 0 14px;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+}
+
+.training-details > p {
+  color: var(--muted);
+}
+
+.training-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 28px 0;
+}
+
+.training-facts div {
+  min-width: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.training-facts dt {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.training-facts dd {
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.training-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.training-actions p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .app-hero {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(420px, 0.85fr);
@@ -1900,8 +2007,36 @@ h1 {
 
   .app-hero,
   .platform-shell,
-  .worker-shell {
+  .worker-shell,
+  .training-shell {
     padding: 112px 18px 48px;
+  }
+
+  .training-heading,
+  .training-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .training-heading .button {
+    width: 100%;
+  }
+
+  .training-media,
+  .training-media img {
+    min-height: 260px;
+    max-height: 360px;
+  }
+
+  .training-details {
+    padding: 24px;
+  }
+
+  .training-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .training-actions .button {
+    width: 100%;
   }
 
   .pricing-hero h1 {
