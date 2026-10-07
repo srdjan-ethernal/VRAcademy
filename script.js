@@ -413,6 +413,10 @@ const translations = {
       assignTrainingLoginRequired: "Prijavite se da biste dodelili obuku.",
       assignTrainingWorking: "Dodeljivanje obuke...",
       assignTrainingSuccess: "Obuka je dodeljena. ExamId: {examId}.",
+      resetTraining: "Resetuj sve obuke",
+      resetTrainingConfirm: "Vratiti sve obuke organizacije na status Dodeljeno i obrisati njihove test sertifikate?",
+      resetTrainingWorking: "Resetovanje obuka...",
+      resetTrainingSuccess: "Resetovano obuka: {enrollments}. Obrisano test sertifikata: {certificates}.",
       enrollmentsLabel: "Obuke",
       enrollmentsTitle: "Dodeljene obuke",
       enrollmentExamId: "ExamId",
@@ -491,6 +495,8 @@ const translations = {
       dueDate: "Rok",
       launch: "Pokreni VR simulaciju",
       launchHint: "Simulacija ce se otvoriti u novom tabu.",
+      localTitle: "Obuka je pokrenuta lokalno",
+      localCopy: "Ostanite na ovoj strani tokom trajanja obuke.",
       ready: "Obuka je spremna za pokretanje.",
       missingCourse: "ID kursa nije prosledjen. Vratite se na portal i ponovo pokrenite obuku.",
       notAssigned: "Ova obuka nije pronadjena medju vasim dodeljenim kursevima.",
@@ -956,6 +962,10 @@ const translations = {
       assignTrainingLoginRequired: "Sign in to assign training.",
       assignTrainingWorking: "Assigning training...",
       assignTrainingSuccess: "Training has been assigned. ExamId: {examId}.",
+      resetTraining: "Reset all training",
+      resetTrainingConfirm: "Reset all organization training to Enrolled and delete the related test certificates?",
+      resetTrainingWorking: "Resetting training...",
+      resetTrainingSuccess: "Reset training records: {enrollments}. Deleted test certificates: {certificates}.",
       enrollmentsLabel: "Training",
       enrollmentsTitle: "Assigned training",
       enrollmentExamId: "ExamId",
@@ -1034,6 +1044,8 @@ const translations = {
       dueDate: "Due date",
       launch: "Launch VR simulation",
       launchHint: "The simulation will open in a new tab.",
+      localTitle: "Training is running locally",
+      localCopy: "Stay on this page for the duration of the training.",
       ready: "Training is ready to launch.",
       missingCourse: "The course ID is missing. Return to the portal and start the training again.",
       notAssigned: "This training was not found among your assigned courses.",
@@ -1351,6 +1363,8 @@ const enrollmentWorkerSelect = document.querySelector("[data-enrollment-worker]"
 const enrollmentCourseSelect = document.querySelector("[data-enrollment-course]");
 const enrollmentMessage = document.querySelector("[data-enrollment-message]");
 const enrollmentRecords = document.querySelector("[data-enrollment-records]");
+const resetEnrollmentsButton = document.querySelector("[data-reset-enrollments]");
+const resetEnrollmentsMessage = document.querySelector("[data-reset-enrollments-message]");
 const completionForm = document.querySelector("[data-completion-form]");
 const completionEnrollmentSelect = document.querySelector("[data-completion-enrollment]");
 const completionMessage = document.querySelector("[data-completion-message]");
@@ -1390,7 +1404,6 @@ const trainingCourseId = document.querySelector("[data-training-course-id]");
 const trainingExamId = document.querySelector("[data-training-exam-id]");
 const trainingStatus = document.querySelector("[data-training-status]");
 const trainingDueDate = document.querySelector("[data-training-due-date]");
-const trainingLaunchButton = document.querySelector("[data-training-launch]");
 const systemAdminMessage = document.querySelector("[data-system-admin-message]");
 const systemAdminLogoutButton = document.querySelector("[data-system-admin-logout]");
 const systemCompanyList = document.querySelector("[data-system-company-list]");
@@ -1414,7 +1427,6 @@ let currentSystemCompanyUsers = [];
 let currentSystemCompanyWorkers = [];
 let workerSearchTerm = "";
 let certificateViewData = null;
-let activeTrainingExamId = "";
 const defaultApiBaseUrl =
   window.location.protocol.startsWith("http") &&
   !["localhost", "127.0.0.1"].includes(window.location.hostname)
@@ -1424,10 +1436,6 @@ const apiBaseUrl =
   window.SAFETY_SIM_API_BASE_URL ||
   localStorage.getItem("safetySimApiBaseUrl") ||
   defaultApiBaseUrl;
-const externalTrainingBaseUrl =
-  window.VR_ACADEMY_TRAINING_BASE_URL ||
-  localStorage.getItem("vrAcademyTrainingBaseUrl") ||
-  "https://play.unity.com/en/games/b9c15d03-6f3b-420f-ad71-b49e178fcfe7/builds";
 const externalExamCheckBaseUrl =
   window.VR_ACADEMY_EXAM_CHECK_BASE_URL ||
   localStorage.getItem("vrAcademyExamCheckBaseUrl") ||
@@ -1697,6 +1705,16 @@ function setEnrollmentMessage(message, tone = "") {
   enrollmentMessage.classList.toggle("is-success", tone === "success");
 }
 
+function setResetEnrollmentsMessage(message, tone = "") {
+  if (!resetEnrollmentsMessage) {
+    return;
+  }
+
+  resetEnrollmentsMessage.textContent = message;
+  resetEnrollmentsMessage.classList.toggle("is-error", tone === "error");
+  resetEnrollmentsMessage.classList.toggle("is-success", tone === "success");
+}
+
 function setCompletionMessage(message, tone = "") {
   if (!completionMessage) {
     return;
@@ -1909,14 +1927,6 @@ function getExamId(enrollment) {
 
 function getExternalBaseUrl(baseUrl) {
   return String(baseUrl || "").replace(/\/+$/, "");
-}
-
-function getExternalExamUrl(examId) {
-  if (!examId || examId === "-") {
-    return "";
-  }
-
-  return `${getExternalBaseUrl(externalTrainingBaseUrl)}/${encodeURIComponent(examId)}`;
 }
 
 function getExternalExamCheckUrl(examId) {
@@ -2902,7 +2912,6 @@ async function loadTrainingPage(language) {
   const enrollmentId = params.get("enrollmentId")?.trim();
 
   trainingContent.hidden = true;
-  activeTrainingExamId = "";
   trainingMessage.textContent = dictionary.loading;
 
   if (!courseId) {
@@ -2932,7 +2941,6 @@ async function loadTrainingPage(language) {
 
   const title = getCourseTitle(course, language) || dictionary.title;
   const examId = getExamId(enrollment);
-  activeTrainingExamId = examId === "-" ? "" : examId;
 
   trainingPageTitle.textContent = title;
   trainingPageCopy.textContent = getCourseDescription(course, language) || dictionary.copy;
@@ -2944,9 +2952,8 @@ async function loadTrainingPage(language) {
   trainingExamId.textContent = examId;
   trainingStatus.textContent = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
   trainingDueDate.textContent = formatShortDate(getField(enrollment, "dueAt"), language);
-  trainingLaunchButton.disabled = !activeTrainingExamId;
   trainingContent.hidden = false;
-  trainingMessage.textContent = dictionary.ready;
+  trainingMessage.textContent = dictionary.localTitle;
 }
 
 async function startWorkerPortalEnrollment(enrollmentId, courseId, triggerButton = null) {
@@ -3768,10 +3775,6 @@ document.addEventListener("click", (event) => {
   }
 });
 
-trainingLaunchButton?.addEventListener("click", () => {
-  openExternalTrainingWindow(getExternalExamUrl(activeTrainingExamId));
-});
-
 document.addEventListener("click", (event) => {
   const checkButton = event.target.closest("[data-worker-check-enrollment]");
   if (!checkButton) {
@@ -4091,6 +4094,42 @@ enrollmentForm?.addEventListener("submit", async (event) => {
 
   setEnrollmentMessage(
     translations[currentLanguage].platform.assignTrainingSuccess.replace("{examId}", getExamId(result.data)),
+    "success",
+  );
+  loadPlatformData(currentLanguage);
+});
+
+resetEnrollmentsButton?.addEventListener("click", async () => {
+  const dictionary = translations[currentLanguage].platform;
+  if (!getAccessToken() || !platformDataLoadedFromApi) {
+    setResetEnrollmentsMessage(dictionary.assignTrainingLoginRequired, "error");
+    return;
+  }
+
+  if (!window.confirm(dictionary.resetTrainingConfirm)) {
+    return;
+  }
+
+  resetEnrollmentsButton.disabled = true;
+  setResetEnrollmentsMessage(dictionary.resetTrainingWorking);
+
+  const result = await apiRequest("/api/enrollments/reset", {
+    method: "POST",
+    auth: true,
+  });
+
+  resetEnrollmentsButton.disabled = false;
+  if (!result.ok) {
+    setResetEnrollmentsMessage(result.error, "error");
+    return;
+  }
+
+  const enrollmentCount = String(getField(result.data, "enrollmentCount") ?? 0);
+  const certificateCount = String(getField(result.data, "certificateCount") ?? 0);
+  setResetEnrollmentsMessage(
+    dictionary.resetTrainingSuccess
+      .replace("{enrollments}", enrollmentCount)
+      .replace("{certificates}", certificateCount),
     "success",
   );
   loadPlatformData(currentLanguage);

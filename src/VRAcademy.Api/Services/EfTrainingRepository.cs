@@ -299,7 +299,7 @@ public sealed class EfTrainingRepository : ITrainingRepository
             certificate is null ? null : ToDomain(certificate)));
     }
 
-    public ResetEnrollmentsResponse ResetEnrollmentsToUnpassed(Guid companyId)
+    public ResetEnrollmentsResponse ResetEnrollments(Guid companyId)
     {
         var enrollments = _dbContext.Enrollments
             .Include(enrollment => enrollment.Worker)
@@ -319,7 +319,7 @@ public sealed class EfTrainingRepository : ITrainingRepository
 
         foreach (var enrollment in enrollments)
         {
-            enrollment.Status = EnrollmentStatus.Failed;
+            enrollment.Status = EnrollmentStatus.Enrolled;
             enrollment.CompletedAt = null;
             enrollment.Score = null;
             enrollment.DurationMinutes = null;
@@ -328,7 +328,7 @@ public sealed class EfTrainingRepository : ITrainingRepository
         _dbContext.Certificates.RemoveRange(certificates);
         _dbContext.SaveChanges();
 
-        return new ResetEnrollmentsResponse(enrollments.Count, certificates.Count, EnrollmentStatus.Failed);
+        return new ResetEnrollmentsResponse(enrollments.Count, certificates.Count, EnrollmentStatus.Enrolled);
     }
 
     public DashboardSummaryResponse GetDashboardSummary(Guid companyId)

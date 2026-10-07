@@ -227,7 +227,7 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
         }
     }
 
-    public ResetEnrollmentsResponse ResetEnrollmentsToUnpassed(Guid companyId)
+    public ResetEnrollmentsResponse ResetEnrollments(Guid companyId)
     {
         lock (_lock)
         {
@@ -252,7 +252,7 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
 
                 _enrollments[index] = enrollment with
                 {
-                    Status = EnrollmentStatus.Failed,
+                    Status = EnrollmentStatus.Enrolled,
                     CompletedAt = null,
                     Score = null,
                     DurationMinutes = null
@@ -263,7 +263,7 @@ public sealed class InMemoryTrainingRepository : ITrainingRepository
             var removedCertificateCount = _certificates.RemoveAll(certificate =>
                 enrollmentKeys.Contains(CreateEnrollmentCertificateKey(certificate.WorkerId, certificate.CourseId)));
 
-            return new ResetEnrollmentsResponse(resetCount, removedCertificateCount, EnrollmentStatus.Failed);
+            return new ResetEnrollmentsResponse(resetCount, removedCertificateCount, EnrollmentStatus.Enrolled);
         }
     }
 

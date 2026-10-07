@@ -212,6 +212,7 @@ app.MapGet("/api", () => Results.Ok(new
         "POST /api/workers",
         "POST /api/enrollments",
         "GET /api/enrollments",
+        "POST /api/enrollments/reset",
         "POST /api/enrollments/{enrollmentId}/complete",
         "GET /api/certificates",
         "GET /api/certificates/verify/{certificateNumber}",
@@ -834,7 +835,7 @@ app.MapGet("/api/enrollments", (HttpRequest request, IAuthService authService, I
         _ => Results.Unauthorized());
 });
 
-app.MapPost("/api/enrollments/reset-unpassed", (HttpRequest request, IAuthService authService, ITrainingRepository repository) =>
+app.MapPost("/api/enrollments/reset", (HttpRequest request, IAuthService authService, ITrainingRepository repository) =>
 {
     var currentUser = ResolveCurrentUser(request, authService);
     return currentUser.Match(
@@ -845,7 +846,7 @@ app.MapPost("/api/enrollments/reset-unpassed", (HttpRequest request, IAuthServic
                 return Results.Forbid();
             }
 
-            return Results.Ok(repository.ResetEnrollmentsToUnpassed(user.CompanyId));
+            return Results.Ok(repository.ResetEnrollments(user.CompanyId));
         },
         _ => Results.Unauthorized());
 });

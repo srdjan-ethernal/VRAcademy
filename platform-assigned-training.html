@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20261004-language-select" />
+    <link rel="stylesheet" href="styles.css?v=20261007-training-reset" />
   </head>
   <body data-page="platformAssignedTraining">
     <header class="site-header" data-header>
@@ -99,6 +99,12 @@
               <span class="scenario-kicker" data-i18n="platform.enrollmentsLabel">Obuke</span>
               <h2 id="enrollment-log-title" data-i18n="platform.enrollmentsTitle">Dodeljene obuke</h2>
             </div>
+            <div class="panel-heading-actions">
+              <button class="button danger" type="button" data-reset-enrollments data-i18n="platform.resetTraining">
+                Resetuj sve obuke
+              </button>
+              <p class="auth-message" data-reset-enrollments-message></p>
+            </div>
           </div>
           <div class="records-table" role="table" aria-label="Dodeljene obuke" data-i18n-aria-label="platform.enrollmentsTitle">
             <div role="row" class="records-head enrollment-head">
@@ -120,7 +126,7 @@
       <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
     </footer>
 
-    <script src="global-languages.js"></script>
-    <script src="script.js?v=20260929-global-languages"></script>
+    <script src="global-languages.js?v=20261007-training-reset"></script>
+    <script src="script.js?v=20261007-training-reset"></script>
   </body>
 </html>

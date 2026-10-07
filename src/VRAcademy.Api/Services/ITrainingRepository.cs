@@ -27,7 +27,7 @@ public interface ITrainingRepository
 
     Result<EnrollmentCompletionResponse> CompleteExternalExam(string examId, ExternalExamResultRequest request);
 
-    ResetEnrollmentsResponse ResetEnrollmentsToUnpassed(Guid companyId);
+    ResetEnrollmentsResponse ResetEnrollments(Guid companyId);
 
     DashboardSummaryResponse GetDashboardSummary(Guid companyId);
 

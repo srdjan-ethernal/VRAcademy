@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20261007-training" />
+    <link rel="stylesheet" href="styles.css?v=20261007-training-reset" />
   </head>
   <body data-page="training">
     <header class="site-header" data-header>
@@ -84,11 +84,12 @@
               </div>
             </dl>
 
-            <div class="training-actions">
-              <button class="button primary" type="button" data-training-launch data-i18n="training.launch">
-                Pokreni VR simulaciju
-              </button>
-              <p data-i18n="training.launchHint">Simulacija ce se otvoriti u novom tabu.</p>
+            <div class="training-local-session">
+              <span aria-hidden="true"></span>
+              <div>
+                <strong data-i18n="training.localTitle">Obuka je pokrenuta lokalno</strong>
+                <p data-i18n="training.localCopy">Ostanite na ovoj strani tokom trajanja obuke.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -100,7 +101,7 @@
       <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
     </footer>
 
-    <script src="global-languages.js?v=20261007-training"></script>
-    <script src="script.js?v=20261007-training"></script>
+    <script src="global-languages.js?v=20261007-training-reset"></script>
+    <script src="script.js?v=20261007-training-reset"></script>
   </body>
 </html>

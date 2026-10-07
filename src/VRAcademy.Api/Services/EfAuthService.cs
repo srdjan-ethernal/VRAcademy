@@ -61,7 +61,7 @@ public sealed class EfAuthService : IAuthService
             Email = normalizedEmail,
             FirstName = request.FirstName.Trim(),
             LastName = request.LastName.Trim(),
-            Role = UserRole.CompanyAdministrator,
+            Role = UserRole.User,
             CreatedAt = DateTimeOffset.UtcNow,
             PasswordHash = password.Hash,
             PasswordSalt = password.Salt
@@ -139,7 +139,7 @@ public sealed class EfAuthService : IAuthService
             Email = normalizedEmail,
             FirstName = request.FirstName.Trim(),
             LastName = request.LastName.Trim(),
-            Role = UserRole.CompanyAdministrator,
+            Role = UserRole.User,
             CreatedAt = DateTimeOffset.UtcNow,
             PasswordHash = password.Hash,
             PasswordSalt = password.Salt

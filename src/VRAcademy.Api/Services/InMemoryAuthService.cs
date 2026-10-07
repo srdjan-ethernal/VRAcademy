@@ -61,7 +61,7 @@ public sealed class InMemoryAuthService : IAuthService
                 normalizedEmail,
                 request.FirstName.Trim(),
                 request.LastName.Trim(),
-                UserRole.CompanyAdministrator,
+                UserRole.User,
                 DateTimeOffset.UtcNow);
 
             var storedUser = new StoredUser(account, password.Hash, password.Salt);
@@ -140,7 +140,7 @@ public sealed class InMemoryAuthService : IAuthService
                 normalizedEmail,
                 request.FirstName.Trim(),
                 request.LastName.Trim(),
-                UserRole.CompanyAdministrator,
+                UserRole.User,
                 DateTimeOffset.UtcNow);
             storedUser = new StoredUser(account, password.Hash, password.Salt);
             _users.Add(storedUser);
