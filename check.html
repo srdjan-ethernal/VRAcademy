@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VR Academy provera obuke</title>
+    <meta name="description" content="Lokalna provera rezultata dodeljene VR Academy obuke." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=20261007-local-check" />
+  </head>
+  <body data-page="check">
+    <header class="site-header" data-header>
+      <a class="brand" href="index.html#top" aria-label="Pocetak" data-i18n-aria-label="brand.home">
+        <img class="brand-icon" src="assets/vr-academy-icon.svg" alt="" />
+        <span class="brand-text">VR Academy</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Glavna navigacija" data-i18n-aria-label="nav.label">
+        <a href="index.html#scenariji" data-i18n="nav.scenarios">Scenariji</a>
+        <a href="system-admin.html" data-i18n="nav.systemAdmin">Admin</a>
+        <a href="platform.html" data-i18n="nav.platform">Platforma</a>
+        <a href="worker.html" data-i18n="nav.workerPortal">Moj portal</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Cene</a>
+        <a href="certificates.html" data-i18n="nav.certificates">Sertifikati</a>
+        <a href="verify.html" data-i18n="nav.verify">Provera</a>
+        <a href="index.html#kontakt" data-i18n="nav.contact">Kontakt</a>
+      </nav>
+
+      <a class="header-action" href="#" data-auth-logout data-i18n="platform.logout">Odjava</a>
+
+      <div class="language-switch" aria-label="Izbor jezika" data-i18n-aria-label="language.label">
+        <button type="button" data-language-option="sr" aria-pressed="true">SR</button>
+        <button type="button" data-language-option="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="nav-toggle" type="button" aria-label="Otvori navigaciju" data-i18n-aria-label="nav.open" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="training-shell" aria-labelledby="check-page-title">
+        <div class="training-heading">
+          <div>
+            <p class="eyebrow" data-i18n="checkPage.eyebrow">Provera obuke</p>
+            <h1 id="check-page-title" data-check-page-title data-i18n="checkPage.title">Provera rezultata</h1>
+            <p data-check-page-copy data-i18n="checkPage.copy">
+              Proveravamo rezultat obuke i pripremamo sertifikat.
+            </p>
+            <p class="platform-session" data-check-message data-i18n="checkPage.loading">Provera je u toku...</p>
+          </div>
+          <a class="button secondary" href="worker.html" data-i18n="checkPage.backToPortal">Nazad na moj portal</a>
+        </div>
+
+        <section class="training-workspace" data-check-content hidden aria-live="polite">
+          <div class="training-media">
+            <img data-check-image src="assets/hero-vr-training.png" alt="" />
+          </div>
+          <div class="training-details">
+            <span class="scenario-kicker" data-i18n="checkPage.courseLabel">Provereni kurs</span>
+            <h2 data-check-course-title>-</h2>
+            <p data-check-course-description>-</p>
+
+            <dl class="training-facts">
+              <div>
+                <dt data-i18n="checkPage.courseId">ID kursa</dt>
+                <dd data-check-course-id>-</dd>
+              </div>
+              <div>
+                <dt data-i18n="checkPage.examId">ExamId</dt>
+                <dd data-check-exam-id>-</dd>
+              </div>
+              <div>
+                <dt data-i18n="checkPage.status">Status</dt>
+                <dd data-check-status>-</dd>
+              </div>
+              <div>
+                <dt data-i18n="checkPage.score">Rezultat</dt>
+                <dd data-check-score>-</dd>
+              </div>
+            </dl>
+
+            <div class="check-result" data-check-result hidden>
+              <span aria-hidden="true">OK</span>
+              <div>
+                <strong data-check-result-title data-i18n="checkPage.passedTitle">Obuka je polozena</strong>
+                <p data-check-result-copy data-i18n="checkPage.passedCopy">Rezultat je evidentiran i sertifikat je kreiran.</p>
+                <a href="#" target="_blank" rel="noopener noreferrer" data-check-certificate data-i18n="checkPage.openCertificate">Otvori sertifikat</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>VR Academy</span>
+      <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
+    </footer>
+
+    <script src="global-languages.js?v=20261007-local-check"></script>
+    <script src="script.js?v=20261007-local-check"></script>
+  </body>
+</html>

@@ -143,6 +143,10 @@ const translations = {
         metaTitle: "VR Academy obuka",
         metaDescription: "Pokretanje dodeljene VR Academy obuke.",
       },
+      check: {
+        metaTitle: "VR Academy provera obuke",
+        metaDescription: "Lokalna provera rezultata dodeljene VR Academy obuke.",
+      },
       verify: {
         metaTitle: "Provera VR Academy sertifikata",
         metaDescription: "Javna provera vazenja VR Academy sertifikata na osnovu broja sertifikata.",
@@ -502,6 +506,27 @@ const translations = {
       notAssigned: "Ova obuka nije pronadjena medju vasim dodeljenim kursevima.",
       unavailable: "Podaci o obuci trenutno nisu dostupni.",
     },
+    checkPage: {
+      eyebrow: "Provera obuke",
+      title: "Provera rezultata",
+      copy: "Proveravamo rezultat obuke i pripremamo sertifikat.",
+      loading: "Provera je u toku...",
+      backToPortal: "Nazad na moj portal",
+      courseLabel: "Provereni kurs",
+      courseId: "ID kursa",
+      examId: "ExamId",
+      status: "Status",
+      score: "Rezultat",
+      passedTitle: "Obuka je polozena",
+      passedCopy: "Rezultat je evidentiran i sertifikat je kreiran.",
+      failedTitle: "Obuka nije polozena",
+      failedCopy: "Rezultat je evidentiran bez izdavanja sertifikata.",
+      openCertificate: "Otvori sertifikat",
+      ready: "Provera je zavrsena.",
+      missingCourse: "Nedostaje ID kursa ili obuke. Vratite se na portal i pokusajte ponovo.",
+      notAssigned: "Ova obuka nije pronadjena medju vasim dodeljenim kursevima.",
+      unavailable: "Rezultat obuke trenutno nije moguce proveriti.",
+    },
     systemAdmin: {
       eyebrow: "System admin",
       title: "Kompanije i preplate",
@@ -692,6 +717,10 @@ const translations = {
       training: {
         metaTitle: "VR Academy training",
         metaDescription: "Launch an assigned VR Academy training course.",
+      },
+      check: {
+        metaTitle: "VR Academy training check",
+        metaDescription: "Local result check for an assigned VR Academy training course.",
       },
       verify: {
         metaTitle: "VR Academy certificate verification",
@@ -1051,6 +1080,27 @@ const translations = {
       notAssigned: "This training was not found among your assigned courses.",
       unavailable: "Training data is currently unavailable.",
     },
+    checkPage: {
+      eyebrow: "Training check",
+      title: "Result check",
+      copy: "We are checking the training result and preparing the certificate.",
+      loading: "Checking the result...",
+      backToPortal: "Back to my portal",
+      courseLabel: "Checked course",
+      courseId: "Course ID",
+      examId: "ExamId",
+      status: "Status",
+      score: "Score",
+      passedTitle: "Training passed",
+      passedCopy: "The result was recorded and a certificate was created.",
+      failedTitle: "Training not passed",
+      failedCopy: "The result was recorded without issuing a certificate.",
+      openCertificate: "Open certificate",
+      ready: "The check is complete.",
+      missingCourse: "The course or training ID is missing. Return to the portal and try again.",
+      notAssigned: "This training was not found among your assigned courses.",
+      unavailable: "The training result cannot be checked right now.",
+    },
     systemAdmin: {
       eyebrow: "System admin",
       title: "Companies and subscriptions",
@@ -1404,6 +1454,21 @@ const trainingCourseId = document.querySelector("[data-training-course-id]");
 const trainingExamId = document.querySelector("[data-training-exam-id]");
 const trainingStatus = document.querySelector("[data-training-status]");
 const trainingDueDate = document.querySelector("[data-training-due-date]");
+const checkContent = document.querySelector("[data-check-content]");
+const checkMessage = document.querySelector("[data-check-message]");
+const checkPageTitle = document.querySelector("[data-check-page-title]");
+const checkPageCopy = document.querySelector("[data-check-page-copy]");
+const checkCourseImage = document.querySelector("[data-check-image]");
+const checkCourseTitle = document.querySelector("[data-check-course-title]");
+const checkCourseDescription = document.querySelector("[data-check-course-description]");
+const checkCourseId = document.querySelector("[data-check-course-id]");
+const checkExamId = document.querySelector("[data-check-exam-id]");
+const checkStatus = document.querySelector("[data-check-status]");
+const checkScore = document.querySelector("[data-check-score]");
+const checkResult = document.querySelector("[data-check-result]");
+const checkResultTitle = document.querySelector("[data-check-result-title]");
+const checkResultCopy = document.querySelector("[data-check-result-copy]");
+const checkCertificateLink = document.querySelector("[data-check-certificate]");
 const systemAdminMessage = document.querySelector("[data-system-admin-message]");
 const systemAdminLogoutButton = document.querySelector("[data-system-admin-logout]");
 const systemCompanyList = document.querySelector("[data-system-company-list]");
@@ -1427,6 +1492,8 @@ let currentSystemCompanyUsers = [];
 let currentSystemCompanyWorkers = [];
 let workerSearchTerm = "";
 let certificateViewData = null;
+let checkPageData = null;
+let checkPageLoading = false;
 const defaultApiBaseUrl =
   window.location.protocol.startsWith("http") &&
   !["localhost", "127.0.0.1"].includes(window.location.hostname)
@@ -1436,12 +1503,6 @@ const apiBaseUrl =
   window.SAFETY_SIM_API_BASE_URL ||
   localStorage.getItem("safetySimApiBaseUrl") ||
   defaultApiBaseUrl;
-const externalExamCheckBaseUrl =
-  window.VR_ACADEMY_EXAM_CHECK_BASE_URL ||
-  localStorage.getItem("vrAcademyExamCheckBaseUrl") ||
-  window.VR_ACADEMY_EXAM_BASE_URL ||
-  localStorage.getItem("vrAcademyExamBaseUrl") ||
-  "https://vracademy.io/";
 const authStorageKey = "safetySimAuth";
 
 if (pageName === "login") {
@@ -1633,7 +1694,7 @@ function enforcePageAccess() {
     return false;
   }
 
-  if ((pageName === "worker" || pageName === "training") && (!isLoggedIn || !isWorkerRole(role))) {
+  if ((pageName === "worker" || pageName === "training" || pageName === "check") && (!isLoggedIn || !isWorkerRole(role))) {
     window.location.href = isLoggedIn ? getDefaultPageForRole(role) : "login.html";
     return false;
   }
@@ -1925,18 +1986,6 @@ function getExamId(enrollment) {
   return getField(enrollment, "examId") || getField(enrollment, "ExamId") || "-";
 }
 
-function getExternalBaseUrl(baseUrl) {
-  return String(baseUrl || "").replace(/\/+$/, "");
-}
-
-function getExternalExamCheckUrl(examId) {
-  if (!examId || examId === "-") {
-    return "";
-  }
-
-  return `${getExternalBaseUrl(externalExamCheckBaseUrl)}/check/${encodeURIComponent(examId)}`;
-}
-
 function getTrainingPageUrl(courseId, enrollmentId) {
   const params = new URLSearchParams({
     courseId: String(courseId || ""),
@@ -1946,10 +1995,14 @@ function getTrainingPageUrl(courseId, enrollmentId) {
   return `training.html?${params.toString()}`;
 }
 
-function openExternalTrainingWindow(url) {
-  if (url) {
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
+function getCheckPageUrl(courseId, enrollmentId, durationMinutes) {
+  const params = new URLSearchParams({
+    courseId: String(courseId || ""),
+    enrollmentId: String(enrollmentId || ""),
+    durationMinutes: String(Number(durationMinutes) || 35),
+  });
+
+  return `check.html?${params.toString()}`;
 }
 
 function buildNotifications({ workers, courses, certificates, enrollments, language, workerMap, courseMap }) {
@@ -2828,7 +2881,7 @@ function renderWorkerPortal(language, apiData = null, message = "") {
                 }
                 ${
                   canCheck
-                    ? `<button class="status-pill" type="button" data-worker-check-enrollment="${escapeAttribute(enrollmentId)}" data-worker-exam-id="${escapeAttribute(examId)}" data-worker-duration="${escapeAttribute(duration)}" ${isLive ? "" : "disabled"}>${dictionary.checkTraining}</button>`
+                    ? `<button class="status-pill" type="button" data-worker-check-enrollment="${escapeAttribute(enrollmentId)}" data-worker-course-id="${escapeAttribute(courseId)}" data-worker-duration="${escapeAttribute(duration)}" ${isLive ? "" : "disabled"}>${dictionary.checkTraining}</button>`
                     : ""
                 }
               </div>
@@ -2956,6 +3009,131 @@ async function loadTrainingPage(language) {
   trainingMessage.textContent = dictionary.localTitle;
 }
 
+function renderCheckPage(language) {
+  if (!checkPageData || !checkContent || !checkMessage) {
+    return;
+  }
+
+  const dictionary = translations[language].checkPage;
+  const { worker, course, enrollment, certificate } = checkPageData;
+  const title = getCourseTitle(course, language) || dictionary.title;
+  const normalizedStatus = String(getField(enrollment, "status") || "").toLowerCase();
+  const passed = normalizedStatus === "passed";
+  const score = getField(enrollment, "score");
+
+  checkPageTitle.textContent = title;
+  checkPageCopy.textContent = getCourseDescription(course, language) || dictionary.copy;
+  checkCourseImage.src = getCourseImage(course);
+  checkCourseImage.alt = getCourseAlt(course, language);
+  checkCourseTitle.textContent = title;
+  checkCourseDescription.textContent = getCourseDescription(course, language) || dictionary.copy;
+  checkCourseId.textContent = String(getField(course, "id") || "-");
+  checkExamId.textContent = getExamId(enrollment);
+  checkStatus.textContent = getEnrollmentStatusLabel(getField(enrollment, "status"), language);
+  checkScore.textContent = score == null ? "-" : `${score}%`;
+  checkResult.classList.toggle("is-failed", !passed);
+  checkResultTitle.textContent = passed ? dictionary.passedTitle : dictionary.failedTitle;
+  checkResultCopy.textContent = passed ? dictionary.passedCopy : dictionary.failedCopy;
+  checkCertificateLink.hidden = !certificate;
+
+  if (certificate) {
+    checkCertificateLink.href = getCertificateDisplayUrl(certificate, getWorkerName(worker), title);
+    checkCertificateLink.textContent = dictionary.openCertificate;
+  } else {
+    checkCertificateLink.removeAttribute("href");
+  }
+
+  checkResult.hidden = false;
+  checkContent.hidden = false;
+  checkMessage.textContent = dictionary.ready;
+}
+
+async function loadCheckPage(language) {
+  if (!checkContent || !checkMessage) {
+    return;
+  }
+
+  if (checkPageData) {
+    renderCheckPage(language);
+    return;
+  }
+
+  if (checkPageLoading) {
+    return;
+  }
+
+  const dictionary = translations[language].checkPage;
+  const params = new URLSearchParams(window.location.search);
+  const courseId = params.get("courseId")?.trim();
+  const enrollmentId = params.get("enrollmentId")?.trim();
+  const durationMinutes = Number(params.get("durationMinutes")) || 35;
+
+  checkContent.hidden = true;
+  checkMessage.textContent = dictionary.loading;
+
+  if (!courseId || !enrollmentId) {
+    checkMessage.textContent = dictionary.missingCourse;
+    return;
+  }
+
+  checkPageLoading = true;
+
+  try {
+    const portalResult = await apiRequest("/api/worker-portal/me", { auth: true });
+    if (!portalResult.ok) {
+      checkMessage.textContent = portalResult.error || dictionary.unavailable;
+      return;
+    }
+
+    const worker = getField(portalResult.data, "worker");
+    const courses = getField(portalResult.data, "courses") || [];
+    const enrollments = getField(portalResult.data, "enrollments") || [];
+    const certificates = getField(portalResult.data, "certificates") || [];
+    const course = findCourseForRecord(courses, courseId);
+    let enrollment = enrollments.find(
+      (item) =>
+        String(getField(item, "id")) === String(enrollmentId) &&
+        String(getField(item, "courseId")) === String(courseId),
+    );
+
+    if (!course || !enrollment) {
+      checkMessage.textContent = dictionary.notAssigned;
+      return;
+    }
+
+    let certificate = certificates.find(
+      (item) => String(getField(item, "courseId")) === String(courseId),
+    );
+
+    if (String(getField(enrollment, "status") || "").toLowerCase() === "inprogress") {
+      const completionResult = await apiRequest(
+        `/api/worker-portal/enrollments/${encodeURIComponent(enrollmentId)}/complete`,
+        {
+          method: "POST",
+          auth: true,
+          body: {
+            score: 100,
+            durationMinutes,
+          },
+        },
+      );
+
+      if (!completionResult.ok) {
+        checkMessage.textContent = completionResult.error || dictionary.unavailable;
+        return;
+      }
+
+      enrollment = getField(completionResult.data, "enrollment") || enrollment;
+      certificate = getField(completionResult.data, "certificate") || certificate;
+    }
+
+    checkPageData = { worker, course, enrollment, certificate };
+    renderCheckPage(currentLanguage);
+  } finally {
+    checkPageLoading = false;
+  }
+}
+
 async function startWorkerPortalEnrollment(enrollmentId, courseId, triggerButton = null) {
   if (!getAccessToken()) {
     setWorkerPortalMessage(translations[currentLanguage].workerPortal.loginRequired);
@@ -2983,43 +3161,13 @@ async function startWorkerPortalEnrollment(enrollmentId, courseId, triggerButton
   window.location.href = getTrainingPageUrl(getField(result.data, "courseId") || courseId, enrollmentId);
 }
 
-async function checkWorkerPortalEnrollment(enrollmentId, examId, durationMinutes, triggerButton = null) {
+function checkWorkerPortalEnrollment(enrollmentId, courseId, durationMinutes) {
   if (!getAccessToken()) {
     setWorkerPortalMessage(translations[currentLanguage].workerPortal.loginRequired);
     return;
   }
 
-  if (triggerButton) {
-    triggerButton.disabled = true;
-  }
-
-  openExternalTrainingWindow(getExternalExamCheckUrl(examId));
-  setWorkerPortalMessage(translations[currentLanguage].workerPortal.checkWorking);
-
-  const result = await apiRequest(`/api/worker-portal/enrollments/${encodeURIComponent(enrollmentId)}/complete`, {
-    method: "POST",
-    auth: true,
-    body: {
-      score: 100,
-      durationMinutes: Number(durationMinutes) || 35,
-    },
-  });
-
-  if (!result.ok) {
-    if (triggerButton) {
-      triggerButton.disabled = false;
-    }
-    setWorkerPortalMessage(result.error || translations[currentLanguage].workerPortal.actionUnavailable);
-    return;
-  }
-
-  const certificate = getField(result.data, "certificate");
-  setWorkerPortalMessage(
-    certificate
-      ? translations[currentLanguage].workerPortal.checkSuccess
-      : translations[currentLanguage].workerPortal.completeFailed,
-  );
-  loadWorkerPortalData(currentLanguage);
+  window.location.href = getCheckPageUrl(courseId, enrollmentId, durationMinutes);
 }
 
 async function completeWorkerPortalEnrollment(enrollmentId, score, durationMinutes) {
@@ -3525,6 +3673,7 @@ function applyTranslations(language) {
   loadPlatformData(language);
   loadWorkerPortalData(language);
   loadTrainingPage(language);
+  loadCheckPage(language);
   loadSystemAdminData(language);
   loadSystemCompanyData(language);
   applyCertificateViewParams();
@@ -3782,10 +3931,10 @@ document.addEventListener("click", (event) => {
   }
 
   const enrollmentId = checkButton.dataset.workerCheckEnrollment;
-  const examId = checkButton.dataset.workerExamId;
+  const courseId = checkButton.dataset.workerCourseId;
   const durationMinutes = checkButton.dataset.workerDuration;
   if (enrollmentId) {
-    checkWorkerPortalEnrollment(enrollmentId, examId, durationMinutes, checkButton);
+    checkWorkerPortalEnrollment(enrollmentId, courseId, durationMinutes);
   }
 });
 
