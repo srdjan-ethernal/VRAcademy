@@ -1354,6 +1354,27 @@ const scenarios = [
   },
 ];
 
+const catalogCourseImages = Object.freeze({
+  "first-aid": "assets/catalog-courses/first-aid.jpg",
+  "working-at-heights": "assets/catalog-courses/working-at-heights.jpg",
+  "forklift-safety": "assets/catalog-courses/forklift-safety.jpg",
+  "lockout-tagout": "assets/catalog-courses/lockout-tagout.jpg",
+  "personal-protective-equipment": "assets/catalog-courses/personal-protective-equipment.jpg",
+  "chemical-safety": "assets/catalog-courses/chemical-safety.jpg",
+  "electrical-safety": "assets/catalog-courses/electrical-safety.jpg",
+  "confined-space-entry": "assets/catalog-courses/confined-space-entry.jpg",
+  "emergency-evacuation": "assets/catalog-courses/emergency-evacuation.jpg",
+  "industrial-machinery-safety": "assets/catalog-courses/industrial-machinery-safety.jpg",
+  "laboratory-safety": "assets/catalog-courses/laboratory-safety.jpg",
+  "hazardous-material-handling": "assets/catalog-courses/hazardous-material-handling.jpg",
+  "construction-site-safety": "assets/catalog-courses/construction-site-safety.jpg",
+  "crane-suspended-loads": "assets/catalog-courses/crane-suspended-loads.jpg",
+  "gas-leak-response": "assets/catalog-courses/gas-leak-response.jpg",
+  "warehouse-logistics-safety": "assets/catalog-courses/warehouse-logistics-safety.jpg",
+  "drone-operation-fpv": "assets/catalog-courses/drone-operation-fpv.jpg",
+  "drone-search-rescue": "assets/catalog-courses/drone-search-rescue.jpg",
+});
+
 Object.entries(globalLanguageSettings.scenarios || {}).forEach(([language, localizedScenarios]) => {
   localizedScenarios.forEach((content, index) => {
     if (scenarios[index]) {
@@ -1938,8 +1959,9 @@ function getCourseImage(course) {
     return course.image;
   }
 
-  const scenario = getScenarioByCode(getField(course, "code"));
-  return scenario?.image || "assets/hero-vr-training.png";
+  const code = getField(course, "code");
+  const scenario = getScenarioByCode(code);
+  return catalogCourseImages[code] || scenario?.image || "assets/hero-vr-training.png";
 }
 
 function getCourseAlt(course, language) {
