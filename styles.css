@@ -422,8 +422,10 @@ h1 {
 }
 
 .scenario-grid {
+  --scenario-row-count: 2;
   display: grid;
-  grid-auto-columns: calc((100% - 70px) / 6);
+  grid-template-rows: repeat(2, minmax(250px, auto));
+  grid-auto-columns: calc((100% - 14px) / 2);
   grid-auto-flow: column;
   gap: 14px;
   overflow-x: auto;
@@ -439,9 +441,9 @@ h1 {
 }
 
 .scenario-card {
-  display: flex;
+  display: grid;
   min-width: 0;
-  flex-direction: column;
+  grid-template-columns: minmax(150px, 42%) minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -451,16 +453,15 @@ h1 {
 }
 
 .scenario-image {
-  aspect-ratio: 16 / 10;
+  height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
 .scenario-body {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  min-height: 238px;
+  min-height: 250px;
   padding: 16px;
 }
 
@@ -490,7 +491,7 @@ h1 {
 }
 
 .scenario-card.is-catalog .scenario-body {
-  min-height: 238px;
+  min-height: 250px;
 }
 
 .scenario-list {
@@ -2156,9 +2157,6 @@ h1 {
     padding: 14px;
   }
 
-  .scenario-grid {
-    grid-auto-columns: calc((100% - 28px) / 3);
-  }
 }
 
 @media (max-width: 900px) {
@@ -2235,7 +2233,7 @@ h1 {
   }
 
   .scenario-grid {
-    grid-auto-columns: calc((100% - 14px) / 2);
+    grid-auto-columns: 100%;
   }
 }
 
@@ -2335,8 +2333,20 @@ h1 {
   }
 
   .scenario-grid {
+    --scenario-row-count: 1;
+    grid-template-rows: auto;
     grid-auto-columns: min(86vw, 360px);
     gap: 14px;
+  }
+
+  .scenario-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scenario-image {
+    aspect-ratio: 16 / 10;
+    height: auto;
   }
 
   .intro-band,

@@ -2134,8 +2134,14 @@ function getScenarioVisibleCount() {
     return 1;
   }
 
-  const gap = Number.parseFloat(getComputedStyle(scenarioGrid).columnGap) || 0;
-  return Math.max(1, Math.floor((scenarioGrid.clientWidth + gap) / (cards[0].offsetWidth + gap)));
+  const gridStyles = getComputedStyle(scenarioGrid);
+  const gap = Number.parseFloat(gridStyles.columnGap) || 0;
+  const visibleColumns = Math.max(
+    1,
+    Math.floor((scenarioGrid.clientWidth + gap) / (cards[0].offsetWidth + gap)),
+  );
+  const rowCount = Number.parseInt(gridStyles.getPropertyValue("--scenario-row-count"), 10) || 1;
+  return visibleColumns * rowCount;
 }
 
 function updateScenarioCarouselState(language = currentLanguage) {
@@ -2287,12 +2293,12 @@ function renderScenarios(language) {
 }
 
 scenarioPreviousButton?.addEventListener("click", () => {
-  setScenarioCarouselIndex(scenarioCarouselIndex - 1);
+  setScenarioCarouselIndex(scenarioCarouselIndex - getScenarioVisibleCount());
   startScenarioCarousel();
 });
 
 scenarioNextButton?.addEventListener("click", () => {
-  setScenarioCarouselIndex(scenarioCarouselIndex + 1);
+  setScenarioCarouselIndex(scenarioCarouselIndex + getScenarioVisibleCount());
   startScenarioCarousel();
 });
 
