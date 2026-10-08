@@ -412,11 +412,18 @@ const translations = {
       resetSuccess: "Lozinka je resetovana za {email}.",
       assignWorker: "Radnik",
       assignCourse: "Kurs",
+      assignCourses: "Kursevi",
+      assignCoursesHint: "Izaberite jedan ili vise kurseva. Vec dodeljeni kursevi su oznaceni.",
+      courseAlreadyAssigned: "Vec dodeljeno",
+      noCoursesAvailable: "Nema dostupnih kurseva.",
+      assignCourseRequired: "Izaberite najmanje jedan novi kurs.",
       assignDueAt: "Rok za polaganje",
       assignTraining: "Dodeli obuku",
       assignTrainingLoginRequired: "Prijavite se da biste dodelili obuku.",
-      assignTrainingWorking: "Dodeljivanje obuke...",
-      assignTrainingSuccess: "Obuka je dodeljena. ExamId: {examId}.",
+      assignTrainingWorking: "Dodeljivanje obuka...",
+      assignTrainingSuccess: "Broj dodeljenih obuka: {count}.",
+      assignTrainingPartial: "Dodeljeno: {assigned}. Nije dodeljeno: {failed}. {error}",
+      assignTrainingFailed: "Obuke nisu mogle da budu dodeljene.",
       resetTraining: "Resetuj sve obuke",
       resetTrainingConfirm: "Vratiti sve obuke organizacije na status Dodeljeno i obrisati njihove test sertifikate?",
       resetTrainingWorking: "Resetovanje obuka...",
@@ -986,11 +993,18 @@ const translations = {
       resetSuccess: "Password has been reset for {email}.",
       assignWorker: "Worker",
       assignCourse: "Course",
+      assignCourses: "Courses",
+      assignCoursesHint: "Select one or more courses. Courses already assigned are marked.",
+      courseAlreadyAssigned: "Already assigned",
+      noCoursesAvailable: "No courses are available.",
+      assignCourseRequired: "Select at least one new course.",
       assignDueAt: "Due date",
       assignTraining: "Assign training",
       assignTrainingLoginRequired: "Sign in to assign training.",
       assignTrainingWorking: "Assigning training...",
-      assignTrainingSuccess: "Training has been assigned. ExamId: {examId}.",
+      assignTrainingSuccess: "Assigned training courses: {count}.",
+      assignTrainingPartial: "Assigned: {assigned}. Not assigned: {failed}. {error}",
+      assignTrainingFailed: "The training courses could not be assigned.",
       resetTraining: "Reset all training",
       resetTrainingConfirm: "Reset all organization training to Enrolled and delete the related test certificates?",
       resetTrainingWorking: "Resetting training...",
@@ -1431,7 +1445,7 @@ const workerSearchInput = document.querySelector("[data-worker-search]");
 const workerImportInput = document.querySelector("[data-worker-import]");
 const enrollmentForm = document.querySelector("[data-enrollment-form]");
 const enrollmentWorkerSelect = document.querySelector("[data-enrollment-worker]");
-const enrollmentCourseSelect = document.querySelector("[data-enrollment-course]");
+const enrollmentCourseList = document.querySelector("[data-enrollment-courses]");
 const enrollmentMessage = document.querySelector("[data-enrollment-message]");
 const enrollmentRecords = document.querySelector("[data-enrollment-records]");
 const resetEnrollmentsButton = document.querySelector("[data-reset-enrollments]");
@@ -2304,18 +2318,71 @@ function getEnrollmentStatusLabel(status, language) {
   return dictionary.statusEnrolled;
 }
 
-function renderEnrollmentSelectors(workers, courses, language) {
-  if (!enrollmentWorkerSelect || !enrollmentCourseSelect) {
+function getScheduledCourseIds(workerId, enrollments) {
+  return new Set(
+    enrollments
+      .filter((enrollment) => {
+        const status = String(getField(enrollment, "status") || "").toLowerCase();
+        return (
+          String(getField(enrollment, "workerId")) === String(workerId) &&
+          (status === "enrolled" || status === "inprogress")
+        );
+      })
+      .map((enrollment) => String(getField(enrollment, "courseId"))),
+  );
+}
+
+function renderEnrollmentCourseOptions(workerId, courses, enrollments, language) {
+  if (!enrollmentCourseList) {
     return;
   }
+
+  const dictionary = translations[language].platform;
+  const scheduledCourseIds = getScheduledCourseIds(workerId, enrollments);
+  enrollmentCourseList.innerHTML = courses.length
+    ? courses
+        .map((course) => {
+          const courseId = String(getField(course, "id"));
+          const isScheduled = scheduledCourseIds.has(courseId);
+          const scheduledBadge = isScheduled
+            ? `<span class="course-multiselect-badge">${dictionary.courseAlreadyAssigned}</span>`
+            : "";
+
+          return `
+            <label class="course-multiselect-option${isScheduled ? " is-assigned" : ""}">
+              <input
+                type="checkbox"
+                name="courseIds"
+                value="${escapeAttribute(courseId)}"
+                ${isScheduled ? "checked disabled" : ""}
+              />
+              <span>${escapeAttribute(getCourseTitle(course, language))}</span>
+              ${scheduledBadge}
+            </label>
+          `;
+        })
+        .join("")
+    : `<span class="course-multiselect-empty">${dictionary.noCoursesAvailable}</span>`;
+}
+
+function renderEnrollmentSelectors(workers, courses, enrollments, language) {
+  if (!enrollmentWorkerSelect || !enrollmentCourseList) {
+    return;
+  }
+
+  const previousWorkerId = enrollmentWorkerSelect.value;
+  const selectedWorkerId = workers.some(
+    (worker) => String(getField(worker, "id")) === String(previousWorkerId),
+  )
+    ? previousWorkerId
+    : String(getField(workers[0], "id") || "");
 
   enrollmentWorkerSelect.innerHTML = workers.length
     ? workers.map((worker) => `<option value="${getField(worker, "id")}">${getWorkerName(worker)}</option>`).join("")
     : `<option value="" disabled selected>${translations[language].platform.emptyWorkers}</option>`;
 
-  enrollmentCourseSelect.innerHTML = courses.length
-    ? courses.map((course) => `<option value="${getField(course, "id")}">${getCourseTitle(course, language)}</option>`).join("")
-    : `<option value="" disabled selected>-</option>`;
+  enrollmentWorkerSelect.value = selectedWorkerId;
+  renderEnrollmentCourseOptions(selectedWorkerId, courses, enrollments, language);
 }
 
 function renderCompletionSelector(enrollments, workerMap, courseMap, language) {
@@ -2346,7 +2413,7 @@ function renderPlatform(language, apiData = null) {
     certificateRecords ||
     enrollmentRecords ||
     enrollmentWorkerSelect ||
-    enrollmentCourseSelect ||
+    enrollmentCourseList ||
     organizationUserList;
 
   if (!hasPlatformWidgets) {
@@ -2374,7 +2441,7 @@ function renderPlatform(language, apiData = null) {
     "score",
     summary ? `${Math.round(Number(getField(summary, "averageScore") || 0))}%` : getAverageScore(enrollments),
   );
-  renderEnrollmentSelectors(workers, courses, language);
+  renderEnrollmentSelectors(workers, courses, enrollments, language);
   renderCompletionSelector(enrollments, workerMap, courseMap, language);
   renderOrganizationUsers(language, users, workers);
   renderNotifications(
@@ -4230,6 +4297,20 @@ workerImportInput?.addEventListener("change", async () => {
   setWorkerMessage(lastError || translations[currentLanguage].platform.importWorkersEmpty, "error");
 });
 
+enrollmentWorkerSelect?.addEventListener("change", () => {
+  if (!currentPlatformData) {
+    return;
+  }
+
+  renderEnrollmentCourseOptions(
+    enrollmentWorkerSelect.value,
+    currentPlatformData.courses || [],
+    currentPlatformData.enrollments || [],
+    currentLanguage,
+  );
+  setEnrollmentMessage("");
+});
+
 enrollmentForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -4241,32 +4322,53 @@ enrollmentForm?.addEventListener("submit", async (event) => {
   const formData = new FormData(enrollmentForm);
   const submitButton = enrollmentForm.querySelector('button[type="submit"]');
   const dueAtValue = formData.get("dueAt")?.toString();
-  const request = {
-    workerId: formData.get("workerId")?.toString(),
-    courseId: formData.get("courseId")?.toString(),
-    dueAt: dueAtValue ? new Date(`${dueAtValue}T23:59:59`).toISOString() : null,
-  };
+  const workerId = formData.get("workerId")?.toString();
+  const courseIds = [...new Set(formData.getAll("courseIds").map((value) => value.toString()))];
+  const dictionary = translations[currentLanguage].platform;
 
-  setEnrollmentMessage(translations[currentLanguage].platform.assignTrainingWorking);
-  submitButton.disabled = true;
-
-  const result = await apiRequest("/api/enrollments", {
-    method: "POST",
-    auth: true,
-    body: request,
-  });
-
-  submitButton.disabled = false;
-
-  if (!result.ok) {
-    setEnrollmentMessage(result.error, "error");
+  if (!courseIds.length) {
+    setEnrollmentMessage(dictionary.assignCourseRequired, "error");
     return;
   }
 
-  setEnrollmentMessage(
-    translations[currentLanguage].platform.assignTrainingSuccess.replace("{examId}", getExamId(result.data)),
-    "success",
-  );
+  setEnrollmentMessage(dictionary.assignTrainingWorking);
+  submitButton.disabled = true;
+
+  const results = [];
+  for (const courseId of courseIds) {
+    const result = await apiRequest("/api/enrollments", {
+      method: "POST",
+      auth: true,
+      body: {
+        workerId,
+        courseId,
+        dueAt: dueAtValue ? new Date(`${dueAtValue}T23:59:59`).toISOString() : null,
+      },
+    });
+    results.push(result);
+  }
+
+  submitButton.disabled = false;
+  const assignedCount = results.filter((result) => result.ok).length;
+  const failedResults = results.filter((result) => !result.ok);
+
+  if (!assignedCount) {
+    setEnrollmentMessage(failedResults[0]?.error || dictionary.assignTrainingFailed, "error");
+    return;
+  }
+
+  if (failedResults.length) {
+    setEnrollmentMessage(
+      dictionary.assignTrainingPartial
+        .replace("{assigned}", String(assignedCount))
+        .replace("{failed}", String(failedResults.length))
+        .replace("{error}", failedResults[0]?.error || dictionary.assignTrainingFailed),
+      "error",
+    );
+  } else {
+    setEnrollmentMessage(dictionary.assignTrainingSuccess.replace("{count}", String(assignedCount)), "success");
+  }
+
   loadPlatformData(currentLanguage);
 });
 

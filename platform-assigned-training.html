@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20261007-training-reset" />
+    <link rel="stylesheet" href="styles.css?v=20261008-course-multiselect" />
   </head>
   <body data-page="platformAssignedTraining">
     <header class="site-header" data-header>
@@ -79,10 +79,18 @@
                 <span data-i18n="platform.assignWorker">Radnik</span>
                 <select name="workerId" required data-enrollment-worker></select>
               </label>
-              <label>
-                <span data-i18n="platform.assignCourse">Kurs</span>
-                <select name="courseId" required data-enrollment-course></select>
-              </label>
+              <div class="assignment-course-field">
+                <span class="form-field-label" id="assignment-courses-label" data-i18n="platform.assignCourses">Kursevi</span>
+                <div
+                  class="course-multiselect"
+                  role="group"
+                  aria-labelledby="assignment-courses-label"
+                  data-enrollment-courses
+                ></div>
+                <span class="form-field-hint" data-i18n="platform.assignCoursesHint">
+                  Izaberite jedan ili vise kurseva. Vec dodeljeni kursevi su oznaceni.
+                </span>
+              </div>
               <label>
                 <span data-i18n="platform.assignDueAt">Rok za polaganje</span>
                 <input type="date" name="dueAt" />
@@ -126,7 +134,7 @@
       <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
     </footer>
 
-    <script src="global-languages.js?v=20261007-training-reset"></script>
-    <script src="script.js?v=20261007-training-reset"></script>
+    <script src="global-languages.js?v=20261008-course-multiselect"></script>
+    <script src="script.js?v=20261008-course-multiselect"></script>
   </body>
 </html>
