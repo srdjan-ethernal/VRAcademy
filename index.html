@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="icon" href="assets/vr-academy-icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20261004-language-select" />
+    <link rel="stylesheet" href="styles.css?v=20261008-course-carousel" />
   </head>
   <body>
     <header class="site-header" data-header>
@@ -92,7 +92,30 @@
             materijalima i obuke za odgovorno postupanje sa otpadom.
           </p>
         </div>
-        <div class="scenario-grid" data-scenario-grid></div>
+        <div class="scenario-carousel" data-scenario-carousel>
+          <div class="scenario-carousel-toolbar">
+            <span class="scenario-carousel-position" data-scenario-position aria-live="polite">1-2 od 24</span>
+            <div class="scenario-carousel-controls">
+              <button
+                type="button"
+                class="scenario-carousel-button"
+                aria-label="Prethodne obuke"
+                data-scenario-previous
+              >
+                &#8592;
+              </button>
+              <button
+                type="button"
+                class="scenario-carousel-button"
+                aria-label="Sledece obuke"
+                data-scenario-next
+              >
+                &#8594;
+              </button>
+            </div>
+          </div>
+          <div class="scenario-grid" data-scenario-grid></div>
+        </div>
       </section>
 
       <section class="section light-section" id="metodologija" aria-labelledby="method-title">
@@ -171,7 +194,7 @@
       <span data-i18n="footer.copy">Profesionalne VR simulacije za bezbednosne obuke.</span>
     </footer>
 
-    <script src="global-languages.js?v=20261007-new-pages-i18n"></script>
-    <script src="script.js"></script>
+    <script src="global-languages.js?v=20261008-course-carousel"></script>
+    <script src="script.js?v=20261008-course-carousel"></script>
   </body>
 </html>

@@ -39,6 +39,9 @@ const translations = {
       title: "Scenariji spremni za prezentaciju i razvoj",
       copy: "Katalog scenarija pokriva industrijsku bezbednost, upravljanje opasnim materijalima i obuke za odgovorno postupanje sa otpadom.",
       demoLink: "Pogledaj demo",
+      previous: "Prethodne obuke",
+      next: "Sledece obuke",
+      position: "{start}-{end} od {total}",
     },
     method: {
       eyebrow: "Metodologija",
@@ -621,6 +624,9 @@ const translations = {
       title: "Scenarios ready for presentation and development",
       copy: "The scenario catalog covers industrial safety, hazardous material handling, and training for responsible waste management.",
       demoLink: "Watch demo",
+      previous: "Previous training courses",
+      next: "Next training courses",
+      position: "{start}-{end} of {total}",
     },
     method: {
       eyebrow: "Methodology",
@@ -1389,6 +1395,214 @@ const catalogCourseImages = Object.freeze({
   "drone-search-rescue": "assets/catalog-courses/drone-search-rescue.jpg",
 });
 
+const catalogCourses = [
+  {
+    code: "first-aid",
+    labelSr: "Hitne situacije",
+    labelEn: "Emergency response",
+    titleSr: "Prva pomoc",
+    titleEn: "First Aid Training",
+    descriptionSr: "Procena situacije, KPR, kontrola krvarenja i pravilna upotreba AED uredjaja.",
+    descriptionEn: "Situation assessment, CPR, bleeding control, and correct use of an AED.",
+  },
+  {
+    code: "working-at-heights",
+    labelSr: "Rad na visini",
+    labelEn: "Work at height",
+    titleSr: "Rad na visini",
+    titleEn: "Working at Heights",
+    descriptionSr: "Prepoznavanje rizika od pada, izbor opreme i bezbedno kretanje na visini.",
+    descriptionEn: "Fall hazard recognition, equipment selection, and safe movement at height.",
+  },
+  {
+    code: "forklift-safety",
+    labelSr: "Industrijska vozila",
+    labelEn: "Industrial vehicles",
+    titleSr: "Bezbedno upravljanje viljuskarom",
+    titleEn: "Forklift Safety",
+    descriptionSr: "Pregled vozila, bezbedno upravljanje, rukovanje teretom i kretanje kroz radnu zonu.",
+    descriptionEn: "Vehicle inspection, safe operation, load handling, and workplace navigation.",
+  },
+  {
+    code: "lockout-tagout",
+    labelSr: "Kontrola energije",
+    labelEn: "Energy control",
+    titleSr: "Lockout/Tagout (LOTO)",
+    titleEn: "Lockout / Tagout",
+    descriptionSr: "Identifikacija izvora energije, izolacija, zakljucavanje i bezbedna provera opreme.",
+    descriptionEn: "Energy source identification, isolation, lockout, and safe equipment verification.",
+  },
+  {
+    code: "personal-protective-equipment",
+    labelSr: "Licna zastita",
+    labelEn: "Personal protection",
+    titleSr: "Licna zastitna oprema",
+    titleEn: "Personal Protective Equipment",
+    descriptionSr: "Procena rizika, izbor, pregled, pravilno koriscenje i odrzavanje zastitne opreme.",
+    descriptionEn: "Risk assessment, selection, inspection, correct use, and maintenance of PPE.",
+  },
+  {
+    code: "chemical-safety",
+    labelSr: "Hemijska bezbednost",
+    labelEn: "Chemical safety",
+    titleSr: "Hemijska bezbednost",
+    titleEn: "Chemical Safety",
+    descriptionSr: "Prepoznavanje oznaka, bezbedno rukovanje hemikalijama i reagovanje pri prosipanju.",
+    descriptionEn: "Label recognition, safe chemical handling, and spill response.",
+  },
+  {
+    code: "electrical-safety",
+    labelSr: "Elektricna bezbednost",
+    labelEn: "Electrical safety",
+    titleSr: "Elektricna bezbednost",
+    titleEn: "Electrical Safety",
+    descriptionSr: "Prepoznavanje elektricnih rizika, bezbedan rad i reagovanje u vanrednim situacijama.",
+    descriptionEn: "Electrical hazard recognition, safe work practices, and emergency response.",
+  },
+  {
+    code: "confined-space-entry",
+    labelSr: "Zatvoreni prostori",
+    labelEn: "Confined spaces",
+    titleSr: "Ulazak u zatvoreni prostor",
+    titleEn: "Confined Space Entry",
+    descriptionSr: "Procena prostora, merenje atmosfere, dozvola za rad i postupci spasavanja.",
+    descriptionEn: "Space assessment, atmospheric testing, work permits, and rescue procedures.",
+  },
+  {
+    code: "emergency-evacuation",
+    labelSr: "Hitne situacije",
+    labelEn: "Emergency response",
+    titleSr: "Hitna evakuacija",
+    titleEn: "Emergency Evacuation",
+    descriptionSr: "Prepoznavanje alarma, izbor izlaza, pomoc kolegama i bezbedno okupljanje.",
+    descriptionEn: "Alarm recognition, exit selection, assisting others, and safe assembly.",
+  },
+  {
+    code: "industrial-machinery-safety",
+    labelSr: "Bezbednost masina",
+    labelEn: "Machinery safety",
+    titleSr: "Bezbedno rukovanje industrijskim masinama",
+    titleEn: "Safe Operation of Industrial Machinery",
+    descriptionSr: "Pregled masine, provera zastita, bezbedno pokretanje i zaustavljanje opreme.",
+    descriptionEn: "Machine inspection, guard checks, safe startup, operation, and shutdown.",
+  },
+  {
+    code: "laboratory-safety",
+    labelSr: "Laboratorijska bezbednost",
+    labelEn: "Laboratory safety",
+    titleSr: "Bezbednost u laboratoriji",
+    titleEn: "Laboratory Safety",
+    descriptionSr: "Bezbedan rad sa uzorcima, laboratorijskom opremom, hemikalijama i kontaminacijom.",
+    descriptionEn: "Safe work with samples, laboratory equipment, chemicals, and contamination.",
+  },
+  {
+    code: "hazardous-material-handling",
+    labelSr: "Opasni materijali",
+    labelEn: "Hazardous materials",
+    titleSr: "Rukovanje opasnim materijalima",
+    titleEn: "Hazardous Material Handling",
+    descriptionSr: "Prijem, oznacavanje, razdvajanje, transport i skladistenje opasnih materijala.",
+    descriptionEn: "Receiving, labeling, segregation, transport, and storage of hazardous materials.",
+  },
+  {
+    code: "construction-site-safety",
+    labelSr: "Gradjevinska bezbednost",
+    labelEn: "Construction safety",
+    titleSr: "Bezbednost na gradilistu",
+    titleEn: "Construction Site Safety",
+    descriptionSr: "Prepoznavanje rizika, bezbedno kretanje, radne zone, skele i kontrola pristupa.",
+    descriptionEn: "Hazard recognition, safe movement, work zones, scaffolding, and access control.",
+  },
+  {
+    code: "crane-suspended-loads",
+    labelSr: "Operacije dizanja",
+    labelEn: "Lifting operations",
+    titleSr: "Rad u blizini dizalica i visecih tereta",
+    titleEn: "Working Near Cranes and Suspended Loads",
+    descriptionSr: "Planiranje dizanja, bezbedne zone, komunikacija i reagovanje pri nestabilnom teretu.",
+    descriptionEn: "Lift planning, exclusion zones, communication, and response to unstable loads.",
+  },
+  {
+    code: "gas-leak-response",
+    labelSr: "Hitne situacije",
+    labelEn: "Emergency response",
+    titleSr: "Reagovanje pri curenju gasa",
+    titleEn: "Gas Leak Response",
+    descriptionSr: "Prepoznavanje curenja, aktiviranje alarma, izolacija zone i bezbedna evakuacija.",
+    descriptionEn: "Leak recognition, alarm activation, area isolation, and safe evacuation.",
+  },
+  {
+    code: "warehouse-logistics-safety",
+    labelSr: "Logisticka bezbednost",
+    labelEn: "Logistics safety",
+    titleSr: "Bezbednost u skladistu i logistici",
+    titleEn: "Warehouse and Logistics Safety",
+    descriptionSr: "Bezbedno kretanje, slaganje tereta, rukovanje opremom i kontrola logistickih rizika.",
+    descriptionEn: "Safe movement, load stacking, equipment handling, and logistics risk control.",
+  },
+  {
+    code: "drone-operation-fpv",
+    labelSr: "Upravljanje dronovima",
+    labelEn: "Drone operations",
+    titleSr: "Upravljanje dronom i FPV navigacija",
+    titleEn: "Drone Operation and FPV Navigation",
+    descriptionSr: "Predletna provera, bezbedno upravljanje, FPV navigacija i reagovanje na incidente.",
+    descriptionEn: "Pre-flight checks, safe operation, FPV navigation, and incident response.",
+  },
+  {
+    code: "drone-search-rescue",
+    labelSr: "Potraga i spasavanje",
+    labelEn: "Search and rescue",
+    titleSr: "Potraga i spasavanje uz pomoc drona",
+    titleEn: "Drone-Assisted Search and Rescue",
+    descriptionSr: "Planiranje misije, vazdusna pretraga, lociranje osobe i koordinacija spasavanja.",
+    descriptionEn: "Mission planning, aerial search, casualty location, and rescue coordination.",
+  },
+];
+
+scenarios.push(
+  ...catalogCourses.map((course, index) => {
+    const localizedContent = Object.fromEntries(
+      Object.entries(globalLanguageSettings.catalogCourses || {}).map(([language, pack]) => {
+        const localizedCourse = pack.courses?.[index];
+        const title = localizedCourse?.[0] || course.titleEn;
+        return [
+          language,
+          {
+            title,
+            label: pack.label,
+            alt: `${pack.label}: ${title}`,
+            description: localizedCourse?.[1] || course.descriptionEn,
+            points: [],
+          },
+        ];
+      }),
+    );
+
+    return {
+      image: catalogCourseImages[course.code],
+      variant: "is-catalog",
+      content: {
+        sr: {
+          title: course.titleSr,
+          label: course.labelSr,
+          alt: `VR obuka: ${course.titleSr}`,
+          description: course.descriptionSr,
+          points: [],
+        },
+        en: {
+          title: course.titleEn,
+          label: course.labelEn,
+          alt: `VR training: ${course.titleEn}`,
+          description: course.descriptionEn,
+          points: [],
+        },
+        ...localizedContent,
+      },
+    };
+  }),
+);
+
 Object.entries(globalLanguageSettings.scenarios || {}).forEach(([language, localizedScenarios]) => {
   localizedScenarios.forEach((content, index) => {
     if (scenarios[index]) {
@@ -1411,6 +1625,9 @@ document.querySelectorAll(".language-switch").forEach((switcher) => {
 });
 
 const scenarioGrid = document.querySelector("[data-scenario-grid]");
+const scenarioPreviousButton = document.querySelector("[data-scenario-previous]");
+const scenarioNextButton = document.querySelector("[data-scenario-next]");
+const scenarioPosition = document.querySelector("[data-scenario-position]");
 const header = document.querySelector("[data-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const brandLink = document.querySelector(".brand");
@@ -1901,6 +2118,100 @@ function getInitialLanguage() {
   return supportedLanguages.includes(browserLanguage) ? browserLanguage : "en";
 }
 
+let scenarioCarouselIndex = 0;
+let scenarioCarouselScrollFrame = null;
+
+function getScenarioCards() {
+  return scenarioGrid ? [...scenarioGrid.querySelectorAll("[data-scenario-card]")] : [];
+}
+
+function getScenarioVisibleCount() {
+  const cards = getScenarioCards();
+  if (!scenarioGrid || !cards.length) {
+    return 1;
+  }
+
+  const gap = Number.parseFloat(getComputedStyle(scenarioGrid).columnGap) || 0;
+  return Math.max(1, Math.floor((scenarioGrid.clientWidth + gap) / (cards[0].offsetWidth + gap)));
+}
+
+function updateScenarioCarouselState(language = currentLanguage) {
+  const cards = getScenarioCards();
+  if (!cards.length) {
+    return;
+  }
+
+  const visibleCount = getScenarioVisibleCount();
+  const maxIndex = Math.max(0, cards.length - visibleCount);
+  scenarioCarouselIndex = Math.min(Math.max(0, scenarioCarouselIndex), maxIndex);
+  const dictionary = translations[language].scenarios;
+  const start = scenarioCarouselIndex + 1;
+  const end = Math.min(cards.length, start + visibleCount - 1);
+
+  if (scenarioPosition) {
+    scenarioPosition.textContent = dictionary.position
+      .replace("{start}", String(start))
+      .replace("{end}", String(end))
+      .replace("{total}", String(cards.length));
+  }
+
+  if (scenarioPreviousButton) {
+    scenarioPreviousButton.disabled = scenarioCarouselIndex === 0;
+    scenarioPreviousButton.setAttribute("aria-label", dictionary.previous);
+    scenarioPreviousButton.setAttribute("title", dictionary.previous);
+    scenarioPreviousButton.textContent = language === "ar" ? "→" : "←";
+  }
+
+  if (scenarioNextButton) {
+    scenarioNextButton.disabled = scenarioCarouselIndex >= maxIndex;
+    scenarioNextButton.setAttribute("aria-label", dictionary.next);
+    scenarioNextButton.setAttribute("title", dictionary.next);
+    scenarioNextButton.textContent = language === "ar" ? "←" : "→";
+  }
+}
+
+function setScenarioCarouselIndex(index, behavior = "smooth") {
+  const cards = getScenarioCards();
+  if (!cards.length) {
+    return;
+  }
+
+  const maxIndex = Math.max(0, cards.length - getScenarioVisibleCount());
+  scenarioCarouselIndex = Math.min(Math.max(0, index), maxIndex);
+  const gridRect = scenarioGrid.getBoundingClientRect();
+  const cardRect = cards[scenarioCarouselIndex].getBoundingClientRect();
+  const isRtl = document.documentElement.dir === "rtl";
+  const distance = isRtl ? cardRect.right - gridRect.right : cardRect.left - gridRect.left;
+  scenarioGrid.scrollBy({ left: distance, behavior });
+  updateScenarioCarouselState();
+}
+
+function syncScenarioCarouselFromScroll() {
+  const cards = getScenarioCards();
+  if (!scenarioGrid || !cards.length) {
+    return;
+  }
+
+  const gridRect = scenarioGrid.getBoundingClientRect();
+  const isRtl = document.documentElement.dir === "rtl";
+  const viewportEdge = isRtl ? gridRect.right : gridRect.left;
+  let closestIndex = 0;
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  cards.forEach((card, index) => {
+    const cardRect = card.getBoundingClientRect();
+    const cardEdge = isRtl ? cardRect.right : cardRect.left;
+    const distance = Math.abs(cardEdge - viewportEdge);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = index;
+    }
+  });
+
+  scenarioCarouselIndex = closestIndex;
+  updateScenarioCarouselState();
+}
+
 function renderScenarios(language) {
   if (!scenarioGrid || !scenarioCount) {
     return;
@@ -1915,24 +2226,50 @@ function renderScenarios(language) {
       const demoLink = scenario.demoUrl
         ? `<a class="scenario-demo-link" href="${scenario.demoUrl}" target="_blank" rel="noopener noreferrer">${dictionary.demoLink}</a>`
         : "";
+      const points = content.points?.length
+        ? `<ul class="scenario-list">${content.points.map((point) => `<li>${point}</li>`).join("")}</ul>`
+        : "";
 
       return `
-        <article class="scenario-card ${scenario.variant}">
+        <article class="scenario-card ${scenario.variant}" data-scenario-card>
           <img class="scenario-image" src="${scenario.image}" alt="${content.alt}" loading="lazy" />
           <div class="scenario-body">
             <span class="scenario-kicker">${content.label}</span>
             <h3>${content.title}</h3>
             <p>${content.description}</p>
-            <ul class="scenario-list">
-              ${content.points.map((point) => `<li>${point}</li>`).join("")}
-            </ul>
+            ${points}
             ${demoLink}
           </div>
         </article>
       `;
     })
     .join("");
+
+  scenarioCarouselIndex = 0;
+  scenarioGrid.scrollTo({ left: 0, behavior: "auto" });
+  requestAnimationFrame(() => updateScenarioCarouselState(language));
 }
+
+scenarioPreviousButton?.addEventListener("click", () => {
+  setScenarioCarouselIndex(scenarioCarouselIndex - 1);
+});
+
+scenarioNextButton?.addEventListener("click", () => {
+  setScenarioCarouselIndex(scenarioCarouselIndex + 1);
+});
+
+scenarioGrid?.addEventListener("scroll", () => {
+  if (scenarioCarouselScrollFrame) {
+    cancelAnimationFrame(scenarioCarouselScrollFrame);
+  }
+
+  scenarioCarouselScrollFrame = requestAnimationFrame(() => {
+    scenarioCarouselScrollFrame = null;
+    syncScenarioCarouselFromScroll();
+  });
+});
+
+window.addEventListener("resize", () => updateScenarioCarouselState());
 
 function getScenarioContentByCode(code, language) {
   const scenario = scenarios.find((item) => item.content.sr.title && item.image.includes(code));

@@ -369,18 +369,85 @@ h1 {
   font-size: 17px;
 }
 
+.scenario-carousel {
+  min-width: 0;
+}
+
+.scenario-carousel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.scenario-carousel-position {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.scenario-carousel-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.scenario-carousel-button {
+  display: inline-grid;
+  width: 42px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.scenario-carousel-button:hover:not(:disabled),
+.scenario-carousel-button:focus-visible {
+  border-color: var(--teal);
+  background: var(--surface-soft);
+  color: var(--teal-dark);
+  outline: none;
+}
+
+.scenario-carousel-button:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
 .scenario-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-columns: calc((100% - 22px) / 2);
+  grid-auto-flow: column;
   gap: 22px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding-bottom: 8px;
+  scroll-behavior: smooth;
+  scroll-snap-type: inline mandatory;
+  scrollbar-width: none;
+}
+
+.scenario-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .scenario-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: 0 18px 50px rgba(23, 32, 42, 0.08);
+  scroll-snap-align: start;
 }
 
 .scenario-image {
@@ -390,6 +457,9 @@ h1 {
 }
 
 .scenario-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 26px;
 }
 
@@ -410,6 +480,14 @@ h1 {
 
 .scenario-card p {
   color: var(--muted);
+}
+
+.scenario-card.is-catalog .scenario-image {
+  aspect-ratio: 16 / 10;
+}
+
+.scenario-card.is-catalog .scenario-body {
+  min-height: 220px;
 }
 
 .scenario-list {
@@ -2123,7 +2201,6 @@ h1 {
   }
 
   .intro-grid,
-  .scenario-grid,
   .method-layout,
   .benefit-grid,
   .pricing-hero-layout,
@@ -2146,6 +2223,10 @@ h1 {
 
   .contact-section .button {
     width: 100%;
+  }
+
+  .scenario-grid {
+    grid-auto-columns: min(86vw, 440px);
   }
 }
 
@@ -2238,6 +2319,15 @@ h1 {
 
   .section {
     padding: 72px 18px;
+  }
+
+  .scenario-carousel-toolbar {
+    margin-bottom: 14px;
+  }
+
+  .scenario-grid {
+    grid-auto-columns: min(86vw, 360px);
+    gap: 14px;
   }
 
   .intro-band,
