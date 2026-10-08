@@ -1625,6 +1625,7 @@ document.querySelectorAll(".language-switch").forEach((switcher) => {
 });
 
 const scenarioGrid = document.querySelector("[data-scenario-grid]");
+const scenarioCarousel = document.querySelector("[data-scenario-carousel]");
 const scenarioPreviousButton = document.querySelector("[data-scenario-previous]");
 const scenarioNextButton = document.querySelector("[data-scenario-next]");
 const scenarioPosition = document.querySelector("[data-scenario-position]");
@@ -2120,6 +2121,8 @@ function getInitialLanguage() {
 
 let scenarioCarouselIndex = 0;
 let scenarioCarouselScrollFrame = null;
+let scenarioCarouselTimer = null;
+const scenarioCarouselInterval = 5000;
 
 function getScenarioCards() {
   return scenarioGrid ? [...scenarioGrid.querySelectorAll("[data-scenario-card]")] : [];
@@ -2186,6 +2189,40 @@ function setScenarioCarouselIndex(index, behavior = "smooth") {
   updateScenarioCarouselState();
 }
 
+function stopScenarioCarousel() {
+  if (scenarioCarouselTimer) {
+    window.clearInterval(scenarioCarouselTimer);
+    scenarioCarouselTimer = null;
+  }
+}
+
+function advanceScenarioCarousel() {
+  const cards = getScenarioCards();
+  if (!cards.length) {
+    return;
+  }
+
+  const visibleCount = getScenarioVisibleCount();
+  const maxIndex = Math.max(0, cards.length - visibleCount);
+  const nextIndex = scenarioCarouselIndex >= maxIndex
+    ? 0
+    : Math.min(scenarioCarouselIndex + visibleCount, maxIndex);
+  setScenarioCarouselIndex(nextIndex);
+}
+
+function startScenarioCarousel() {
+  stopScenarioCarousel();
+  if (
+    !scenarioCarousel ||
+    document.hidden ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return;
+  }
+
+  scenarioCarouselTimer = window.setInterval(advanceScenarioCarousel, scenarioCarouselInterval);
+}
+
 function syncScenarioCarouselFromScroll() {
   const cards = getScenarioCards();
   if (!scenarioGrid || !cards.length) {
@@ -2226,9 +2263,6 @@ function renderScenarios(language) {
       const demoLink = scenario.demoUrl
         ? `<a class="scenario-demo-link" href="${scenario.demoUrl}" target="_blank" rel="noopener noreferrer">${dictionary.demoLink}</a>`
         : "";
-      const points = content.points?.length
-        ? `<ul class="scenario-list">${content.points.map((point) => `<li>${point}</li>`).join("")}</ul>`
-        : "";
 
       return `
         <article class="scenario-card ${scenario.variant}" data-scenario-card>
@@ -2237,7 +2271,6 @@ function renderScenarios(language) {
             <span class="scenario-kicker">${content.label}</span>
             <h3>${content.title}</h3>
             <p>${content.description}</p>
-            ${points}
             ${demoLink}
           </div>
         </article>
@@ -2247,15 +2280,37 @@ function renderScenarios(language) {
 
   scenarioCarouselIndex = 0;
   scenarioGrid.scrollTo({ left: 0, behavior: "auto" });
-  requestAnimationFrame(() => updateScenarioCarouselState(language));
+  requestAnimationFrame(() => {
+    updateScenarioCarouselState(language);
+    startScenarioCarousel();
+  });
 }
 
 scenarioPreviousButton?.addEventListener("click", () => {
   setScenarioCarouselIndex(scenarioCarouselIndex - 1);
+  startScenarioCarousel();
 });
 
 scenarioNextButton?.addEventListener("click", () => {
   setScenarioCarouselIndex(scenarioCarouselIndex + 1);
+  startScenarioCarousel();
+});
+
+scenarioCarousel?.addEventListener("pointerenter", stopScenarioCarousel);
+scenarioCarousel?.addEventListener("pointerleave", startScenarioCarousel);
+scenarioCarousel?.addEventListener("focusin", stopScenarioCarousel);
+scenarioCarousel?.addEventListener("focusout", (event) => {
+  if (!scenarioCarousel.contains(event.relatedTarget)) {
+    startScenarioCarousel();
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stopScenarioCarousel();
+  } else {
+    startScenarioCarousel();
+  }
 });
 
 scenarioGrid?.addEventListener("scroll", () => {
@@ -2269,7 +2324,10 @@ scenarioGrid?.addEventListener("scroll", () => {
   });
 });
 
-window.addEventListener("resize", () => updateScenarioCarouselState());
+window.addEventListener("resize", () => {
+  updateScenarioCarouselState();
+  startScenarioCarousel();
+});
 
 function getScenarioContentByCode(code, language) {
   const scenario = scenarios.find((item) => item.content.sr.title && item.image.includes(code));

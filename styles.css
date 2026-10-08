@@ -423,9 +423,9 @@ h1 {
 
 .scenario-grid {
   display: grid;
-  grid-auto-columns: calc((100% - 22px) / 2);
+  grid-auto-columns: calc((100% - 70px) / 6);
   grid-auto-flow: column;
-  gap: 22px;
+  gap: 14px;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   padding-bottom: 8px;
@@ -451,7 +451,7 @@ h1 {
 }
 
 .scenario-image {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   width: 100%;
   object-fit: cover;
 }
@@ -460,34 +460,37 @@ h1 {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 26px;
+  min-height: 238px;
+  padding: 16px;
 }
 
 .scenario-kicker {
   display: inline-flex;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   color: var(--teal-dark);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .scenario-card h3 {
-  margin-bottom: 12px;
-  font-size: 26px;
-  line-height: 1.16;
+  margin-bottom: 10px;
+  font-size: 18px;
+  line-height: 1.22;
 }
 
 .scenario-card p {
+  display: -webkit-box;
+  overflow: hidden;
   color: var(--muted);
-}
-
-.scenario-card.is-catalog .scenario-image {
-  aspect-ratio: 16 / 10;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }
 
 .scenario-card.is-catalog .scenario-body {
-  min-height: 220px;
+  min-height: 238px;
 }
 
 .scenario-list {
@@ -546,13 +549,15 @@ h1 {
   align-items: center;
   justify-content: center;
   min-height: 40px;
-  margin-top: 22px;
-  padding: 0 16px;
+  width: 100%;
+  min-height: 36px;
+  margin-top: auto;
+  padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #ffffff;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 800;
   text-decoration: none;
   transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
@@ -2150,6 +2155,10 @@ h1 {
   .site-header.is-open .main-nav a {
     padding: 14px;
   }
+
+  .scenario-grid {
+    grid-auto-columns: calc((100% - 28px) / 3);
+  }
 }
 
 @media (max-width: 900px) {
@@ -2226,7 +2235,7 @@ h1 {
   }
 
   .scenario-grid {
-    grid-auto-columns: min(86vw, 440px);
+    grid-auto-columns: calc((100% - 14px) / 2);
   }
 }
 
