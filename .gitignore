@@ -8,4 +8,4 @@ deploy/hetzner/.env
 deploy/hetzner/backups/
 .dotnet-home/
 .nuget/
-
+.idea
